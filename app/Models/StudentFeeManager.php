@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class StudentFeeManager extends Model
 {
     use HasFactory;
-
+    protected $table ='student_fee_managers';
     /**
      * The attributes that are mass assignable.
      *

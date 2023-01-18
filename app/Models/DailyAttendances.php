@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class DailyAttendances extends Model
 {
     use HasFactory;
-
+    protected $table ='daily_attendances';
     /**
      * The attributes that are mass assignable.
      *

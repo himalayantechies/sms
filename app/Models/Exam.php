@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Exam extends Model
 {
     use HasFactory;
-
+    protected $table ='exams';
+    
     /**
      * The attributes that are mass assignable.
      *

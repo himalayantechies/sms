@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Section extends Model
 {
     use HasFactory;
-
+    protected $table ='sections';
     /**
      * The attributes that are mass assignable.
      *
