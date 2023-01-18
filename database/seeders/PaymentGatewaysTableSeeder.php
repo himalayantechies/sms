@@ -25,8 +25,8 @@ class PaymentGatewaysTableSeeder extends Seeder
                 'name' => 'Offline',
                 'status' => 1,
                 'configuration' => '[]',
-                'created_at' => 1571608810,
-                'updated_at' => 0,
+                'created_at' => '2023-01-13 13:25:00',
+                'updated_at' => '2023-01-13 13:25:00',
             ),
         ));
         
