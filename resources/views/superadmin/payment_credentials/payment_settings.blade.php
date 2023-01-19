@@ -9,11 +9,11 @@
               class="d-flex justify-content-between align-items-center flex-wrap gr-15"
             >
                 <div class="d-flex flex-column">
-                    <h4>{{ get_phrase('Payment settings'); }}</h4>
+                    <h4>{{ get_phrase('Payment Settings'); }}</h4>
                     <ul class="d-flex align-items-center eBreadcrumb-2">
                         <li><a href="#">{{ get_phrase('Home'); }}</a></li>
                         <li><a href="#">{{ get_phrase('Settings'); }}</a></li>
-                        <li><a href="#">{{ get_phrase('Payment settings'); }}</a></li>
+                        <li><a href="#">{{ get_phrase('Payment Settings'); }}</a></li>
                     </ul>
                 </div>
             </div>

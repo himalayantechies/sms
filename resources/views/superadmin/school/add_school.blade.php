@@ -8,11 +8,11 @@
               class="d-flex justify-content-between align-items-center flex-wrap gr-15"
             >
                 <div class="d-flex flex-column">
-                    <h4>{{ get_phrase('Create School') }}</h4>
+                    <h4>{{ get_phrase('Create school') }}</h4>
                     <ul class="d-flex align-items-center eBreadcrumb-2">
                         <li><a href="#">{{ get_phrase('Home') }}</a></li>
                         <li><a href="#">{{ get_phrase('Schools') }}</a></li>
-                        <li><a href="#">{{ get_phrase('Create School') }}</a></li>
+                        <li><a href="#">{{ get_phrase('Create school') }}</a></li>
                     </ul>
                 </div>
             </div>
@@ -52,7 +52,7 @@
 									<input type="tel" class="form-control eForm-control" id="school_phone" name="school_phone" required>
 								</div>
 								<div class="fpb-7">
-					                <label for="school_info" class="eForm-label">{{ get_phrase('School info') }}</label>
+					                <label for="school_info" class="eForm-label">{{ get_phrase('SCHOOL INFO') }}</label>
 					                <textarea class="form-control eForm-control" id="school_info" name = "school_info" rows="4" required></textarea>
 					            </div>
 							</div>

@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center">
-                <h4>{{ get_phrase('Smtp Settings') }}</h4>
+                <h4>{{ strtoupper(get_phrase('Smtp settings')) }}</h4>
             </div>
         </div>
     </div>

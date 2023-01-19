@@ -13,7 +13,7 @@
                     <ul class="d-flex align-items-center eBreadcrumb-2">
                         <li><a href="#">{{ get_phrase('Home') }}</a></li>
                         <li><a href="#">{{ get_phrase('Settings') }}</a></li>
-                        <li><a href="#">{{ get_phrase('Language settings') }}</a></li>
+                        <li><a href="#">{{ get_phrase('Language Settings') }}</a></li>
                     </ul>
                 </div>
             </div>
@@ -38,7 +38,7 @@
                     aria-controls="editphrase"
                     aria-selected="false"
                   >
-                  {{ get_phrase('Edit phrase ') }}
+                  {{ get_phrase('Edit phrase') }}
                     <span></span>
                   </button>
                 </li>
@@ -55,7 +55,7 @@
                     aria-controls="languagelist"
                     aria-selected="false"
                   >
-                  {{ get_phrase('Language list ') }}<p class="badge bg-success ">
+                  {{ get_phrase('Language list') }}<p class="badge bg-success ">
                     {{ count($languages) }}
                 </p>
                     <span></span>

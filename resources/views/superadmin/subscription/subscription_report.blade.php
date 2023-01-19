@@ -95,7 +95,7 @@ use App\Models\School;
 		            <h4 class="title">{{ get_phrase('Subscription Report') }}</h4>
 		            <p class="summary-item">{{ get_phrase('From') }}: <span>{{ date('m/d/Y', $date_from) }}</span></p>
 		            <p class="summary-item">{{ get_phrase('To') }}: <span>{{ date('m/d/Y', $date_to) }}</span></p>
-		            <p class="summary-item">{{ get_phrase('Total amount') }}: <span>{{ currency($amount) }}</span></p>
+		            <p class="summary-item">{{ get_phrase('Total Amount') }}: <span>{{ currency($amount) }}</span></p>
 		          </div>
 		          <div class="att-banner-img order-0 order-md-1">
 		            <img
@@ -116,7 +116,7 @@ use App\Models\School;
 		                    <th>{{ get_phrase('Expire Date') }}</th>
 		                </thead>
 		                <tbody>
-		                	@foreach($subscriptions as $subscription)
+							@foreach($subscriptions as $subscription)
 		                		<?php 
 		                		$package = Package::find($subscription->package_id);
 		                		$school = School::find($subscription->school_id);
@@ -125,7 +125,7 @@ use App\Models\School;
 		                		<tr>
 		                			<td>{{ $loop->index + 1 }}</td>
 		                			<td><strong>{{ $school->title }}</strong></td>
-		                			<td><strong>{{ $package->name }}</strong></td>
+									<td><strong>{{ $package->name }}</strong></td>
 		                			<td>{{ $subscription->paid_amount }}</td>
 		                			<td>
 		                				{{ $subscription->payment_method }}
