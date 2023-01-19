@@ -20,8 +20,8 @@ return new class extends Migration
             $table->double('paid_amount',8,2);
             $table->string('payment_method',255);
             $table->longText('transaction_keys');
-            $table->date('expire_date');
-            $table->date('date_added');
+            $table->integer('expire_date');
+            $table->integer('date_added');
             $table->integer('active');
             $table->integer('status');
             $table->timestamps();
