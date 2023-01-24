@@ -9,7 +9,7 @@ use App\Models\Section;
 			<tr>
 	            <th>#</th>
 	            <th>{{ get_phrase('Image') }}</th>
-	            <th>{{ get_phrase('Student Name') }}</th>
+	            <th>{{ get_phrase('Student name') }}</th>
 	            <th>{{ get_phrase('Section') }}</th>
 	            <th class="text-center">{{ get_phrase('Action') }}</th>
 	        </tr>

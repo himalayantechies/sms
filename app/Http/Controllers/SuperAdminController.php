@@ -135,18 +135,33 @@ class SuperAdminController extends Controller
             'status' => '2',
         ]);
 
+        // echo "<pre>";
+        // // print_r($school->toArray());
+        // $arr = array('id'=>6);
+        // // $school = new stdClass();
+        // $school = (object) $arr;
+        // // $school->id = 6;
+        // print_r($school->id);
+        // // die;
+
         if (isset($school->id) && $school->id != "") {
 
             $data['status'] = '1';
             $data['session_title'] = date("Y");
             $data['school_id'] = $school->id;
-
+            // echo "<pre>";
+            // print_r($data);
+            
             $session = Session::create($data);
+            // die;
+            
 
             School::where('id', $school->id)->update([
                 'running_session' => $session->id,
             ]);
             
+            
+
             if (!empty($data['photo'])) {
 
                 $imageName = time() . '.' . $data['photo']->extension();

@@ -58,7 +58,7 @@
             </div>
 
             <div class="fpb-7">
-                <label for="phone" class="eForm-label">{{ get_phrase('Phone number') }}</label>
+                <label for="phone" class="eForm-label">{{ get_phrase('Phone Number') }}</label>
                 <input type="text" class="form-control eForm-control" value="{{ $info->phone }}" id="phone" name = "phone" placeholder="Provide student number" required>
             </div>
             <div class="fpb-7">

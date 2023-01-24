@@ -11,7 +11,7 @@ use App\Models\Grade;
   class="att-report-banner d-flex justify-content-center justify-content-md-between align-items-center flex-wrap"
 >
   <div class="att-report-summary order-1">
-    <h4 class="title">{{ get_phrase('Manage marks') }}</h4>
+    <h4 class="title">{{ get_phrase('Manage Marks') }}</h4>
     <p class="summary-item">{{ get_phrase('Class') }} : <span>{{ $page_data['class_name'] }}</span></p>
     <p class="summary-item">{{ get_phrase('Section') }} : <span>{{ $page_data['section_name'] }}</span></p>
     <p class="summary-item">{{ get_phrase('Subject') }} : <span>{{ $page_data['subject_name'] }}</span>
@@ -53,7 +53,7 @@ use App\Models\Grade;
             <tr>
                 <th scope="col">{{ get_phrase('Student name') }}</td>
                 <th scope="col">{{ get_phrase('Mark') }}</td>
-                <th scope="col">{{ get_phrase('Grade point') }}</td>
+                <th scope="col">{{ get_phrase('Grade Point') }}</td>
                 <th scope="col">{{ get_phrase('Comment') }}</td>
                 <th scope="col">{{ get_phrase('Action') }}</td>
             </tr>   

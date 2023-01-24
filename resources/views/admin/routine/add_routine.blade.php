@@ -36,7 +36,7 @@
         </div>
 
         <div class="fpb-7">
-            <label for="class_room_id" class="eForm-label">{{ get_phrase('Class room') }}</label>
+            <label for="class_room_id" class="eForm-label">{{ get_phrase('Class Room') }}</label>
             <select name="class_room_id" id = "class_room_id_on_routine_creation" class="form-select eForm-select eChoice-multiple-with-remove"  required>
                 <option value="">{{ get_phrase('Select a class room') }}</option>
                 <?php foreach($class_rooms as $class_room): ?>

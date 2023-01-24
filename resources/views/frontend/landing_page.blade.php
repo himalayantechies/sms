@@ -124,7 +124,7 @@
                                             <input id="school_phone" name="school_phone" type="tel" class="form-control">
                                         </div>
                                         <div class="single-form">
-                                            <label for="school_info">{{ get_phrase('School info') }}</label>
+                                            <label for="school_info">{{ get_phrase('School information') }}</label>
                                            <textarea name="school_info" id="school_info" class="form-control"></textarea>
                                         </div>
                                     </div>

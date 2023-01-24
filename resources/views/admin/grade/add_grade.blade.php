@@ -8,7 +8,7 @@
             </div>
 
             <div class="fpb-7">
-                <label for="grade_point" class="eForm-label">{{ get_phrase('Grade point') }}</label>
+                <label for="grade_point" class="eForm-label">{{ get_phrase('Grade Point') }}</label>
                 <input type="number" class="form-control eForm-control" id="grade_point" name = "grade_point" step=".01" min="0" placeholder="Provide grade point" aria-label="Provide grade point" required>
             </div>
 
@@ -18,7 +18,7 @@
             </div>
 
             <div class="fpb-7">
-                <label for="mark_upto" class="eForm-label">{{ get_phrase('Mark upto') }}</label>
+                <label for="mark_upto" class="eForm-label">{{ get_phrase('Mark Upto') }}</label>
                 <input type="number" class="form-control eForm-control" id="mark_upto" name = "mark_upto" min="0" placeholder="Mark upto" aria-label="Mark upto" required>
             </div>
 
