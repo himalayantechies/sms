@@ -223,10 +223,10 @@
             <li><a class="{{ (request()->is('superadmin/class_list*')) ? 'active' : '' }}" href="{{ route('superadmin.class_list') }}"><span>
                         {{ get_phrase('Class List') }}
                     </span></a></li>
-            {{-- <li><a class="{{ (request()->is('superadmin/subject*')) ? 'active' : '' }}" href="{{ route('superadmin.subject_list') }}"><span>
+            <li><a class="{{ (request()->is('superadmin/subject*')) ? 'active' : '' }}" href="{{ route('superadmin.subject_list') }}"><span>
                         {{ get_phrase('Subjects') }}
                     </span></a></li>
-            <li><a class="{{ (request()->is('superadmin/gradebook*')) ? 'active' : '' }}" href="{{ route('superadmin.gradebook') }}"><span>
+                    {{-- <li><a class="{{ (request()->is('superadmin/gradebook*')) ? 'active' : '' }}" href="{{ route('superadmin.gradebook') }}"><span>
                         {{ get_phrase('Gradebooks') }}
                     </span></a></li>
             <li><a class="{{ (request()->is('superadmin/department*')) ? 'active' : '' }}" href="{{ route('superadmin.department_list') }}"><span>
