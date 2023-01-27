@@ -17,4 +17,6 @@ class Book extends Model
     protected $fillable = [
         'name', 'author', 'copies', 'school_id', 'session_id', 'timestamp'
     ];
+
+    protected $table ='books';
 }

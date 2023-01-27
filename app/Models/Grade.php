@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Grade extends Model
 {
     use HasFactory;
-
+    protected $table ='grades';
     /**
      * The attributes that are mass assignable.
      *

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Routine extends Model
 {
     use HasFactory;
-
+    protected $table ='routines';
     /**
      * The attributes that are mass assignable.
      *

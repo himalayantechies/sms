@@ -8,7 +8,7 @@
               class="d-flex justify-content-between align-items-center flex-wrap gr-15"
             >
                 <div class="d-flex flex-column">
-                    <h4>{{ get_phrase('System Settings') }}</h4>
+                    <h4>{{ strtoupper(get_phrase('System Settings')) }}</h4>
                     <ul class="d-flex align-items-center eBreadcrumb-2">
                         <li><a href="#">{{ get_phrase('Home') }}</a></li>
                         <li><a href="#">{{ get_phrase('Settings') }}</a></li>
@@ -27,7 +27,7 @@
                 <div class="row">
                     <div class="col-md-11 pb-3">
                         <div class="eForm-layouts">
-                            <p class="column-title">{{ get_phrase('SYSTEM SETTINGS') }}</p>
+                            <p class="column-title">{{ strtoupper(get_phrase('System Settings')) }}</p>
                             <form method="POST" enctype="multipart/form-data" class="d-block ajaxForm" action="{{ route('superadmin.system.update') }}">
                                 @csrf 
                                 <div class="fpb-7">

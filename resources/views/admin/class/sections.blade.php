@@ -1,5 +1,5 @@
 <div class="eoff-form">
-    <form method="POST" enctype="multipart/form-data" class="d-block ajaxForm" action="{{ route('admin.section.update', ['id' => $class_id]) }}">
+    <form method="POST" enctype="multipart/form-data" class="d-block ajaxForm" action="{{ route('superadmin.section.update', ['id' => $class_id]) }}">
         @csrf 
         <?php $count = 0; ?>
         @foreach($sections as $section)

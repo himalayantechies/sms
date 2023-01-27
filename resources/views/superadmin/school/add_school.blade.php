@@ -8,11 +8,11 @@
               class="d-flex justify-content-between align-items-center flex-wrap gr-15"
             >
                 <div class="d-flex flex-column">
-                    <h4>{{ get_phrase('Create School') }}</h4>
+                    <h4>{{ get_phrase('Create school') }}</h4>
                     <ul class="d-flex align-items-center eBreadcrumb-2">
                         <li><a href="#">{{ get_phrase('Home') }}</a></li>
                         <li><a href="#">{{ get_phrase('Schools') }}</a></li>
-                        <li><a href="#">{{ get_phrase('Create School') }}</a></li>
+                        <li><a href="#">{{ get_phrase('Create school') }}</a></li>
                     </ul>
                 </div>
             </div>
@@ -52,9 +52,22 @@
 									<input type="tel" class="form-control eForm-control" id="school_phone" name="school_phone" required>
 								</div>
 								<div class="fpb-7">
-					                <label for="school_info" class="eForm-label">{{ get_phrase('School info') }}</label>
+									<label for="year_established" class="eForm-label">Est. Year</label>
+									<input type="text" class="form-control eForm-control" id="year_established" name="year_established" >
+								</div>
+								<div class="fpb-7">
+									<label for="district_code" class="eForm-label">District Code</label>
+									<input type="text" class="form-control eForm-control" id="district_code" name="district_code" >
+								</div>
+								<div class="fpb-7">
+									<label for="vcd_code" class="eForm-label">VCD Code</label>
+									<input type="text" class="form-control eForm-control" id="vcd_code" name="vcd_code" >
+								</div>
+								<div class="fpb-7">
+					                <label for="school_info" class="eForm-label">{{ get_phrase('SCHOOL INFO') }}</label>
 					                <textarea class="form-control eForm-control" id="school_info" name = "school_info" rows="4" required></textarea>
 					            </div>
+								
 							</div>
 						</div>
 						<div class="col-md-6 pb-3">

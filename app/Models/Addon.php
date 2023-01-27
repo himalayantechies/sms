@@ -18,4 +18,6 @@ class Addon extends Model
     protected $fillable = [
         'title', 'parent_id', 'features', 'version', 'unique_identifier', 'status'
     ];
+
+    protected $table='addons';
 }

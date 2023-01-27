@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ClassRoom extends Model
 {
     use HasFactory;
-
+    protected $table ='class_rooms';
     /**
      * The attributes that are mass assignable.
      *

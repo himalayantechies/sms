@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class TeacherPermission extends Model
 {
     use HasFactory;
+    protected $table ='teacher_permissions';
     public $timestamps = false;
 
     protected $fillable = ['id', 'class_id', 'section_id', 'school_id', 'teacher_id', 'marks', 'attendance', 'updated_at'];

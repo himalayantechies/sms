@@ -82,7 +82,7 @@
                                         </div>
 
                                         <div class="col-xl-1 col-lg-1 col-md-2 col-sm-12 mb-3 mb-lg-0 pt-3">
-                                            <label class="eForm-label">{{ get_phrase('') }}</label>
+                                            <label class="eForm-label"></label>
                                             <button type="button" class="btn btn-icon btn-success" onclick="appendRow()"> <i class="bi bi-plus"></i> </button>
                                         </div>
                                     </div>
@@ -145,7 +145,7 @@
                                 </div>
 
                                 <div class="fpb-7 pt-2">
-                                    <button type="submit" class="btn-form">{{ get_phrase('Add parent') }}</button>
+                                    <button type="submit" class="btn-form">{{ get_phrase('Add Parent') }}</button>
                                 </div>
                             </form>
                         </div>

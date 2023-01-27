@@ -114,7 +114,7 @@ $index = 0;
                             <table class="table eTable" id="gradebook_report">
                                 <thead>
                                     <th>#</th>
-                                    <th>{{ get_phrase('Student Name') }}</th>
+                                    <th>{{ get_phrase('Student name') }}</th>
                                     @foreach($subjects as $subject)
                                        <th>{{ $subject->name }}</th>
                                     @endforeach

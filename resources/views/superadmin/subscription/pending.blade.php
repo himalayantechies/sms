@@ -89,7 +89,7 @@
 		            <h4 class="title">{{ get_phrase('Subscription Report') }}</h4>
 		            <p class="summary-item">{{ get_phrase('From') }}: <span>{{ date('m/d/Y', $date_from) }}</span></p>
 		            <p class="summary-item">{{ get_phrase('To') }}: <span>{{ date('m/d/Y', $date_to) }}</span></p>
-		            <p class="summary-item">{{ get_phrase('Total amount') }}: <span>{{ currency($amount) }}</span></p>
+		            <p class="summary-item">{{ get_phrase('Total Amount') }}: <span>{{ currency($amount) }}</span></p>
 		          </div>
 		          <div class="att-banner-img order-0 order-md-1">
 		            <img

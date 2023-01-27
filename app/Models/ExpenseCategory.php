@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ExpenseCategory extends Model
 {
     use HasFactory;
-
+    protected $table ='expense_categories';
     /**
      * The attributes that are mass assignable.
      *

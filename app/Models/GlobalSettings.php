@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class GlobalSettings extends Model
 {
     use HasFactory;
+    protected $table ='global_settings';
     public $timestamps = false;
 
     /**

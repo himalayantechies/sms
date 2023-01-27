@@ -59,6 +59,7 @@ if ( ! function_exists('get_phrase'))
 
         $active_language = get_settings('language');
         $query = DB::table('language')->where('name', $active_language)->where('phrase', $phrase);
+        
         if($query->get()->count() == 0){
             $translated = $phrase;
 
@@ -68,12 +69,22 @@ if ( ! function_exists('get_phrase'))
                 foreach($all_language as $language){
 
                     if(DB::table('language')->where('name', $language->name)->where('phrase', $phrase)->get()->count() == 0){
+                        echo $phrase . ' Not found<br/>';
+                        print_r($phrase);
+                        echo "stopped in helper file";
+                        die;
                         DB::table('language')->insert(array('name' => $language->name, 'phrase' => $phrase, 'translated' => $translated));
+
                     }
                 }
             }else{
+                // print_r($phrase);
+                // die;
                 DB::table('language')->insert(array('name' => 'english', 'phrase' => $phrase, 'translated' => $translated));
             }
+            // print_r($phrase);
+            // die;
+
             return $translated;
         }
         return $query->value('translated');

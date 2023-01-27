@@ -18,7 +18,7 @@
             </div>
 
             <div class="fpb-7 pt-2">
-                <button class="btn-form" type="submit">{{ get_phrase('Create subject') }}</button>
+                <button class="btn-form" type="submit">{{ get_phrase('Create Subject') }}</button>
             </div>
         </div>
     </form>

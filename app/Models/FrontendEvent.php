@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class FrontendEvent extends Model
 {
     use HasFactory;
-
+    protected $table ='frontend_events';
     /**
      * The attributes that are mass assignable.
      *

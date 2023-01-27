@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class BookIssue extends Model
 {
     use HasFactory;
+    protected $table ='book_issues';
 
     /**
      * The attributes that are mass assignable.
@@ -17,4 +18,6 @@ class BookIssue extends Model
     protected $fillable = [
         'book_id', 'class_id', 'student_id', 'issue_date', 'status', 'school_id', 'session_id', 'timestamp'
     ];
+
+
 }
