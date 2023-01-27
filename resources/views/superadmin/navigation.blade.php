@@ -189,7 +189,55 @@
 					<li><a class="{{ (request()->is('superadmin/settings/smtp*')) ? 'active' : '' }}" href="{{ route('superadmin.smtp_settings') }}"><span>{{ get_phrase('Smtp settings') }}</span></a></li>
 					<li><a class="{{ (request()->is('superadmin/settings/about*')) ? 'active' : '' }}" href="{{ route('superadmin.about') }}"><span>{{ get_phrase('About') }}</span></a></li>
 				</ul>
+
+
 			</li>
+      <li class="nav-links-li {{ request()->is('admin/attendance*') || request()->is('admin/class_list*') || request()->is('admin/routine*') || request()->is('admin/subject*') || request()->is('admin/syllabus*') || request()->is('admin/gradebook*') || request()->is('admin/class_room*') || request()->is('admin/department*') ? 'showMenu':'' }}">
+        <div class="iocn-link">
+            <a href="#">
+                <div class="sidebar_icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24" width="48" height="48"><path d="M7.5,4.5c.151-5.935,8.85-5.934,9,0-.151,5.935-8.85,5.934-9,0ZM24,15.5v1.793c0,2.659-1.899,4.935-4.516,5.411l-5.763,1.139c-1.142,.207-2.285,.21-3.421,.004l-5.807-1.147c-2.595-.472-4.494-2.748-4.494-5.407v-1.793c-.083-3.331,3.222-6.087,6.483-5.411l3.36,.702c.824,.15,1.564,.527,2.16,1.062,.601-.537,1.351-.916,2.191-1.069l3.282-.688c1.653-.301,3.293,.134,4.548,1.181,1.256,1.048,1.976,2.587,1.976,4.223Zm-13.5-.289c0-.726-.518-1.346-1.231-1.476l-3.36-.702c-.707-.126-1.439,.075-2.01,.548-.571,.477-.898,1.176-.898,1.919v1.793c0,1.209,.863,2.243,2.053,2.46l5.447,1.076v-5.618Zm10.5,.289c0-.744-.327-1.443-.897-1.919-.57-.476-1.318-.674-2.05-.54l-3.282,.687c-.753,.137-1.271,.758-1.271,1.483v5.618l5.425-1.072c1.212-.221,2.075-1.255,2.075-2.464v-1.793Z"/></svg>
+                </div>
+                <span class="link_name">
+                    {{ get_phrase('Academic') }}
+                </span>
+            </a>
+            <span class="arrow">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="4.743"
+                height="7.773"
+                viewBox="0 0 4.743 7.773"
+              >
+                <path
+                  id="navigate_before_FILL0_wght600_GRAD0_opsz24"
+                  d="M1.466.247,4.5,3.277a.793.793,0,0,1,.189.288.92.92,0,0,1,0,.643A.793.793,0,0,1,4.5,4.5l-3.03,3.03a.828.828,0,0,1-.609.247.828.828,0,0,1-.609-.247.875.875,0,0,1,0-1.219L2.668,3.886.247,1.466A.828.828,0,0,1,0,.856.828.828,0,0,1,.247.247.828.828,0,0,1,.856,0,.828.828,0,0,1,1.466.247Z"
+                  fill="#fff"
+                  opacity="1"
+                />
+              </svg>
+            </span>
+        </div>
+        <ul class="sub-menu">
+        
+            <li><a class="{{ (request()->is('superadmin/class_list*')) ? 'active' : '' }}" href="{{ route('superadmin.class_list') }}"><span>
+                        {{ get_phrase('Class List') }}
+                    </span></a></li>
+            {{-- <li><a class="{{ (request()->is('superadmin/subject*')) ? 'active' : '' }}" href="{{ route('superadmin.subject_list') }}"><span>
+                        {{ get_phrase('Subjects') }}
+                    </span></a></li>
+            <li><a class="{{ (request()->is('superadmin/gradebook*')) ? 'active' : '' }}" href="{{ route('superadmin.gradebook') }}"><span>
+                        {{ get_phrase('Gradebooks') }}
+                    </span></a></li>
+            <li><a class="{{ (request()->is('superadmin/department*')) ? 'active' : '' }}" href="{{ route('superadmin.department_list') }}"><span>
+                        {{ get_phrase('Department') }}
+                    </span></a></li> --}}
+        </ul>
+    </li>
+
+
+
+
 		</ul>
 	</div>
 

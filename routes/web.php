@@ -88,6 +88,16 @@ Route::controller(SuperAdminController::class)->middleware('auth','superAdmin')-
     Route::post('superadmin/school/create', 'createSchool')->name('superadmin.school.create');
     Route::get('superadmin/school/status_update/{id}/{status}', 'schoolStatusUpdate')->name('superadmin.school.status_update');
 
+    //class list routes
+    Route::get('superadmin/class_list', 'classList')->name('superadmin.class_list');
+    Route::get('superadmin/class_create', 'createClass')->name('superadmin.class.open_modal');
+    Route::post('superadmin/class', 'classCreate')->name('superadmin.create.class');
+    Route::get('superadmin/class/{id}', 'editClass')->name('superadmin.edit.class');
+    Route::post('superadmin/class/{id}', 'classUpdate')->name('superadmin.class.update');
+    Route::get('superadmin/class/section/{id}', 'editSection')->name('superadmin.edit.section');
+    Route::post('superadmin/class/sections/{id}', 'sectionUpdate')->name('superadmin.section.update');
+    // Route::get('superadmin/class/delete/{id}', 'classDelete')->name('superadmin.class.delete');
+
 
     //Package routes
     Route::get('superadmin/package', 'superadminPackage')->name('superadmin.package');

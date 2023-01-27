@@ -2297,7 +2297,8 @@ class AdminController extends Controller
                 })->paginate(10);
 
         } else {
-            $class_lists = Classes::where('school_id', auth()->user()->school_id)->paginate(10);
+            // $class_lists = Classes::where('school_id', auth()->user()->school_id)->paginate(10);
+            $class_lists = Classes::whereNull('school_id')->paginate(10);
         }
 
         return view('admin.class.class_list', compact('class_lists', 'search'));

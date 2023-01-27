@@ -131,36 +131,33 @@ class SuperAdminController extends Controller
             'email' => $data['school_email'],
             'phone' => $data['school_phone'],
             'address' => $data['school_address'],
+            'year_established' => $data['year_established'],
+            'district_code' => $data['district_code'],
+            'vcd_code' => $data['vcd_code'],
             'school_info' => $data['school_info'],
             'status' => '2',
         ]);
 
         // echo "<pre>";
-        // // print_r($school->toArray());
+        // print_r($school->toArray());
         // $arr = array('id'=>6);
-        // // $school = new stdClass();
+        // $school = new stdClass();
         // $school = (object) $arr;
-        // // $school->id = 6;
+        // $school->id = 6;
         // print_r($school->id);
-        // // die;
+        // die;
 
         if (isset($school->id) && $school->id != "") {
 
             $data['status'] = '1';
             $data['session_title'] = date("Y");
             $data['school_id'] = $school->id;
-            // echo "<pre>";
-            // print_r($data);
             
             $session = Session::create($data);
-            // die;
-            
 
             School::where('id', $school->id)->update([
                 'running_session' => $session->id,
             ]);
-            
-            
 
             if (!empty($data['photo'])) {
 
@@ -225,6 +222,125 @@ class SuperAdminController extends Controller
 
         return view('superadmin.package.package', compact('packages', 'search'));
     }
+
+
+        /**
+     * Show the class list.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function classList(Request $request)
+    {
+        $search = $request['search'] ?? "";
+
+        if($search != "") {
+
+            $class_lists = Classes::where(function ($query) use($search) {
+                    $query->where('name', 'LIKE', "%{$search}%")
+                        ->where('school_id', auth()->user()->school_id);
+                })->paginate(10);
+
+        } else {
+            // $class_lists = Classes::where('school_id', auth()->user()->school_id)->paginate(10);
+            $class_lists = Classes::whereNull('school_id')->paginate(10);
+        }
+
+        return view('superadmin.class.class_list', compact('class_lists', 'search'));
+    }
+
+    public function createClass()
+    {
+        return view('superadmin.class.add_class');
+    }
+
+    public function classCreate(Request $request)
+    {
+        $data = $request->all();
+
+        $duplicate_class_check = Classes::get()->where('name', $data['name']);
+
+        if(count($duplicate_class_check) == 0) {
+            $id = Classes::create([
+                'name' => $data['name']
+            ])->id;
+
+            Section::create([
+                'name' => 'A',
+                'class_id' => $id,
+            ]);
+
+            return redirect()->back()->with('message','You have successfully create a new class.');
+
+        } else {
+            return back()
+            ->with('error','Sorry this class already exists');
+        }
+    }
+
+    public function editClass($id)
+    {
+        $class = Classes::find($id);
+        return view('superadmin.class.edit_class', ['class' => $class]);
+    }
+
+    public function classUpdate(Request $request, $id)
+    {
+        $data = $request->all();
+
+        $duplicate_class_check = Classes::get()->where('name', $data['name']);
+
+        if(count($duplicate_class_check) == 0) {
+            Classes::where('id', $id)->update([
+                'name' => $data['name'],
+            ]);
+            
+            return redirect()->back()->with('message','You have successfully update class.');
+        } else {
+            return back()
+            ->with('error','Sorry this class already exists');
+        }
+    }
+
+    // public function editSection($id)
+    // {
+    //     $sections = Section::get()->where('class_id', $id);
+    //     return view('admin.class.sections', ['class_id' => $id, 'sections'=> $sections]);
+
+    //     // $sections = Section::get()->where('class_id', $id);
+    //     // return view('admin.class.sections', ['class_id' => $id, 'sections' => $sections]);
+    // }
+
+    // public function sectionUpdate(Request $request, $id)
+    // {
+    //     $data = $request->all();
+
+    //     $section_id = $data['section_id'];
+    //     $section_name = $data['name'];
+
+    //     foreach($section_id as $key => $value){
+    //         if($value == 0){
+    //             Section::create([
+    //                 'name' => $section_name[$key],
+    //                 'class_id' => $id,
+    //             ]);
+    //         }
+    //         if($value != 0 && is_numeric($value)){
+    //             Section::where(['id' => $value, 'class_id' => $id])->update([
+    //                 'name' => $section_name[$key],
+    //             ]);
+    //         }
+
+    //         $section_value = null;
+    //         if (strpos($value, 'delete') == true) {
+    //             $section_value = str_replace('delete', '', $value);
+
+    //             $section = Section::find(['id' => $section_value, 'class_id' => $id]);
+    //             $section->map->delete();
+    //         }
+    //     }
+
+    //     return redirect()->back()->with('message','You have successfully update sections.');
+    // }
 
     public function createPackage()
     {
