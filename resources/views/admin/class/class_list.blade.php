@@ -17,9 +17,9 @@
               <li><a href="#">{{ get_phrase('Classes') }}</a></li>
             </ul>
           </div>
-          <div class="export-btn-area">
+          {{-- <div class="export-btn-area">
             <a href="javascript:;" class="export_btn" onclick="rightModal('{{ route('admin.class.open_modal') }}', '{{ get_phrase('Create Class') }}')">{{ get_phrase('Add class') }}</a>
-          </div>
+          </div> --}}
         </div>
       </div>
     </div>
@@ -116,9 +116,12 @@
                                 <td>{{ $class_list->name }}</td>
                                 <td>
                                     <ul>
+                                        {{-- <?php $sections =DB::table('sections')->where('class_id', $class_list['id'])->orWhere('school_id', auth()->user()->school_id)->get(); ?> --}}
                                         <?php $sections = Section::get()->where('class_id', $class_list['id']); ?>
                                         @foreach($sections as $section)
-                                            <li>{{ $section->name }}</li>
+                                            @if ($section->school_id == auth()->user()->school_id or $section->school_id == null)
+                                              <li>{{ $section->name }}</li>  
+                                            @endif
                                         @endforeach
                                     </ul>
                                 </td>
@@ -138,12 +141,12 @@
                                           <li>
                                             <a class="dropdown-item" href="javascript:;" onclick="rightModal('{{ route('admin.edit.section', ['id' => $class_list->id]) }}', '{{ get_phrase('Edit Section') }}')">{{ get_phrase('Edit Section') }}</a>
                                           </li>
-                                          <li>
+                                          {{-- <li>
                                             <a class="dropdown-item" href="javascript:;" onclick="rightModal('{{ route('admin.edit.class', ['id' => $class_list->id]) }}', '{{ get_phrase('Edit Class') }}')">{{ get_phrase('Edit Class') }}</a>
                                           </li>
                                           <li>
                                             <a class="dropdown-item" href="javascript:;" onclick="confirmModal('{{ route('admin.class.delete', ['id' => $class_list->id]) }}', 'undefined');">{{ get_phrase('Delete') }}</a>
-                                          </li>
+                                          </li> --}}
                                         </ul>
                                     </div>
                                 </td>

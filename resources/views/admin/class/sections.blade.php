@@ -1,24 +1,22 @@
 <div class="eoff-form">
-    <form method="POST" enctype="multipart/form-data" class="d-block ajaxForm" action="{{ route('superadmin.section.update', ['id' => $class_id]) }}">
+    <form method="POST" enctype="multipart/form-data" class="d-block ajaxForm" action="{{ route('admin.section.update', ['id' => $class_id]) }}">
         @csrf 
         <?php $count = 0; ?>
         @foreach($sections as $section)
             <?php $count++; ?> 
             @if($count == 1)
                 <div class="input-group me-2 mb-2">
-                        <input type="hidden" class="form-control eForm-control" id="section{{ $section->id }}" name = "section_id[]" value="{{ $section->id }}">
-                        <input type="text" class="form-control eForm-control" id="name" name = "name[]" value="{{ $section->name }}" required>
-
-                        <button class="btn btn-icon btn-success" type="button" onclick="appendSection()"><i class="bi bi-plus"></i></button>
+                    <input type="hidden" class="form-control eForm-control" id="section{{ $section->id }}" name = "section_id[]" value="{{ $section->id }}">
+                    <input type="text" class="form-control eForm-control" id="name" name = "name[]" value="{{ $section->name }}" required readonly>
+                    <button class="btn btn-icon btn-success" type="button" onclick="appendSection()"><i class="bi bi-plus"></i></button>
                 </div>
             @endif
 
             @if($count != 1)
                 <div class="input-group me-2 mb-2" id="sectionDatabase{{ $section->id }}">
-                        <input type="hidden" class="form-control eForm-control" id="section{{ $section->id }}" name = "section_id[]" value="{{ $section->id }}">
-                        <input type="text" class="form-control eForm-control" name = "name[]" value="{{ $section->name }}" required>
-
-                        <button class="btn btn-icon btn-danger" type="button" onclick="removeSectionDatabase('{{ $section->id }}')"><i class="bi bi-dash"></i></button>
+                    <input type="hidden" class="form-control eForm-control" id="section{{ $section->id }}" name = "section_id[]" value="{{ $section->id }}">
+                    <input type="text" class="form-control eForm-control" name = "name[]" value="{{ $section->name }}" required>
+                    <button class="btn btn-icon btn-danger" type="button" onclick="removeSectionDatabase('{{ $section->id }}')"><i class="bi bi-dash"></i></button>
                 </div>
             @endif
 
