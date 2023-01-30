@@ -300,6 +300,77 @@ class SuperAdminController extends Controller
             ->with('error','Sorry this class already exists');
         }
     }
+/**
+     * Show the subject list.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function subjectList(Request $request)
+    {
+        $classes = Classes::where('school_id', null)->get();
+
+        if(count($request->all()) > 0 && $request->class_id != ''){
+
+            $data = $request->all();
+            $class_id = $data['class_id'] ?? '';
+            $subjects = Subject::where('class_id', $class_id)->paginate(10);
+
+        } else {
+            $subjects = Subject::where('school_id', null)->paginate(10);
+
+            $class_id = '';
+        }
+        //dd($subjects);
+        return view('superadmin.subject.subject_list', compact('subjects', 'classes', 'class_id'));
+    }
+
+    public function createSubject()
+    {
+        $classes = Classes::where('school_id', null)->get();
+        return view('superadmin.subject.add_subject', ['classes' => $classes]);
+    }
+
+    public function subjectCreate(Request $request)
+    {
+        $data = $request->all();
+        //$active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
+        
+        Subject::create([
+            'name' => $data['name'],
+            'class_id' => $data['class_id'],
+            'school_id' =>null,
+            'session_id' => null,
+        ]);
+        
+        return redirect('/superadmin/subject?class_id='.$data['class_id'])->with('message','You have successfully create subject.');
+    }
+
+    public function editSubject($id)
+    {
+        $subject = Subject::find($id);
+        $classes = Classes::where('school_id', null)->get();
+        return view('superadmin.subject.edit_subject', ['subject' => $subject, 'classes' => $classes]);
+    }
+
+    public function subjectUpdate(Request $request, $id)
+    {
+        $data = $request->all();
+        Subject::where('id', $id)->update([
+            'name' => $data['name'],
+            'class_id' => $data['class_id'],
+            'school_id' => null,
+        ]);
+        
+        return redirect('/superadmin/subject?class_id='.$data['class_id'])->with('message','You have successfully update subject.');
+    }
+
+    public function subjectDelete($id)
+    {
+        $subject = Subject::find($id);
+        $subject->delete();
+        //$subjects = Subject::get()->where('school_id', null);
+        return redirect()->back()->with('message','You have successfully delete subject.');
+    }
 
     // public function editSection($id)
     // {

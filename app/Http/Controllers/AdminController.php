@@ -1534,11 +1534,6 @@ class AdminController extends Controller
         $page_data['attendance_date'] = $first_date;
         $no_of_users = 0;
 
-
-
-
-       
-
             $no_of_users = DailyAttendances::whereBetween('timestamp', [$first_date, $last_date])->where(['school_id' => auth()->user()->school_id,  'session_id' => $active_session])->distinct()->count('student_id');
             $attendance_of_students = DailyAttendances::whereBetween('timestamp', [$first_date, $last_date])->where(['school_id' => auth()->user()->school_id,  'session_id' => $active_session])->get()->toArray();
        

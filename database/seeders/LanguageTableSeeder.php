@@ -2800,1902 +2800,1902 @@ class LanguageTableSeeder extends Seeder
             ),
             397 => 
             array (
-                'id' => 398,
-                'name' => 'english',
-                'phrase' => 'Student name',
-                'translated' => 'Student name',
-            ),
-            398 => 
-            array (
                 'id' => 399,
                 'name' => 'english',
                 'phrase' => 'Mark',
                 'translated' => 'Mark',
             ),
-            399 => 
+            398 => 
             array (
                 'id' => 400,
                 'name' => 'english',
                 'phrase' => 'Comment',
                 'translated' => 'Comment',
             ),
-            400 => 
+            399 => 
             array (
                 'id' => 401,
                 'name' => 'english',
                 'phrase' => 'Value has been updated successfully',
                 'translated' => 'Value has been updated successfully',
             ),
-            401 => 
+            400 => 
             array (
                 'id' => 402,
                 'name' => 'english',
                 'phrase' => 'Required mark field',
                 'translated' => 'Required mark field',
             ),
-            402 => 
+            401 => 
             array (
                 'id' => 403,
                 'name' => 'english',
                 'phrase' => 'Image',
                 'translated' => 'Image',
             ),
-            403 => 
+            402 => 
             array (
                 'id' => 404,
                 'name' => 'english',
                 'phrase' => 'Enroll to',
                 'translated' => 'Enroll to',
             ),
-            404 => 
+            403 => 
             array (
                 'id' => 405,
                 'name' => 'english',
                 'phrase' => 'Select a section',
                 'translated' => 'Select a section',
             ),
-            405 => 
+            404 => 
             array (
                 'id' => 406,
                 'name' => 'english',
                 'phrase' => 'Attendance Report Of',
                 'translated' => 'Attendance Report Of',
             ),
-            406 => 
+            405 => 
             array (
                 'id' => 407,
                 'name' => 'english',
                 'phrase' => 'Last Update at',
                 'translated' => 'Last Update at',
             ),
-            407 => 
+            406 => 
             array (
                 'id' => 408,
                 'name' => 'english',
                 'phrase' => 'Time',
                 'translated' => 'Time',
             ),
-            408 => 
+            407 => 
             array (
                 'id' => 409,
                 'name' => 'english',
                 'phrase' => 'Please select the required fields',
                 'translated' => 'Please select the required fields',
             ),
-            409 => 
+            408 => 
             array (
                 'id' => 410,
                 'name' => 'english',
                 'phrase' => 'Saturday',
                 'translated' => 'Saturday',
             ),
-            410 => 
+            409 => 
             array (
                 'id' => 411,
                 'name' => 'english',
                 'phrase' => 'Sunday',
                 'translated' => 'Sunday',
             ),
-            411 => 
+            410 => 
             array (
                 'id' => 412,
                 'name' => 'english',
                 'phrase' => 'Monday',
                 'translated' => 'Monday',
             ),
-            412 => 
+            411 => 
             array (
                 'id' => 413,
                 'name' => 'english',
                 'phrase' => 'Tuesday',
                 'translated' => 'Tuesday',
             ),
-            413 => 
+            412 => 
             array (
                 'id' => 414,
                 'name' => 'english',
                 'phrase' => 'Wednesday',
                 'translated' => 'Wednesday',
             ),
-            414 => 
+            413 => 
             array (
                 'id' => 415,
                 'name' => 'english',
                 'phrase' => 'Update subject',
                 'translated' => 'Update subject',
             ),
-            415 => 
+            414 => 
             array (
                 'id' => 416,
                 'name' => 'english',
                 'phrase' => 'Select subject',
                 'translated' => 'Select subject',
             ),
-            416 => 
+            415 => 
             array (
                 'id' => 417,
                 'name' => 'english',
                 'phrase' => 'Assign a teacher',
                 'translated' => 'Assign a teacher',
             ),
-            417 => 
+            416 => 
             array (
                 'id' => 418,
                 'name' => 'english',
                 'phrase' => 'Select a class room',
                 'translated' => 'Select a class room',
             ),
-            418 => 
+            417 => 
             array (
                 'id' => 419,
                 'name' => 'english',
                 'phrase' => 'Day',
                 'translated' => 'Day',
             ),
-            419 => 
+            418 => 
             array (
                 'id' => 420,
                 'name' => 'english',
                 'phrase' => 'Select a day',
                 'translated' => 'Select a day',
             ),
-            420 => 
+            419 => 
             array (
                 'id' => 421,
                 'name' => 'english',
                 'phrase' => 'Thursday',
                 'translated' => 'Thursday',
             ),
-            421 => 
+            420 => 
             array (
                 'id' => 422,
                 'name' => 'english',
                 'phrase' => 'Friday',
                 'translated' => 'Friday',
             ),
-            422 => 
+            421 => 
             array (
                 'id' => 423,
                 'name' => 'english',
                 'phrase' => 'Starting hour',
                 'translated' => 'Starting hour',
             ),
-            423 => 
+            422 => 
             array (
                 'id' => 424,
                 'name' => 'english',
                 'phrase' => 'Starting minute',
                 'translated' => 'Starting minute',
             ),
-            424 => 
+            423 => 
             array (
                 'id' => 425,
                 'name' => 'english',
                 'phrase' => 'Ending hour',
                 'translated' => 'Ending hour',
             ),
-            425 => 
+            424 => 
             array (
                 'id' => 426,
                 'name' => 'english',
                 'phrase' => 'Ending minute',
                 'translated' => 'Ending minute',
             ),
-            426 => 
+            425 => 
             array (
                 'id' => 427,
                 'name' => 'english',
                 'phrase' => 'Add routine',
                 'translated' => 'Add routine',
             ),
-            427 => 
+            426 => 
             array (
                 'id' => 428,
                 'name' => 'english',
                 'phrase' => 'Edit class routine',
                 'translated' => 'Edit class routine',
             ),
-            428 => 
+            427 => 
             array (
                 'id' => 429,
                 'name' => 'english',
                 'phrase' => 'Tittle',
                 'translated' => 'Tittle',
             ),
-            429 => 
+            428 => 
             array (
                 'id' => 430,
                 'name' => 'english',
                 'phrase' => 'Upload syllabus',
                 'translated' => 'Upload syllabus',
             ),
-            430 => 
+            429 => 
             array (
                 'id' => 431,
                 'name' => 'english',
                 'phrase' => 'Select student',
                 'translated' => 'Select student',
             ),
-            431 => 
+            430 => 
             array (
                 'id' => 432,
                 'name' => 'english',
                 'phrase' => 'Select a student',
                 'translated' => 'Select a student',
             ),
-            432 => 
+            431 => 
             array (
                 'id' => 433,
                 'name' => 'english',
                 'phrase' => 'Payment method',
                 'translated' => 'Payment method',
             ),
-            433 => 
+            432 => 
             array (
                 'id' => 434,
                 'name' => 'english',
                 'phrase' => 'Select a payment method',
                 'translated' => 'Select a payment method',
             ),
-            434 => 
+            433 => 
             array (
                 'id' => 435,
                 'name' => 'english',
                 'phrase' => 'Cash',
                 'translated' => 'Cash',
             ),
-            435 => 
+            434 => 
             array (
                 'id' => 436,
                 'name' => 'english',
                 'phrase' => 'Paypal',
                 'translated' => 'Paypal',
             ),
-            436 => 
+            435 => 
             array (
                 'id' => 437,
                 'name' => 'english',
                 'phrase' => 'Paytm',
                 'translated' => 'Paytm',
             ),
-            437 => 
+            436 => 
             array (
                 'id' => 438,
                 'name' => 'english',
                 'phrase' => 'Razorpay',
                 'translated' => 'Razorpay',
             ),
-            438 => 
+            437 => 
             array (
                 'id' => 439,
                 'name' => 'english',
                 'phrase' => 'Create invoice',
                 'translated' => 'Create invoice',
             ),
-            439 => 
+            438 => 
             array (
                 'id' => 440,
                 'name' => 'english',
                 'phrase' => 'Payment date',
                 'translated' => 'Payment date',
             ),
-            440 => 
+            439 => 
             array (
                 'id' => 441,
                 'name' => 'english',
                 'phrase' => 'Print invoice',
                 'translated' => 'Print invoice',
             ),
-            441 => 
+            440 => 
             array (
                 'id' => 442,
                 'name' => 'english',
                 'phrase' => 'Edit Invoice',
                 'translated' => 'Edit Invoice',
             ),
-            442 => 
+            441 => 
             array (
                 'id' => 443,
                 'name' => 'english',
                 'phrase' => 'Amount',
                 'translated' => 'Amount',
             ),
-            443 => 
+            442 => 
             array (
                 'id' => 444,
                 'name' => 'english',
                 'phrase' => 'Select an expense category',
                 'translated' => 'Select an expense category',
             ),
-            444 => 
+            443 => 
             array (
                 'id' => 445,
                 'name' => 'english',
                 'phrase' => 'Edit Expense',
                 'translated' => 'Edit Expense',
             ),
-            445 => 
+            444 => 
             array (
                 'id' => 446,
                 'name' => 'english',
                 'phrase' => 'Issue date',
                 'translated' => 'Issue date',
             ),
-            446 => 
+            445 => 
             array (
                 'id' => 447,
                 'name' => 'english',
                 'phrase' => 'Select book',
                 'translated' => 'Select book',
             ),
-            447 => 
+            446 => 
             array (
                 'id' => 448,
                 'name' => 'english',
                 'phrase' => 'Id',
                 'translated' => 'Id',
             ),
-            448 => 
+            447 => 
             array (
                 'id' => 449,
                 'name' => 'english',
                 'phrase' => 'Pending',
                 'translated' => 'Pending',
             ),
-            449 => 
+            448 => 
             array (
                 'id' => 450,
                 'name' => 'english',
                 'phrase' => 'Update issued book',
                 'translated' => 'Update issued book',
             ),
-            450 => 
+            449 => 
             array (
                 'id' => 451,
                 'name' => 'english',
                 'phrase' => 'Return this book',
                 'translated' => 'Return this book',
             ),
-            451 => 
+            450 => 
             array (
                 'id' => 452,
                 'name' => 'english',
                 'phrase' => 'Notice title',
                 'translated' => 'Notice title',
             ),
-            452 => 
+            451 => 
             array (
                 'id' => 453,
                 'name' => 'english',
                 'phrase' => 'Start date',
                 'translated' => 'Start date',
             ),
-            453 => 
+            452 => 
             array (
                 'id' => 454,
                 'name' => 'english',
                 'phrase' => 'Setup additional date & time',
                 'translated' => 'Setup additional date & time',
             ),
-            454 => 
+            453 => 
             array (
                 'id' => 455,
                 'name' => 'english',
                 'phrase' => 'Start time',
                 'translated' => 'Start time',
             ),
-            455 => 
+            454 => 
             array (
                 'id' => 456,
                 'name' => 'english',
                 'phrase' => 'End date',
                 'translated' => 'End date',
             ),
-            456 => 
+            455 => 
             array (
                 'id' => 457,
                 'name' => 'english',
                 'phrase' => 'End time',
                 'translated' => 'End time',
             ),
-            457 => 
+            456 => 
             array (
                 'id' => 458,
                 'name' => 'english',
                 'phrase' => 'Notice',
                 'translated' => 'Notice',
             ),
-            458 => 
+            457 => 
             array (
                 'id' => 459,
                 'name' => 'english',
                 'phrase' => 'Show on website',
                 'translated' => 'Show on website',
             ),
-            459 => 
+            458 => 
             array (
                 'id' => 460,
                 'name' => 'english',
                 'phrase' => 'Show',
                 'translated' => 'Show',
             ),
-            460 => 
+            459 => 
             array (
                 'id' => 461,
                 'name' => 'english',
                 'phrase' => 'Do not need to show',
                 'translated' => 'Do not need to show',
             ),
-            461 => 
+            460 => 
             array (
                 'id' => 462,
                 'name' => 'english',
                 'phrase' => 'Upload notice photo',
                 'translated' => 'Upload notice photo',
             ),
-            462 => 
+            461 => 
             array (
                 'id' => 463,
                 'name' => 'english',
                 'phrase' => 'Save notice',
                 'translated' => 'Save notice',
             ),
-            463 => 
+            462 => 
             array (
                 'id' => 464,
                 'name' => 'english',
                 'phrase' => 'School Currency',
                 'translated' => 'School Currency',
             ),
-            464 => 
+            463 => 
             array (
                 'id' => 465,
                 'name' => 'english',
                 'phrase' => 'Exam List',
                 'translated' => 'Exam List',
             ),
-            465 => 
+            464 => 
             array (
                 'id' => 466,
                 'name' => 'english',
                 'phrase' => 'Profile',
                 'translated' => 'Profile',
             ),
-            466 => 
+            465 => 
             array (
                 'id' => 467,
                 'name' => 'english',
                 'phrase' => ' Download',
                 'translated' => ' Download',
             ),
-            467 => 
+            466 => 
             array (
                 'id' => 468,
                 'name' => 'english',
                 'phrase' => 'Select a subject',
                 'translated' => 'Select a subject',
             ),
-            468 => 
+            467 => 
             array (
                 'id' => 469,
                 'name' => 'english',
                 'phrase' => 'Welcome, to',
                 'translated' => 'Welcome, to',
             ),
-            469 => 
+            468 => 
             array (
                 'id' => 470,
                 'name' => 'english',
                 'phrase' => 'Fee Manager',
                 'translated' => 'Fee Manager',
             ),
-            470 => 
+            469 => 
             array (
                 'id' => 471,
                 'name' => 'english',
                 'phrase' => 'List Of Books',
                 'translated' => 'List Of Books',
             ),
-            471 => 
+            470 => 
             array (
                 'id' => 472,
                 'name' => 'english',
                 'phrase' => 'Issued Book',
                 'translated' => 'Issued Book',
             ),
-            472 => 
+            471 => 
             array (
                 'id' => 473,
                 'name' => 'english',
                 'phrase' => 'Student Code',
                 'translated' => 'Student Code',
             ),
-            473 => 
+            472 => 
             array (
                 'id' => 474,
                 'name' => 'english',
                 'phrase' => 'Candice Kennedy',
                 'translated' => 'Candice Kennedy',
             ),
-            474 => 
+            473 => 
             array (
                 'id' => 475,
                 'name' => 'english',
                 'phrase' => 'English',
                 'translated' => 'English',
             ),
-            475 => 
+            474 => 
             array (
                 'id' => 476,
                 'name' => 'english',
                 'phrase' => 'Natalie Ashley',
                 'translated' => 'Natalie Ashley',
             ),
-            476 => 
+            475 => 
             array (
                 'id' => 477,
                 'name' => 'english',
                 'phrase' => 'Byron Chase',
                 'translated' => 'Byron Chase',
             ),
-            477 => 
+            476 => 
             array (
                 'id' => 478,
                 'name' => 'english',
                 'phrase' => 'Rafael Hardy',
                 'translated' => 'Rafael Hardy',
             ),
-            478 => 
+            477 => 
             array (
                 'id' => 479,
                 'name' => 'english',
                 'phrase' => 'Mathematics',
                 'translated' => 'Mathematics',
             ),
-            479 => 
+            478 => 
             array (
                 'id' => 480,
                 'name' => 'english',
                 'phrase' => 'Aphrodite Shaffer',
                 'translated' => 'Aphrodite Shaffer',
             ),
-            480 => 
+            479 => 
             array (
                 'id' => 481,
                 'name' => 'english',
                 'phrase' => 'Bangla',
                 'translated' => 'Bangla',
             ),
-            481 => 
+            480 => 
             array (
                 'id' => 482,
                 'name' => 'english',
                 'phrase' => 'Fatima Phillips',
                 'translated' => 'Fatima Phillips',
             ),
-            482 => 
+            481 => 
             array (
                 'id' => 483,
                 'name' => 'english',
                 'phrase' => 'Sydney Pearson',
                 'translated' => 'Sydney Pearson',
             ),
-            483 => 
+            482 => 
             array (
                 'id' => 484,
                 'name' => 'english',
                 'phrase' => 'Drawing',
                 'translated' => 'Drawing',
             ),
-            484 => 
+            483 => 
             array (
                 'id' => 485,
                 'name' => 'english',
                 'phrase' => 'Imani Cooper',
                 'translated' => 'Imani Cooper',
             ),
-            485 => 
+            484 => 
             array (
                 'id' => 486,
                 'name' => 'english',
                 'phrase' => 'Ulric Spencer',
                 'translated' => 'Ulric Spencer',
             ),
-            486 => 
+            485 => 
             array (
                 'id' => 487,
                 'name' => 'english',
                 'phrase' => 'Yoshio Gentry',
                 'translated' => 'Yoshio Gentry',
             ),
-            487 => 
+            486 => 
             array (
                 'id' => 488,
                 'name' => 'english',
                 'phrase' => 'Attendance report',
                 'translated' => 'Attendance report',
             ),
-            488 => 
+            487 => 
             array (
                 'id' => 489,
                 'name' => 'english',
                 'phrase' => 'Of',
                 'translated' => 'Of',
             ),
-            489 => 
+            488 => 
             array (
                 'id' => 490,
                 'name' => 'english',
                 'phrase' => 'Last updated at',
                 'translated' => 'Last updated at',
             ),
-            490 => 
+            489 => 
             array (
                 'id' => 491,
                 'name' => 'english',
                 'phrase' => 'View Marks',
                 'translated' => 'View Marks',
             ),
-            491 => 
+            490 => 
             array (
                 'id' => 492,
                 'name' => 'english',
                 'phrase' => 'Subject name',
                 'translated' => 'Subject name',
             ),
-            492 => 
+            491 => 
             array (
                 'id' => 493,
                 'name' => 'english',
                 'phrase' => 'Pay',
                 'translated' => 'Pay',
             ),
-            493 => 
+            492 => 
             array (
                 'id' => 494,
                 'name' => 'english',
                 'phrase' => 'List Of Book',
                 'translated' => 'List Of Book',
             ),
-            494 => 
+            493 => 
             array (
                 'id' => 495,
                 'name' => 'english',
                 'phrase' => 'Child',
                 'translated' => 'Child',
             ),
-            495 => 
+            494 => 
             array (
                 'id' => 496,
                 'name' => 'english',
                 'phrase' => 'Teaches',
                 'translated' => 'Teaches',
             ),
-            496 => 
+            495 => 
             array (
                 'id' => 498,
                 'name' => 'english',
                 'phrase' => 'Student List',
                 'translated' => 'Student List',
             ),
-            497 => 
+            496 => 
             array (
                 'id' => 499,
                 'name' => 'english',
                 'phrase' => 'Id card',
                 'translated' => 'Id card',
             ),
-            498 => 
+            497 => 
             array (
                 'id' => 500,
                 'name' => 'english',
                 'phrase' => 'Code',
                 'translated' => 'Code',
             ),
-            499 => 
+            498 => 
             array (
                 'id' => 501,
                 'name' => 'english',
                 'phrase' => 'Not found',
                 'translated' => 'Not found',
             ),
-        ));
-        \DB::table('language')->insert(array (
-            0 => 
+            499 => 
             array (
                 'id' => 502,
                 'name' => 'english',
                 'phrase' => 'Contact',
                 'translated' => 'Contact',
             ),
-            1 => 
+        ));
+        \DB::table('language')->insert(array (
+            0 => 
             array (
                 'id' => 503,
                 'name' => 'english',
                 'phrase' => 'Search Attendance Report',
                 'translated' => 'Search Attendance Report',
             ),
-            2 => 
+            1 => 
             array (
                 'id' => 504,
                 'name' => 'english',
                 'phrase' => 'Please select in all fields !',
                 'translated' => 'Please select in all fields !',
             ),
-            3 => 
+            2 => 
             array (
                 'id' => 505,
                 'name' => 'english',
                 'phrase' => 'Please select student',
                 'translated' => 'Please select student',
             ),
-            4 => 
+            3 => 
             array (
                 'id' => 506,
                 'name' => 'english',
                 'phrase' => 'Download',
                 'translated' => 'Download',
             ),
-            5 => 
+            4 => 
             array (
                 'id' => 507,
                 'name' => 'english',
                 'phrase' => 'Ekattor',
                 'translated' => 'Ekattor',
             ),
-            6 => 
+            5 => 
             array (
                 'id' => 508,
                 'name' => 'english',
                 'phrase' => 'Add  Single Invoice',
                 'translated' => 'Add  Single Invoice',
             ),
-            7 => 
+            6 => 
             array (
                 'id' => 509,
                 'name' => 'english',
                 'phrase' => 'Add  Mass Invoice',
                 'translated' => 'Add  Mass Invoice',
             ),
-            8 => 
+            7 => 
             array (
                 'id' => 510,
                 'name' => 'english',
                 'phrase' => 'Update invoice',
                 'translated' => 'Update invoice',
             ),
-            9 => 
+            8 => 
             array (
                 'id' => 511,
                 'name' => 'english',
                 'phrase' => 'Invoice',
                 'translated' => 'Invoice',
             ),
-            10 => 
+            9 => 
             array (
                 'id' => 512,
                 'name' => 'english',
                 'phrase' => 'Please find below the invoice',
                 'translated' => 'Please find below the invoice',
             ),
-            11 => 
+            10 => 
             array (
                 'id' => 513,
                 'name' => 'english',
                 'phrase' => 'Billing Address',
                 'translated' => 'Billing Address',
             ),
-            12 => 
+            11 => 
             array (
                 'id' => 514,
                 'name' => 'english',
                 'phrase' => 'Due Amount',
                 'translated' => 'Due Amount',
             ),
-            13 => 
+            12 => 
             array (
                 'id' => 515,
                 'name' => 'english',
                 'phrase' => 'Student Fee',
                 'translated' => 'Student Fee',
             ),
-            14 => 
+            13 => 
             array (
                 'id' => 516,
                 'name' => 'english',
                 'phrase' => 'Subtotal',
                 'translated' => 'Subtotal',
             ),
-            15 => 
+            14 => 
             array (
                 'id' => 517,
                 'name' => 'english',
                 'phrase' => 'Due',
                 'translated' => 'Due',
             ),
-            16 => 
+            15 => 
             array (
                 'id' => 518,
                 'name' => 'english',
                 'phrase' => 'Grand Total',
                 'translated' => 'Grand Total',
             ),
-            17 => 
+            16 => 
             array (
                 'id' => 519,
                 'name' => 'english',
                 'phrase' => 'Update book issue information',
                 'translated' => 'Update book issue information',
             ),
-            18 => 
+            17 => 
             array (
                 'id' => 520,
                 'name' => 'english',
                 'phrase' => 'Not Subscribed',
                 'translated' => 'Not Subscribed',
             ),
-            19 => 
+            18 => 
             array (
                 'id' => 521,
                 'name' => 'english',
                 'phrase' => 'You are not subscribed to any plan. Subscribe now.',
                 'translated' => 'You are not subscribed to any plan. Subscribe now.',
             ),
-            20 => 
+            19 => 
             array (
                 'id' => 522,
                 'name' => 'english',
                 'phrase' => 'Subscribe',
                 'translated' => 'Subscribe',
             ),
-            21 => 
+            20 => 
             array (
                 'id' => 523,
                 'name' => 'english',
                 'phrase' => 'Package List',
                 'translated' => 'Package List',
             ),
-            22 => 
+            21 => 
             array (
                 'id' => 524,
                 'name' => 'english',
                 'phrase' => 'Payment | Ekator 8',
                 'translated' => 'Payment | Ekator 8',
             ),
-            23 => 
+            22 => 
             array (
                 'id' => 525,
                 'name' => 'english',
                 'phrase' => 'Make Payment',
                 'translated' => 'Make Payment',
             ),
-            24 => 
+            23 => 
             array (
                 'id' => 526,
                 'name' => 'english',
                 'phrase' => 'Payment Gateway',
                 'translated' => 'Payment Gateway',
             ),
-            25 => 
+            24 => 
             array (
                 'id' => 527,
                 'name' => 'english',
                 'phrase' => 'Offline',
                 'translated' => 'Offline',
             ),
-            26 => 
+            25 => 
             array (
                 'id' => 528,
                 'name' => 'english',
                 'phrase' => 'Addon',
                 'translated' => 'Addon',
             ),
-            27 => 
+            26 => 
             array (
                 'id' => 529,
                 'name' => 'english',
                 'phrase' => 'Invoice Summary',
                 'translated' => 'Invoice Summary',
             ),
-            28 => 
+            27 => 
             array (
                 'id' => 530,
                 'name' => 'english',
                 'phrase' => 'Document of your payment',
                 'translated' => 'Document of your payment',
             ),
-            29 => 
+            28 => 
             array (
                 'id' => 531,
                 'name' => 'english',
                 'phrase' => 'Submit payment document',
                 'translated' => 'Submit payment document',
             ),
-            30 => 
+            29 => 
             array (
                 'id' => 532,
                 'name' => 'english',
                 'phrase' => 'Instruction',
                 'translated' => 'Instruction',
             ),
-            31 => 
+            30 => 
             array (
                 'id' => 533,
                 'name' => 'english',
                 'phrase' => 'Admin will review your payment document and then approve the Payment.',
                 'translated' => 'Admin will review your payment document and then approve the Payment.',
             ),
-            32 => 
+            31 => 
             array (
                 'id' => 534,
                 'name' => 'english',
                 'phrase' => 'Pending Payment',
                 'translated' => 'Pending Payment',
             ),
-            33 => 
+            32 => 
             array (
                 'id' => 535,
                 'name' => 'english',
                 'phrase' => 'You payment request has been sent to Superadmin ',
                 'translated' => 'You payment request has been sent to Superadmin ',
             ),
-            34 => 
+            33 => 
             array (
                 'id' => 536,
                 'name' => 'english',
                 'phrase' => 'Suspended',
                 'translated' => 'Suspended',
             ),
-            35 => 
+            34 => 
             array (
                 'id' => 537,
                 'name' => 'english',
                 'phrase' => 'Enter your email address to reset your password.',
                 'translated' => 'Enter your email address to reset your password.',
             ),
-            36 => 
+            35 => 
             array (
                 'id' => 538,
                 'name' => 'english',
                 'phrase' => 'Reset password',
                 'translated' => 'Reset password',
             ),
-            37 => 
+            36 => 
             array (
                 'id' => 539,
                 'name' => 'english',
                 'phrase' => 'Language Settings',
                 'translated' => 'Language Settings',
             ),
-            38 => 
+            37 => 
             array (
                 'id' => 540,
                 'name' => 'english',
                 'phrase' => 'Language',
                 'translated' => 'Language',
             ),
-            39 => 
+            38 => 
             array (
                 'id' => 541,
                 'name' => 'english',
                 'phrase' => 'Edit phrase',
                 'translated' => 'Edit phrase',
             ),
-            40 => 
+            39 => 
             array (
                 'id' => 542,
                 'name' => 'english',
                 'phrase' => 'Delete language',
                 'translated' => 'Delete language',
             ),
-            41 => 
+            40 => 
             array (
                 'id' => 543,
                 'name' => 'english',
                 'phrase' => 'edit_phrase',
                 'translated' => 'edit_phrase',
             ),
-            42 => 
+            41 => 
             array (
                 'id' => 544,
                 'name' => 'english',
                 'phrase' => 'delete_language',
                 'translated' => 'delete_language',
             ),
-            43 => 
+            42 => 
             array (
                 'id' => 545,
                 'name' => 'english',
                 'phrase' => 'System default language can not be removed',
                 'translated' => 'System default language can not be removed',
             ),
-            44 => 
+            43 => 
             array (
                 'id' => 546,
                 'name' => 'english',
                 'phrase' => 'language_list',
                 'translated' => 'language_list',
             ),
-            45 => 
+            44 => 
             array (
                 'id' => 547,
                 'name' => 'english',
                 'phrase' => 'add_language',
                 'translated' => 'add_language',
             ),
-            46 => 
+            45 => 
             array (
                 'id' => 548,
                 'name' => 'english',
                 'phrase' => 'Language list',
                 'translated' => 'Language list',
             ),
-            47 => 
+            46 => 
             array (
                 'id' => 549,
                 'name' => 'english',
                 'phrase' => 'Add language',
                 'translated' => 'Add language',
             ),
-            48 => 
+            47 => 
             array (
                 'id' => 550,
                 'name' => 'english',
                 'phrase' => 'Add new phrase',
                 'translated' => 'Add new phrase',
             ),
-            49 => 
+            48 => 
             array (
                 'id' => 551,
                 'name' => 'english',
                 'phrase' => 'add_new_language',
                 'translated' => 'add_new_language',
             ),
-            50 => 
+            49 => 
             array (
                 'id' => 552,
                 'name' => 'english',
                 'phrase' => 'No special character or space is allowed',
                 'translated' => 'No special character or space is allowed',
             ),
-            51 => 
+            50 => 
             array (
                 'id' => 553,
                 'name' => 'english',
                 'phrase' => 'valid_examples',
                 'translated' => 'valid_examples',
             ),
-            52 => 
+            51 => 
             array (
                 'id' => 554,
                 'name' => 'english',
                 'phrase' => 'No special character or space is allowed',
                 'translated' => 'No special character or space is allowed',
             ),
-            53 => 
+            52 => 
             array (
                 'id' => 555,
                 'name' => 'english',
                 'phrase' => 'Validexamples',
                 'translated' => 'Validexamples',
             ),
-            54 => 
+            53 => 
             array (
                 'id' => 556,
                 'name' => 'english',
                 'phrase' => 'Add new language',
                 'translated' => 'Add new language',
             ),
-            55 => 
+            54 => 
             array (
                 'id' => 557,
                 'name' => 'english',
                 'phrase' => 'Valid examples',
                 'translated' => 'Valid examples',
             ),
-            56 => 
+            55 => 
             array (
                 'id' => 560,
                 'name' => 'english',
                 'phrase' => 'Phrase updated',
                 'translated' => 'Phrase updated',
             ),
-            57 => 
+            56 => 
             array (
                 'id' => 561,
                 'name' => 'english',
                 'phrase' => 'System Language',
                 'translated' => 'System Language',
             ),
-            58 => 
+            57 => 
             array (
                 'id' => 562,
                 'name' => 'english',
                 'phrase' => 'Edit Grade',
                 'translated' => 'Edit Grade',
             ),
-            59 => 
+            58 => 
             array (
                 'id' => 563,
                 'name' => 'english',
                 'phrase' => 'Number of scopy',
                 'translated' => 'Number of scopy',
             ),
-            60 => 
+            59 => 
             array (
                 'id' => 564,
                 'name' => 'english',
                 'phrase' => 'Save book',
                 'translated' => 'Save book',
             ),
-            61 => 
+            60 => 
             array (
                 'id' => 565,
                 'name' => 'english',
                 'phrase' => 'New Password',
                 'translated' => 'New Password',
             ),
-            62 => 
+            61 => 
             array (
                 'id' => 566,
                 'name' => 'english',
                 'phrase' => 'Confirm Password',
                 'translated' => 'Confirm Password',
             ),
-            63 => 
+            62 => 
             array (
                 'id' => 567,
                 'name' => 'english',
                 'phrase' => 'Current Password',
                 'translated' => 'Current Password',
             ),
-            64 => 
+            63 => 
             array (
                 'id' => 568,
                 'name' => 'english',
                 'phrase' => 'Add Parent',
                 'translated' => 'Add Parent',
             ),
-            65 => 
+            64 => 
             array (
                 'id' => 569,
                 'name' => 'english',
                 'phrase' => 'Parent profile image',
                 'translated' => 'Parent profile image',
             ),
-            66 => 
+            65 => 
             array (
                 'id' => 570,
                 'name' => 'english',
                 'phrase' => 'Allowances',
                 'translated' => 'Allowances',
             ),
-            67 => 
+            66 => 
             array (
                 'id' => 571,
                 'name' => 'english',
                 'phrase' => 'Type',
                 'translated' => 'Type',
             ),
-            68 => 
+            67 => 
             array (
                 'id' => 572,
                 'name' => 'english',
                 'phrase' => 'Select child',
                 'translated' => 'Select child',
             ),
-            69 => 
+            68 => 
             array (
                 'id' => 573,
                 'name' => 'english',
                 'phrase' => 'Show student list',
                 'translated' => 'Show student list',
             ),
-            70 => 
+            69 => 
             array (
                 'id' => 574,
                 'name' => 'english',
                 'phrase' => 'Update attendance',
                 'translated' => 'Update attendance',
             ),
-            71 => 
+            70 => 
             array (
                 'id' => 575,
                 'name' => 'english',
                 'phrase' => 'Present All',
                 'translated' => 'Present All',
             ),
-            72 => 
+            71 => 
             array (
                 'id' => 576,
                 'name' => 'english',
                 'phrase' => 'Absent All',
                 'translated' => 'Absent All',
             ),
-            73 => 
+            72 => 
             array (
                 'id' => 577,
                 'name' => 'english',
                 'phrase' => 'present',
                 'translated' => 'present',
             ),
-            74 => 
+            73 => 
             array (
                 'id' => 578,
                 'name' => 'english',
                 'phrase' => 'absent',
                 'translated' => 'absent',
             ),
-            75 => 
+            74 => 
             array (
                 'id' => 579,
                 'name' => 'english',
                 'phrase' => 'not_updated_yet',
                 'translated' => 'not_updated_yet',
             ),
-            76 => 
+            75 => 
             array (
                 'id' => 580,
                 'name' => 'english',
                 'phrase' => '31',
                 'translated' => '31',
             ),
-            77 => 
+            76 => 
             array (
                 'id' => 581,
                 'name' => 'english',
                 'phrase' => 'Not updated yet',
                 'translated' => 'Not updated yet',
             ),
-            78 => 
+            77 => 
             array (
                 'id' => 582,
                 'name' => 'english',
                 'phrase' => 'Update class',
                 'translated' => 'Update class',
             ),
-            79 => 
+            78 => 
             array (
                 'id' => 583,
                 'name' => 'english',
                 'phrase' => 'Edit syllabus',
                 'translated' => 'Edit syllabus',
             ),
-            80 => 
+            79 => 
             array (
                 'id' => 584,
                 'name' => 'english',
                 'phrase' => 'Select expense category',
                 'translated' => 'Select expense category',
             ),
-            81 => 
+            80 => 
             array (
                 'id' => 585,
                 'name' => 'english',
                 'phrase' => 'Filter Options',
                 'translated' => 'Filter Options',
             ),
-            82 => 
+            81 => 
             array (
                 'id' => 586,
                 'name' => 'english',
                 'phrase' => 'Reset',
                 'translated' => 'Reset',
             ),
-            83 => 
+            82 => 
             array (
                 'id' => 587,
                 'name' => 'english',
                 'phrase' => 'Apply',
                 'translated' => 'Apply',
             ),
-            84 => 
+            83 => 
             array (
                 'id' => 588,
                 'name' => 'english',
                 'phrase' => 'Profile info updated successfully',
                 'translated' => 'Profile info updated successfully',
             ),
-            85 => 
+            84 => 
             array (
                 'id' => 589,
                 'name' => 'english',
                 'phrase' => 'not_found',
                 'translated' => 'not_found',
             ),
-            86 => 
+            85 => 
             array (
                 'id' => 590,
                 'name' => 'english',
                 'phrase' => 'No date found',
                 'translated' => 'No date found',
             ),
-            87 => 
+            86 => 
             array (
                 'id' => 591,
                 'name' => 'english',
                 'phrase' => 'No date found',
                 'translated' => 'No date found',
             ),
-            88 => 
+            87 => 
             array (
                 'id' => 592,
                 'name' => 'english',
                 'phrase' => 'Blood ',
                 'translated' => 'Blood ',
             ),
-            89 => 
+            88 => 
             array (
                 'id' => 593,
                 'name' => 'english',
                 'phrase' => 'Blood Type',
                 'translated' => 'Blood Type',
             ),
-            90 => 
+            89 => 
             array (
                 'id' => 594,
                 'name' => 'english',
                 'phrase' => 'Help Link',
                 'translated' => 'Help Link',
             ),
-            91 => 
+            90 => 
             array (
                 'id' => 595,
                 'name' => 'english',
                 'phrase' => 'From',
                 'translated' => 'From',
             ),
-            92 => 
+            91 => 
             array (
                 'id' => 596,
                 'name' => 'english',
                 'phrase' => 'To',
                 'translated' => 'To',
             ),
-            93 => 
+            92 => 
             array (
                 'id' => 597,
                 'name' => 'english',
                 'phrase' => 'Select a parent',
                 'translated' => 'Select a parent',
             ),
-            94 => 
+            93 => 
             array (
                 'id' => 598,
                 'name' => 'english',
                 'phrase' => 'Add',
                 'translated' => 'Add',
             ),
-            95 => 
+            94 => 
             array (
                 'id' => 599,
                 'name' => 'english',
                 'phrase' => 'Document',
                 'translated' => 'Document',
             ),
-            96 => 
+            95 => 
             array (
                 'id' => 600,
                 'name' => 'english',
                 'phrase' => 'Decline',
                 'translated' => 'Decline',
             ),
-            97 => 
+            96 => 
             array (
                 'id' => 601,
                 'name' => 'english',
                 'phrase' => 'Number of child:',
                 'translated' => 'Number of child:',
             ),
-            98 => 
+            97 => 
             array (
                 'id' => 602,
                 'name' => 'english',
                 'phrase' => 'Number of child',
                 'translated' => 'Number of child',
             ),
-            99 => 
+            98 => 
             array (
                 'id' => 603,
                 'name' => 'english',
                 'phrase' => 'Parent Create',
                 'translated' => 'Parent Create',
             ),
-            100 => 
+            99 => 
             array (
                 'id' => 604,
                 'name' => 'english',
                 'phrase' => 'Parent Update',
                 'translated' => 'Parent Update',
             ),
-            101 => 
+            100 => 
             array (
                 'id' => 2452,
                 'name' => 'english',
                 'phrase' => 'Version updated successfully',
                 'translated' => 'Version updated successfully',
             ),
-            102 => 
+            101 => 
             array (
                 'id' => 2453,
                 'name' => 'english',
                 'phrase' => 'Website Settings',
                 'translated' => 'Website Settings',
             ),
-            103 => 
+            102 => 
             array (
                 'id' => 2454,
                 'name' => 'english',
                 'phrase' => 'Manage Faq',
                 'translated' => 'Manage Faq',
             ),
-            104 => 
+            103 => 
             array (
                 'id' => 2455,
                 'name' => 'english',
                 'phrase' => 'Visit Website',
                 'translated' => 'Visit Website',
             ),
-            105 => 
+            104 => 
             array (
                 'id' => 2456,
                 'name' => 'english',
                 'phrase' => 'Feature',
                 'translated' => 'Feature',
             ),
-            106 => 
+            105 => 
             array (
                 'id' => 2457,
                 'name' => 'english',
                 'phrase' => 'Faq',
                 'translated' => 'Faq',
             ),
-            107 => 
+            106 => 
             array (
                 'id' => 2458,
                 'name' => 'english',
                 'phrase' => 'Register',
                 'translated' => 'Register',
             ),
-            108 => 
+            107 => 
             array (
                 'id' => 2459,
                 'name' => 'english',
                 'phrase' => 'School Register Form',
                 'translated' => 'School Register Form',
             ),
-            109 => 
+            108 => 
             array (
                 'id' => 2460,
                 'name' => 'english',
                 'phrase' => 'Admin Name',
                 'translated' => 'Admin Name',
             ),
-            110 => 
+            109 => 
             array (
                 'id' => 2461,
                 'name' => 'english',
                 'phrase' => 'User Account',
                 'translated' => 'User Account',
             ),
-            111 => 
+            110 => 
             array (
                 'id' => 2462,
                 'name' => 'english',
                 'phrase' => 'Our Features',
                 'translated' => 'Our Features',
             ),
-            112 => 
+            111 => 
             array (
                 'id' => 2463,
                 'name' => 'english',
                 'phrase' => 'Features',
                 'translated' => 'Features',
             ),
-            113 => 
+            112 => 
             array (
                 'id' => 2464,
                 'name' => 'english',
                 'phrase' => 'Students Admission',
                 'translated' => 'Students Admission',
             ),
-            114 => 
+            113 => 
             array (
                 'id' => 2465,
                 'name' => 'english',
                 'phrase' => 'Your schools can add their students in two different ways',
                 'translated' => 'Your schools can add their students in two different ways',
             ),
-            115 => 
+            114 => 
             array (
                 'id' => 2466,
                 'name' => 'english',
                 'phrase' => 'Take your students attendance in a smart way',
                 'translated' => 'Take your students attendance in a smart way',
             ),
-            116 => 
+            115 => 
             array (
                 'id' => 2467,
                 'name' => 'english',
                 'phrase' => 'Manage your schools class list whenever you want',
                 'translated' => 'Manage your schools class list whenever you want',
             ),
-            117 => 
+            116 => 
             array (
                 'id' => 2468,
                 'name' => 'english',
                 'phrase' => 'Add different subjects for different classes',
                 'translated' => 'Add different subjects for different classes',
             ),
-            118 => 
+            117 => 
             array (
                 'id' => 2469,
                 'name' => 'english',
                 'phrase' => 'Event Calender',
                 'translated' => 'Event Calender',
             ),
-            119 => 
+            118 => 
             array (
                 'id' => 2470,
                 'name' => 'english',
                 'phrase' => 'The school admin can manage their schools events separately',
                 'translated' => 'The school admin can manage their schools events separately',
             ),
-            120 => 
+            119 => 
             array (
                 'id' => 2471,
                 'name' => 'english',
                 'phrase' => 'Routine',
                 'translated' => 'Routine',
             ),
-            121 => 
+            120 => 
             array (
                 'id' => 2472,
                 'name' => 'english',
                 'phrase' => 'Manage your schools class routine easily',
                 'translated' => 'Manage your schools class routine easily',
             ),
-            122 => 
+            121 => 
             array (
                 'id' => 2473,
                 'name' => 'english',
                 'phrase' => 'Student Information',
                 'translated' => 'Student Information',
             ),
-            123 => 
+            122 => 
             array (
                 'id' => 2474,
                 'name' => 'english',
                 'phrase' => 'Add your students information within a few minute',
                 'translated' => 'Add your students information within a few minute',
             ),
-            124 => 
+            123 => 
             array (
                 'id' => 2475,
                 'name' => 'english',
                 'phrase' => 'Manage syllabuses based on the classes',
                 'translated' => 'Manage syllabuses based on the classes',
             ),
-            125 => 
+            124 => 
             array (
                 'id' => 2476,
                 'name' => 'english',
                 'phrase' => 'Fees Management',
                 'translated' => 'Fees Management',
             ),
-            126 => 
+            125 => 
             array (
                 'id' => 2477,
                 'name' => 'english',
                 'phrase' => 'Pay academic fees in a smart way with Ekattor 8',
                 'translated' => 'Pay academic fees in a smart way with Ekattor 8',
             ),
-            127 => 
+            126 => 
             array (
                 'id' => 2478,
                 'name' => 'english',
                 'phrase' => 'ID Card Generator',
                 'translated' => 'ID Card Generator',
             ),
-            128 => 
+            127 => 
             array (
                 'id' => 2479,
                 'name' => 'english',
                 'phrase' => 'Generate your students ID card whenever you want',
                 'translated' => 'Generate your students ID card whenever you want',
             ),
-            129 => 
+            128 => 
             array (
                 'id' => 2480,
                 'name' => 'english',
                 'phrase' => 'Online Payment Gateway',
                 'translated' => 'Online Payment Gateway',
             ),
-            130 => 
+            129 => 
             array (
                 'id' => 2481,
                 'name' => 'english',
                 'phrase' => 'Pay your subscription and academic fees',
                 'translated' => 'Pay your subscription and academic fees',
             ),
-            131 => 
+            130 => 
             array (
                 'id' => 2482,
                 'name' => 'english',
                 'phrase' => 'Invoice Generator',
                 'translated' => 'Invoice Generator',
             ),
-            132 => 
+            131 => 
             array (
                 'id' => 2483,
                 'name' => 'english',
                 'phrase' => 'Generate invoices to make the payments more reliable',
                 'translated' => 'Generate invoices to make the payments more reliable',
             ),
-            133 => 
+            132 => 
             array (
                 'id' => 2484,
                 'name' => 'english',
                 'phrase' => 'Offline Payment',
                 'translated' => 'Offline Payment',
             ),
-            134 => 
+            133 => 
             array (
                 'id' => 2485,
                 'name' => 'english',
                 'phrase' => 'Complete payment with local money',
                 'translated' => 'Complete payment with local money',
             ),
-            135 => 
+            134 => 
             array (
                 'id' => 2486,
                 'name' => 'english',
                 'phrase' => 'Book List',
                 'translated' => 'Book List',
             ),
-            136 => 
+            135 => 
             array (
                 'id' => 2487,
                 'name' => 'english',
                 'phrase' => 'Manage your schools library within a few clicks',
                 'translated' => 'Manage your schools library within a few clicks',
             ),
-            137 => 
+            136 => 
             array (
                 'id' => 2488,
                 'name' => 'english',
                 'phrase' => 'Manage your schools notices smartly',
                 'translated' => 'Manage your schools notices smartly',
             ),
-            138 => 
+            137 => 
             array (
                 'id' => 2489,
                 'name' => 'english',
                 'phrase' => 'Create and manage your schools exams and categories',
                 'translated' => 'Create and manage your schools exams and categories',
             ),
-            139 => 
+            138 => 
             array (
                 'id' => 2490,
                 'name' => 'english',
                 'phrase' => 'Marks Management',
                 'translated' => 'Marks Management',
             ),
-            140 => 
+            139 => 
             array (
                 'id' => 2491,
                 'name' => 'english',
                 'phrase' => 'Manage your students exam marks',
                 'translated' => 'Manage your students exam marks',
             ),
-            141 => 
+            140 => 
             array (
                 'id' => 2492,
                 'name' => 'english',
                 'phrase' => 'Add and manage grades in the examination',
                 'translated' => 'Add and manage grades in the examination',
             ),
-            142 => 
+            141 => 
             array (
                 'id' => 2493,
                 'name' => 'english',
                 'phrase' => 'Have Any Question',
                 'translated' => 'Have Any Question',
             ),
-            143 => 
+            142 => 
             array (
                 'id' => 2494,
                 'name' => 'english',
                 'phrase' => 'Contact us with any questions',
                 'translated' => 'Contact us with any questions',
             ),
-            144 => 
+            143 => 
             array (
                 'id' => 2495,
                 'name' => 'english',
                 'phrase' => 'Contact Us',
                 'translated' => 'Contact Us',
             ),
-            145 => 
+            144 => 
             array (
                 'id' => 2496,
                 'name' => 'english',
                 'phrase' => 'Social Link',
                 'translated' => 'Social Link',
             ),
-            146 => 
+            145 => 
             array (
                 'id' => 2497,
                 'name' => 'english',
                 'phrase' => 'Ekattor8 School Management System',
                 'translated' => 'Ekattor8 School Management System',
             ),
-            147 => 
+            146 => 
             array (
                 'id' => 2498,
                 'name' => 'english',
                 'phrase' => 'Excel upload',
                 'translated' => 'Excel upload',
             ),
-            148 => 
+            147 => 
             array (
                 'id' => 2499,
                 'name' => 'english',
                 'phrase' => 'Frontend View',
                 'translated' => 'Frontend View',
             ),
-            149 => 
+            148 => 
             array (
                 'id' => 2500,
                 'name' => 'english',
                 'phrase' => 'No',
                 'translated' => 'No',
             ),
-            150 => 
+            149 => 
             array (
                 'id' => 2501,
                 'name' => 'english',
                 'phrase' => 'Youtube Api Key',
                 'translated' => 'Youtube Api Key',
             ),
-            151 => 
+            150 => 
             array (
                 'id' => 2502,
                 'name' => 'english',
                 'phrase' => 'Vimeo Api Key',
                 'translated' => 'Vimeo Api Key',
             ),
-            152 => 
+            151 => 
             array (
                 'id' => 2503,
                 'name' => 'english',
                 'phrase' => 'Has to be bigger than',
                 'translated' => 'Has to be bigger than',
             ),
-            153 => 
+            152 => 
             array (
                 'id' => 2504,
                 'name' => 'english',
                 'phrase' => 'GENERAL SETTINGS',
                 'translated' => 'GENERAL SETTINGS',
             ),
-            154 => 
+            153 => 
             array (
                 'id' => 2505,
                 'name' => 'english',
                 'phrase' => 'Banner Title',
                 'translated' => 'Banner Title',
             ),
-            155 => 
+            154 => 
             array (
                 'id' => 2506,
                 'name' => 'english',
                 'phrase' => 'Banner Subtitle',
                 'translated' => 'Banner Subtitle',
             ),
-            156 => 
+            155 => 
             array (
                 'id' => 2507,
                 'name' => 'english',
                 'phrase' => 'Price Subtitle',
                 'translated' => 'Price Subtitle',
             ),
-            157 => 
+            156 => 
             array (
                 'id' => 2508,
                 'name' => 'english',
                 'phrase' => 'Faq Subtitle',
                 'translated' => 'Faq Subtitle',
             ),
-            158 => 
+            157 => 
             array (
                 'id' => 2509,
                 'name' => 'english',
                 'phrase' => 'Facebook Link',
                 'translated' => 'Facebook Link',
             ),
-            159 => 
+            158 => 
             array (
                 'id' => 2510,
                 'name' => 'english',
                 'phrase' => 'Twitter Link',
                 'translated' => 'Twitter Link',
             ),
-            160 => 
+            159 => 
             array (
                 'id' => 2511,
                 'name' => 'english',
                 'phrase' => 'Linkedin Link',
                 'translated' => 'Linkedin Link',
             ),
-            161 => 
+            160 => 
             array (
                 'id' => 2512,
                 'name' => 'english',
                 'phrase' => 'Instagram Link',
                 'translated' => 'Instagram Link',
             ),
-            162 => 
+            161 => 
             array (
                 'id' => 2513,
                 'name' => 'english',
                 'phrase' => 'Contact Mail',
                 'translated' => 'Contact Mail',
             ),
-            163 => 
+            162 => 
             array (
                 'id' => 2514,
                 'name' => 'english',
                 'phrase' => 'Frontend Footer Text',
                 'translated' => 'Frontend Footer Text',
             ),
-            164 => 
+            163 => 
             array (
                 'id' => 2515,
                 'name' => 'english',
                 'phrase' => 'Copyright Text',
                 'translated' => 'Copyright Text',
             ),
-            165 => 
+            164 => 
             array (
                 'id' => 2516,
                 'name' => 'english',
                 'phrase' => 'Add question and answer',
                 'translated' => 'Add question and answer',
             ),
-            166 => 
+            165 => 
             array (
                 'id' => 2517,
                 'name' => 'english',
                 'phrase' => 'Faq List',
                 'translated' => 'Faq List',
             ),
-            167 => 
+            166 => 
             array (
                 'id' => 2518,
                 'name' => 'english',
                 'phrase' => 'Update question and answer',
                 'translated' => 'Update question and answer',
+            ),
+            167 => 
+            array (
+                'id' => 398,
+                'name' => 'english',
+                'phrase' => 'Student name',
+                'translated' => 'Student name',
             ),
         ));
         
