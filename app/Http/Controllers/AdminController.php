@@ -2363,19 +2363,29 @@ class AdminController extends Controller
     public function sectionUpdate(Request $request, $id)
     {
         $data = $request->all();
+        // {{DB::table('schools')->where('id', auth()->user()->school_id)->value('title') }}
 
         $section_id = $data['section_id'];
         $section_name = $data['name'];
+        $school_id = auth()->user()->school_id;
+        // echo "<pre>";
+        // echo "school Id ";
+        // print_r($school_id);
+        // print_r($section_id);
+        // die;
+
+        
 
         foreach($section_id as $key => $value){
             if($value == 0){
                 Section::create([
                     'name' => $section_name[$key],
                     'class_id' => $id,
+                    'school_id' =>auth()->user()->school_id,
                 ]);
             }
             if($value != 0 && is_numeric($value)){
-                Section::where(['id' => $value, 'class_id' => $id])->update([
+                Section::where(['id' => $value, 'class_id' => $id, 'school_id' => $school_id])->update([
                     'name' => $section_name[$key],
                 ]);
             }
@@ -2384,7 +2394,7 @@ class AdminController extends Controller
             if (strpos($value, 'delete') == true) {
                 $section_value = str_replace('delete', '', $value);
 
-                $section = Section::find(['id' => $section_value, 'class_id' => $id]);
+                $section = Section::find(['id' => $section_value, 'class_id' => $id, 'school_id' => $school_id]);
                 $section->map->delete();
             }
         }

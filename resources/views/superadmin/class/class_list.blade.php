@@ -118,7 +118,9 @@
                                     <ul>
                                         <?php $sections = Section::get()->where('class_id', $class_list['id']); ?>
                                         @foreach($sections as $section)
-                                            <li>{{ $section->name }}</li>
+                                          @if ($section->school_id == null)
+                                              <li>{{ $section->name }}</li>
+                                          @endif    
                                         @endforeach
                                     </ul>
                                 </td>
