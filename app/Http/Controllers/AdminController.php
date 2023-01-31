@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\CommonController;
@@ -37,9 +38,12 @@ use App\Models\Currency;
 use App\Models\PaymentHistory;
 use App\Models\TeacherPermission;
 use App\Models\Payments;
+use App\Models\Student;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
+
 class AdminController extends Controller
 {
 
@@ -50,47 +54,44 @@ class AdminController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
 
-    function __construct() {
+    function __construct()
+    {
         $this->middleware(function ($request, $next) {
             $this->user = Auth()->user();
             $this->check_subscription_status(Auth()->user()->school_id);
             return $next($request);
         });
-
-
     }
 
-    function check_subscription_status($school_id = ""){
+    function check_subscription_status($school_id = "")
+    {
         $current_route = Route::currentRouteName();
         $has_subscription = Subscription::where('school_id', $school_id)->where('status', 1)->get()->count();
         $active_subscription = Subscription::where('school_id', $school_id)->where('active', 1)->first();
-        
+
         $today = date("Y-m-d");
         $today_time = strtotime($today);
-        
-        if($has_subscription != 0) {
+
+        if ($has_subscription != 0) {
 
             $expiry_status = (int)$active_subscription['expire_date'] < $today_time;
 
-            if(
+            if (
                 ($current_route != 'admin.subscription' && $expiry_status) &&
                 ($current_route != 'admin.subscription.purchase' && $expiry_status) &&
                 ($current_route != 'admin.subscription.payment' && $expiry_status) &&
                 ($current_route != 'admin.subscription.offline_payment' && $expiry_status)
-            )
-            {
+            ) {
                 redirect()->route('admin.subscription')->send();
             }
-
         } else {
 
-            if(
+            if (
                 ($current_route != 'admin.subscription' && $has_subscription == 0) &&
                 ($current_route != 'admin.subscription.purchase' && $has_subscription == 0) &&
                 ($current_route != 'admin.subscription.payment' && $has_subscription == 0) &&
                 ($current_route != 'admin.subscription.offline_payment' && $has_subscription == 0)
-            )
-            {
+            ) {
                 redirect()->route('admin.subscription')->send();
             }
         }
@@ -104,45 +105,32 @@ class AdminController extends Controller
 
     public function check_admin_subscription($school_id)
     {
-        $validity_of_current_package=Subscription::where('school_id',$school_id)->where('active',1)->first();
-        if(!empty($validity_of_current_package))
-        {
-            $validity_of_current_package= $validity_of_current_package->toArray();
+        $validity_of_current_package = Subscription::where('school_id', $school_id)->where('active', 1)->first();
+        if (!empty($validity_of_current_package)) {
+            $validity_of_current_package = $validity_of_current_package->toArray();
 
 
             $today = date("Y-m-d");
             $today_time = strtotime($today);
 
-            if((int)$validity_of_current_package['expire_date'] < $today_time)
-            {
-
-
-            }
-            else
-            {
+            if ((int)$validity_of_current_package['expire_date'] < $today_time) {
+            } else {
 
                 $this->adminDashboard();
             }
-
-
+        } else {
         }
-        else
-        {
-
-
-        }
-
     }
 
 
 
     public function adminDashboard()
     {
-        if(auth()->user()->role_id != "") {
+        if (auth()->user()->role_id != "") {
             return view('admin.dashboard');
         } else {
             redirect()->route('login')
-                ->with('error','You are not logged in.');
+                ->with('error', 'You are not logged in.');
         }
     }
 
@@ -157,18 +145,17 @@ class AdminController extends Controller
     {
         $search = $request['search'] ?? "";
 
-        if($search != "") {
+        if ($search != "") {
 
-            $admins = User::where(function ($query) use($search) {
-                    $query->where('name', 'LIKE', "%{$search}%")
-                        ->where('school_id', auth()->user()->school_id)
-                        ->where('role_id', 2);
-                })->orWhere(function ($query) use($search) {
-                    $query->where('email', 'LIKE', "%{$search}%")
-                        ->where('school_id', auth()->user()->school_id)
-                        ->where('role_id', 2);
-                })->paginate(10);
-
+            $admins = User::where(function ($query) use ($search) {
+                $query->where('name', 'LIKE', "%{$search}%")
+                    ->where('school_id', auth()->user()->school_id)
+                    ->where('role_id', 2);
+            })->orWhere(function ($query) use ($search) {
+                $query->where('email', 'LIKE', "%{$search}%")
+                    ->where('school_id', auth()->user()->school_id)
+                    ->where('role_id', 2);
+            })->paginate(10);
         } else {
             $admins = User::where('role_id', 2)->where('school_id', auth()->user()->school_id)->paginate(10);
         }
@@ -190,9 +177,9 @@ class AdminController extends Controller
     {
         $data = $request->all();
 
-        if(!empty($data['photo'])){
+        if (!empty($data['photo'])) {
 
-            $imageName = time().'.'.$data['photo']->extension();
+            $imageName = time() . '.' . $data['photo']->extension();
 
             $data['photo']->move(public_path('assets/uploads/user-images/'), $imageName);
 
@@ -221,7 +208,7 @@ class AdminController extends Controller
             'user_information' => $data['user_information'],
         ]);
 
-        return redirect()->back()->with('message','You have successfully add user.');
+        return redirect()->back()->with('message', 'You have successfully add user.');
     }
 
     public function editModal($id)
@@ -233,9 +220,9 @@ class AdminController extends Controller
     public function adminUpdate(Request $request, $id)
     {
         $data = $request->all();
-        if(!empty($data['photo'])){
+        if (!empty($data['photo'])) {
 
-            $imageName = time().'.'.$data['photo']->extension();
+            $imageName = time() . '.' . $data['photo']->extension();
 
             $data['photo']->move(public_path('assets/uploads/user-images/'), $imageName);
 
@@ -259,7 +246,7 @@ class AdminController extends Controller
             'user_information' => $data['user_information'],
         ]);
 
-        return redirect()->back()->with('message','You have successfully update user.');
+        return redirect()->back()->with('message', 'You have successfully update user.');
     }
 
     public function adminDelete($id)
@@ -267,7 +254,7 @@ class AdminController extends Controller
         $user = User::find($id);
         $user->delete();
         $admins = User::get()->where('role_id', 2);
-        return redirect()->route('admin.admin')->with('message','You have successfully deleted user.');
+        return redirect()->route('admin.admin')->with('message', 'You have successfully deleted user.');
     }
 
     /**
@@ -279,18 +266,17 @@ class AdminController extends Controller
     {
         $search = $request['search'] ?? "";
 
-        if($search != "") {
+        if ($search != "") {
 
-            $teachers = User::where(function ($query) use($search) {
-                    $query->where('name', 'LIKE', "%{$search}%")
-                        ->where('school_id', auth()->user()->school_id)
-                        ->where('role_id', 3);
-                })->orWhere(function ($query) use($search) {
-                    $query->where('email', 'LIKE', "%{$search}%")
-                        ->where('school_id', auth()->user()->school_id)
-                        ->where('role_id', 3);
-                })->paginate(10);
-
+            $teachers = User::where(function ($query) use ($search) {
+                $query->where('name', 'LIKE', "%{$search}%")
+                    ->where('school_id', auth()->user()->school_id)
+                    ->where('role_id', 3);
+            })->orWhere(function ($query) use ($search) {
+                $query->where('email', 'LIKE', "%{$search}%")
+                    ->where('school_id', auth()->user()->school_id)
+                    ->where('role_id', 3);
+            })->paginate(10);
         } else {
             $teachers = User::where('role_id', 3)->where('school_id', auth()->user()->school_id)->paginate(10);
         }
@@ -312,9 +298,9 @@ class AdminController extends Controller
     public function adminTeacherCreate(Request $request)
     {
         $data = $request->all();
-         if(!empty($data['photo'])){
+        if (!empty($data['photo'])) {
 
-            $imageName = time().'.'.$data['photo']->extension();
+            $imageName = time() . '.' . $data['photo']->extension();
 
             $data['photo']->move(public_path('assets/uploads/user-images/'), $imageName);
 
@@ -342,7 +328,7 @@ class AdminController extends Controller
             'department_id' => $data['department_id'],
             'designation' => $data['designation'],
         ]);
-        return redirect()->back()->with('message','You have successfully add teacher.');
+        return redirect()->back()->with('message', 'You have successfully add teacher.');
     }
 
     public function teacherEditModal($id)
@@ -355,9 +341,9 @@ class AdminController extends Controller
     public function teacherUpdate(Request $request, $id)
     {
         $data = $request->all();
-         if(!empty($data['photo'])){
+        if (!empty($data['photo'])) {
 
-            $imageName = time().'.'.$data['photo']->extension();
+            $imageName = time() . '.' . $data['photo']->extension();
 
             $data['photo']->move(public_path('assets/uploads/user-images/'), $imageName);
 
@@ -382,7 +368,7 @@ class AdminController extends Controller
             'department_id' => $data['department_id'],
             'designation' => $data['designation'],
         ]);
-        return redirect()->back()->with('message','You have successfully update teacher.');
+        return redirect()->back()->with('message', 'You have successfully update teacher.');
     }
 
     public function teacherDelete($id)
@@ -390,7 +376,7 @@ class AdminController extends Controller
         $user = User::find($id);
         $user->delete();
         $admins = User::get()->where('role_id', 3);
-        return redirect()->route('admin.teacher')->with('message','You have successfully deleted teacher.');
+        return redirect()->route('admin.teacher')->with('message', 'You have successfully deleted teacher.');
     }
 
     /**
@@ -402,18 +388,17 @@ class AdminController extends Controller
     {
         $search = $request['search'] ?? "";
 
-        if($search != "") {
+        if ($search != "") {
 
-            $accountants = User::where(function ($query) use($search) {
-                    $query->where('name', 'LIKE', "%{$search}%")
-                        ->where('school_id', auth()->user()->school_id)
-                        ->where('role_id', 4);
-                })->orWhere(function ($query) use($search) {
-                    $query->where('email', 'LIKE', "%{$search}%")
-                        ->where('school_id', auth()->user()->school_id)
-                        ->where('role_id', 4);
-                })->paginate(10);
-
+            $accountants = User::where(function ($query) use ($search) {
+                $query->where('name', 'LIKE', "%{$search}%")
+                    ->where('school_id', auth()->user()->school_id)
+                    ->where('role_id', 4);
+            })->orWhere(function ($query) use ($search) {
+                $query->where('email', 'LIKE', "%{$search}%")
+                    ->where('school_id', auth()->user()->school_id)
+                    ->where('role_id', 4);
+            })->paginate(10);
         } else {
             $accountants = User::where('role_id', 4)->where('school_id', auth()->user()->school_id)->paginate(10);
         }
@@ -429,9 +414,9 @@ class AdminController extends Controller
     public function accountantCreate(Request $request)
     {
         $data = $request->all();
-         if(!empty($data['photo'])){
+        if (!empty($data['photo'])) {
 
-            $imageName = time().'.'.$data['photo']->extension();
+            $imageName = time() . '.' . $data['photo']->extension();
 
             $data['photo']->move(public_path('assets/uploads/user-images/'), $imageName);
 
@@ -457,8 +442,8 @@ class AdminController extends Controller
             'school_id' => auth()->user()->school_id,
             'user_information' => $data['user_information'],
         ]);
-        
-        return redirect()->back()->with('message','You have successfully add accountant.');
+
+        return redirect()->back()->with('message', 'You have successfully add accountant.');
     }
 
     public function accountantEditModal($id)
@@ -470,9 +455,9 @@ class AdminController extends Controller
     public function accountantUpdate(Request $request, $id)
     {
         $data = $request->all();
-         if(!empty($data['photo'])){
+        if (!empty($data['photo'])) {
 
-            $imageName = time().'.'.$data['photo']->extension();
+            $imageName = time() . '.' . $data['photo']->extension();
 
             $data['photo']->move(public_path('assets/uploads/user-images/'), $imageName);
 
@@ -497,7 +482,7 @@ class AdminController extends Controller
             'user_information' => $data['user_information'],
         ]);
 
-        return redirect()->back()->with('message','You have successfully update accountant.');
+        return redirect()->back()->with('message', 'You have successfully update accountant.');
     }
 
     public function accountantDelete($id)
@@ -505,7 +490,7 @@ class AdminController extends Controller
         $user = User::find($id);
         $user->delete();
         $admins = User::get()->where('role_id', 4);
-        return redirect()->route('admin.accountant')->with('message','You have successfully deleted accountant.');
+        return redirect()->route('admin.accountant')->with('message', 'You have successfully deleted accountant.');
     }
 
     /**
@@ -517,18 +502,17 @@ class AdminController extends Controller
     {
         $search = $request['search'] ?? "";
 
-        if($search != "") {
+        if ($search != "") {
 
-            $librarians = User::where(function ($query) use($search) {
-                    $query->where('name', 'LIKE', "%{$search}%")
-                        ->where('school_id', auth()->user()->school_id)
-                        ->where('role_id', 5);
-                })->orWhere(function ($query) use($search) {
-                    $query->where('email', 'LIKE', "%{$search}%")
-                        ->where('school_id', auth()->user()->school_id)
-                        ->where('role_id', 5);
-                })->paginate(10);
-
+            $librarians = User::where(function ($query) use ($search) {
+                $query->where('name', 'LIKE', "%{$search}%")
+                    ->where('school_id', auth()->user()->school_id)
+                    ->where('role_id', 5);
+            })->orWhere(function ($query) use ($search) {
+                $query->where('email', 'LIKE', "%{$search}%")
+                    ->where('school_id', auth()->user()->school_id)
+                    ->where('role_id', 5);
+            })->paginate(10);
         } else {
             $librarians = User::where('role_id', 5)->where('school_id', auth()->user()->school_id)->paginate(10);
         }
@@ -544,9 +528,9 @@ class AdminController extends Controller
     public function librarianCreate(Request $request)
     {
         $data = $request->all();
-         if(!empty($data['photo'])){
+        if (!empty($data['photo'])) {
 
-            $imageName = time().'.'.$data['photo']->extension();
+            $imageName = time() . '.' . $data['photo']->extension();
 
             $data['photo']->move(public_path('assets/uploads/user-images/'), $imageName);
 
@@ -572,7 +556,7 @@ class AdminController extends Controller
             'school_id' => auth()->user()->school_id,
             'user_information' => $data['user_information'],
         ]);
-        return redirect()->back()->with('message','You have successfully add librarian.');
+        return redirect()->back()->with('message', 'You have successfully add librarian.');
     }
 
     public function librarianEditModal($id)
@@ -584,9 +568,9 @@ class AdminController extends Controller
     public function librarianUpdate(Request $request, $id)
     {
         $data = $request->all();
-         if(!empty($data['photo'])){
+        if (!empty($data['photo'])) {
 
-            $imageName = time().'.'.$data['photo']->extension();
+            $imageName = time() . '.' . $data['photo']->extension();
 
             $data['photo']->move(public_path('assets/uploads/user-images/'), $imageName);
 
@@ -609,7 +593,7 @@ class AdminController extends Controller
             'email' => $data['email'],
             'user_information' => $data['user_information'],
         ]);
-        return redirect()->back()->with('message','You have successfully update librarian.');
+        return redirect()->back()->with('message', 'You have successfully update librarian.');
     }
 
     public function librarianDelete($id)
@@ -617,7 +601,7 @@ class AdminController extends Controller
         $user = User::find($id);
         $user->delete();
         $admins = User::get()->where('role_id', 5);
-        return redirect()->route('admin.librarian')->with('message','You have successfully deleted librarian.');
+        return redirect()->route('admin.librarian')->with('message', 'You have successfully deleted librarian.');
     }
 
     /**
@@ -629,18 +613,17 @@ class AdminController extends Controller
     {
         $search = $request['search'] ?? "";
 
-        if($search != "") {
+        if ($search != "") {
 
-            $parents = User::where(function ($query) use($search) {
-                    $query->where('name', 'LIKE', "%{$search}%")
-                        ->where('school_id', auth()->user()->school_id)
-                        ->where('role_id', 6);
-                })->orWhere(function ($query) use($search) {
-                    $query->where('email', 'LIKE', "%{$search}%")
-                        ->where('school_id', auth()->user()->school_id)
-                        ->where('role_id', 6);
-                })->paginate(10);
-
+            $parents = User::where(function ($query) use ($search) {
+                $query->where('name', 'LIKE', "%{$search}%")
+                    ->where('school_id', auth()->user()->school_id)
+                    ->where('role_id', 6);
+            })->orWhere(function ($query) use ($search) {
+                $query->where('email', 'LIKE', "%{$search}%")
+                    ->where('school_id', auth()->user()->school_id)
+                    ->where('role_id', 6);
+            })->paginate(10);
         } else {
             $parents = User::where('role_id', 6)->where('school_id', auth()->user()->school_id)->paginate(10);
         }
@@ -658,10 +641,10 @@ class AdminController extends Controller
     public function parentCreate(Request $request)
     {
         $data = $request->all();
-        
-        if(!empty($data['photo'])){
 
-            $imageName = time().'.'.$data['photo']->extension();
+        if (!empty($data['photo'])) {
+
+            $imageName = time() . '.' . $data['photo']->extension();
 
             $data['photo']->move(public_path('assets/uploads/user-images/'), $imageName);
 
@@ -692,19 +675,19 @@ class AdminController extends Controller
         $class_id = $data['class_id'];
         $section_id = $data['student_id'];
 
-        foreach($students as $student){
+        foreach ($students as $student) {
             $users = User::where('id', $student)->get();
 
-            if(count($users) == 1) {
+            if (count($users) == 1) {
                 User::where('id', $student)->update([
                     'parent_id' => $parent->id,
                 ]);
             } else {
-                if(count($users) > 1) {
-                    foreach($users as $user){
+                if (count($users) > 1) {
+                    foreach ($users as $user) {
                         $data = Enrollment::where('class_id', $class_id)->where('section_id', $section_id)->where('user_id', $user->id)->where('school_id', auth()->user()->school_id)->first();
 
-                        if($data != '') {
+                        if ($data != '') {
                             User::where('id', $user->id)->update([
                                 'parent_id' => $parent->id,
                             ]);
@@ -713,8 +696,8 @@ class AdminController extends Controller
                 }
             }
         }
-        
-        return redirect()->back()->with('message','You have successfully add parent.');
+
+        return redirect()->back()->with('message', 'You have successfully add parent.');
     }
 
 
@@ -730,9 +713,9 @@ class AdminController extends Controller
         $data = $request->all();
 
 
-        if(!empty($data['photo'])){
+        if (!empty($data['photo'])) {
 
-            $imageName = time().'.'.$data['photo']->extension();
+            $imageName = time() . '.' . $data['photo']->extension();
 
             $data['photo']->move(public_path('assets/uploads/user-images/'), $imageName);
 
@@ -742,7 +725,7 @@ class AdminController extends Controller
             $user_information = User::where('id', $id)->value('user_information');
             $file_name = json_decode($user_information)->photo;
 
-            if($file_name != ''){
+            if ($file_name != '') {
                 $photo = $file_name;
             } else {
                 $photo = '';
@@ -772,11 +755,11 @@ class AdminController extends Controller
 
 
         $students = $data['student_id'];
-        foreach($students as $student){
-            if($student != '') {
+        foreach ($students as $student) {
+            if ($student != '') {
                 $user = User::where('id', $student)->first();
 
-                if($user != '') {
+                if ($user != '') {
                     User::where('id', $user->id)->update([
                         'parent_id' => $id,
                     ]);
@@ -784,7 +767,7 @@ class AdminController extends Controller
             }
         }
 
-        return redirect()->back()->with('message','You have successfully update parent.');
+        return redirect()->back()->with('message', 'You have successfully update parent.');
     }
 
     public function parentDelete($id)
@@ -792,7 +775,7 @@ class AdminController extends Controller
         $user = User::find($id);
         $user->delete();
         $admins = User::get()->where('role_id', 5);
-        return redirect()->route('admin.parent')->with('message','You have successfully deleted parent.');
+        return redirect()->route('admin.parent')->with('message', 'You have successfully deleted parent.');
     }
 
     /**
@@ -806,24 +789,24 @@ class AdminController extends Controller
         $class_id = $request['class_id'] ?? "";
         $section_id = $request['section_id'] ?? "";
 
-        $users = User::where(function ($query) use($search) {
+        $users = User::where(function ($query) use ($search) {
             $query->where('users.name', 'LIKE', "%{$search}%")
                 ->orWhere('users.email', 'LIKE', "%{$search}%");
         });
 
         $users->where('users.school_id', auth()->user()->school_id)
-        ->where('users.role_id', 7);
+            ->where('users.role_id', 7);
 
-        if($section_id == 'all' || $section_id != ""){
+        if ($section_id == 'all' || $section_id != "") {
             $users->where('section_id', $section_id);
         }
 
-        if($class_id == 'all' || $class_id != ""){
+        if ($class_id == 'all' || $class_id != "") {
             $users->where('class_id', $class_id);
         }
 
         $students = $users->join('enrollments', 'users.id', '=', 'enrollments.user_id')->select('enrollments.*')->paginate(10);
-        
+
         $classes = Classes::get()->where('school_id', auth()->user()->school_id);
 
         return view('admin.student.student_list', compact('students', 'search', 'classes', 'class_id', 'section_id'));
@@ -839,9 +822,9 @@ class AdminController extends Controller
     {
         $data = $request->all();
         $code = student_code();
-        if(!empty($data['photo'])){
+        if (!empty($data['photo'])) {
 
-            $imageName = time().'.'.$data['photo']->extension();
+            $imageName = time() . '.' . $data['photo']->extension();
 
             $data['photo']->move(public_path('assets/uploads/user-images/'), $imageName);
 
@@ -868,7 +851,7 @@ class AdminController extends Controller
             'school_id' => auth()->user()->school_id,
             'user_information' => $data['user_information'],
         ]);
-        return redirect()->back()->with('message','You have successfully add student.');
+        return redirect()->back()->with('message', 'You have successfully add student.');
     }
 
     public function studentIdCardGenerate($id)
@@ -887,38 +870,77 @@ class AdminController extends Controller
 
     public function studentUpdate(Request $request, $id)
     {
-        $data = $request->all();
-         if(!empty($data['photo'])){
+        // dd($request->all());
+        DB::transaction(function () use ($request, $id) {
+            $data = $request->all();
+            if ($file = $request->file('photo')) {
+                $imageName = time() . '.' . $data['photo']->extension();
+                $file->move(public_path('assets/uploads/user-images/'), $imageName);
+                $photo  = $imageName;
+            } else {
+                $photo = isset($data['photo']) ? $data['photo'] : '';
+            }
 
-            $imageName = time().'.'.$data['photo']->extension();
+            // if (!empty($data['photo'])) {
+            //     $imageName = time() . '.' . $data['photo']->extension();
+            //     $data['photo']->move(public_path('assets/uploads/user-images/'), $imageName);
+            //     $photo  = $imageName;
+            // } else {
+            //     $photo = '';
+            // }
+            $info = array(
+                'gender' => $data['gender'],
+                'blood_group' => $data['blood_group'],
+                'birthday' => $data['dob_ad'],
+                'phone' => $data['phone'],
+                'address' => $data['address'],
+                'photo' => $photo
+            );
+            $data['user_information'] = json_encode($info);
+            User::where('id', $id)->update([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'user_information' => $data['user_information'],
+            ]);
 
-            $data['photo']->move(public_path('assets/uploads/user-images/'), $imageName);
+            Enrollment::where('user_id', $id)->update([
+                'class_id' => $data['class_id'],
+                'section_id' => $data['section_id'],
+            ]);
 
-            $photo  = $imageName;
-        } else {
-            $photo = '';
-        }
-        $info = array(
-            'gender' => $data['gender'],
-            'blood_group' => $data['blood_group'],
-            'birthday' => strtotime($data['birthday']),
-            'phone' => $data['phone'],
-            'address' => $data['address'],
-            'photo' => $photo
-        );
-        $data['user_information'] = json_encode($info);
-        User::where('id', $id)->update([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'user_information' => $data['user_information'],
-        ]);
+            $student = Student::where('user_id', $id)->first();
 
-        Enrollment::where('user_id', $id)->update([
-            'class_id' => $data['class_id'],
-            'section_id' => $data['section_id'],
-        ]);
+            $student->name = $data['name'];
+            $student->student_type = $data['student_type'];
+            $student->class_id = $data['class_id'];
+            $student->section_id = $data['section_id'];
+            $student->registration_no = $data['registration_no'];
+            $student->roll_no = $data['roll_no'];
+            $student->gender = $data['gender'];
+            $student->admitted_date = $data['admitted_date'];
+            $student->dob_ad = $data['dob_ad'];
+            $student->dob_bs = $data['dob_bs'];
+            $student->phone = $data['phone'];
+            $student->email = $data['email'];
 
-        return redirect()->back()->with('message','You have successfully update student.');
+            if (isset($data['password'])) {
+                $student->password = $data['password'];
+            }
+
+            $student->address = $data['address'];
+            $student->blood_group = $data['blood_group'];
+            $student->disability = $data['disability'];
+            $student->caste = $data['caste'];
+            $student->religion = $data['religion'];
+            $student->previous_school = $data['previous_school'];
+            $student->ecd_type = $data['ecd_type'];
+            $student->ecd_no = $data['ecd_no'];
+            $student->ecd_ppc_experience = isset($data['ecd_ppc_experience']) ? $data['ecd_ppc_experience'] : '0';
+            $student->new_admission_status = isset($data['new_admission_status']) ? $data['new_admission_status'] : '0';
+            $student->photo = $photo;
+            $student->save();
+        });
+        return redirect()->back()->with('message', 'You have successfully update student.');
     }
 
     public function studentDelete($id)
@@ -949,7 +971,7 @@ class AdminController extends Controller
         $user->delete();
 
         $students = User::get()->where('role_id', 7);
-        return redirect()->back()->with('message','Student removed successfully.');
+        return redirect()->back()->with('message', 'Student removed successfully.');
     }
 
 
@@ -962,8 +984,8 @@ class AdminController extends Controller
     {
         $classes = Classes::get()->where('school_id', auth()->user()->school_id);
         $teachers = User::where('role_id', 3)
-                ->where('school_id', auth()->user()->school_id)
-                ->get();
+            ->where('school_id', auth()->user()->school_id)
+            ->get();
         return view('admin.permission.index', ['classes' => $classes, 'teachers' => $teachers]);
     }
 
@@ -973,8 +995,8 @@ class AdminController extends Controller
         $class_id = $data[0];
         $section_id = $data[1];
         $teachers = User::where('role_id', 3)
-                ->where('school_id', auth()->user()->school_id)
-                ->get();
+            ->where('school_id', auth()->user()->school_id)
+            ->get();
         return view('admin.permission.list', ['teachers' => $teachers, 'class_id' => $class_id, 'section_id' => $section_id]);
     }
 
@@ -988,27 +1010,25 @@ class AdminController extends Controller
         $column_name = $data['column_name'];
         $value = $data['value'];
 
-         $check_row = TeacherPermission::where('class_id', $class_id)
-                    ->where('section_id', $section_id)
-                    ->where('teacher_id', $teacher_id)
-                    ->where('school_id', auth()->user()->school_id)
-                    ->get();
+        $check_row = TeacherPermission::where('class_id', $class_id)
+            ->where('section_id', $section_id)
+            ->where('teacher_id', $teacher_id)
+            ->where('school_id', auth()->user()->school_id)
+            ->get();
 
-        if(count($check_row) > 0){
+        if (count($check_row) > 0) {
 
             TeacherPermission::where('class_id', $class_id)
-                    ->where('section_id', $section_id)
-                    ->where('teacher_id', $teacher_id)
-                    ->where('school_id', auth()->user()->school_id)
-                    ->update([
-                        'class_id' => $class_id,
-                        'section_id' => $section_id,
-                        'school_id' => auth()->user()->school_id,
-                        'teacher_id' => $teacher_id,
-                        $column_name => $data['value'],
-                    ]);
-
-            
+                ->where('section_id', $section_id)
+                ->where('teacher_id', $teacher_id)
+                ->where('school_id', auth()->user()->school_id)
+                ->update([
+                    'class_id' => $class_id,
+                    'section_id' => $section_id,
+                    'school_id' => auth()->user()->school_id,
+                    'teacher_id' => $teacher_id,
+                    $column_name => $data['value'],
+                ]);
         } else {
             TeacherPermission::create([
                 'class_id' => $class_id,
@@ -1017,9 +1037,7 @@ class AdminController extends Controller
                 'teacher_id' => $teacher_id,
                 $column_name => 1,
             ]);
-            
         }
-        
     }
 
 
@@ -1030,20 +1048,23 @@ class AdminController extends Controller
      */
     public function offlineAdmissionForm($type = '')
     {
-        $data['parents'] = User::where(['role_id' => 6,'school_id' => 1])->get();
-        $data['departments'] = Department::get()->where('school_id', auth()->user()->school_id);
-        $data['classes'] = Classes::get()->where('school_id', auth()->user()->school_id);
+        $data['student_type'] = ['Day Scholar'];
+        $data['gender'] = ['male', 'female'];
+        $data['caste'] = ['brahmin/chhetri', 'dalit', 'janjati', 'others'];
+        $data['ecd_type'] = ['school based', 'community based'];
+        $data['disability'] = ['n/a', 'physical', 'mental', 'deaf', 'blind', 'low vision', 'deaf and blind', 'speech impairment', 'multiple disability'];
+        $data['classes'] = Classes::get();
+        $data['departments'] = Department::get()->where('school_id', Auth::user()->school_id);
+        $data['parents'] = User::where(['role_id' => 6, 'school_id' => 1])->get();
         return view('admin.offline_admission.offline_admission', ['aria_expand' => $type, 'data' => $data]);
     }
 
     public function offlineAdmissionCreate(Request $request)
     {
         $data = $request->all();
-        $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
+        if (!empty($data['photo'])) {
 
-        if(!empty($data['photo'])){
-
-            $imageName = time().'.'.$data['photo']->extension();
+            $imageName = time() . '.' . $data['photo']->extension();
 
             $data['photo']->move(public_path('assets/uploads/user-images/'), $imageName);
 
@@ -1055,7 +1076,7 @@ class AdminController extends Controller
         $info = array(
             'gender' => $data['gender'],
             'blood_group' => $data['blood_group'],
-            'birthday' => strtotime($data['eDefaultDateRange']),
+            'birthday' => $data['dob_ad'],
             'phone' => $data['phone'],
             'address' => $data['address'],
             'photo' => $photo
@@ -1063,33 +1084,97 @@ class AdminController extends Controller
         $data['user_information'] = json_encode($info);
 
         $duplicate_user_check = User::get()->where('email', $data['email']);
+        if (count($duplicate_user_check) == 0) {
+            DB::transaction(function () use ($data) {
+                $active_session = get_school_settings(Auth::user()->school_id)->value('running_session');
+                $user = User::create([
+                    'name' => $data['name'],
+                    'email' => $data['email'],
+                    'password' => Hash::make($data['password']),
+                    'code' => student_code(),
+                    'role_id' => '7',
+                    'school_id' => Auth::user()->school_id,
+                    'user_information' => $data['user_information']
+                ]);
 
-        if(count($duplicate_user_check) == 0) {
-
-            $user = User::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'password' => Hash::make($data['password']),
-                'code' => student_code(),
-                'role_id' => '7',
-                'school_id' => auth()->user()->school_id,
-                'user_information' => $data['user_information'],
-            ]);
-
-            Enrollment::create([
-                'user_id' => $user->id,
-                'class_id' => $data['class_id'],
-                'section_id' => $data['section_id'],
-                'school_id' => auth()->user()->school_id,
-                'session_id' => $active_session,
-            ]);
-
-            return redirect()->back()->with('message','Admission successfully done.');
-
+                Enrollment::create([
+                    'user_id' => $user->id,
+                    'class_id' => $data['class_id'],
+                    'section_id' => $data['section_id'],
+                    'school_id' => Auth::user()->school_id,
+                    'session_id' => $active_session
+                ]);
+                Student::create([
+                    'user_id' => $user->id,
+                    'name' => isset($data['name']) ? $data['name'] : '',
+                    'student_type' => isset($data['student_type']) ? $data['student_type'] : '',
+                    'class_id' => isset($data['class_id']) ? $data['class_id'] : '',
+                    'section_id' => isset($data['section_id']) ? $data['section_id'] : '',
+                    'registration_no' => isset($data['registration_no']) ? $data['registration_no'] : '',
+                    'roll_no' => isset($data['roll_no']) ? $data['roll_no'] : '',
+                    'gender' => isset($data['gender']) ? $data['gender'] : '',
+                    'admitted_date' => isset($data['admitted_date']) ? $data['admitted_date'] : '',
+                    'dob_ad' => isset($data['dob_ad']) ? $data['dob_ad'] : '',
+                    'dob_bs' => isset($data['dob_bs']) ? $data['dob_bs'] : '',
+                    'phone' => isset($data['phone']) ? $data['phone'] : '',
+                    'email' => isset($data['email']) ? $data['email'] : '',
+                    'password' => isset($data['password']) ? $data['password'] : '',
+                    'address' => isset($data['address']) ? $data['address'] : '',
+                    'blood_group' => isset($data['blood_group']) ? $data['blood_group'] : '',
+                    'disability' => isset($data['disability']) ? $data['disability'] : '',
+                    'caste' => isset($data['caste']) ? $data['caste'] : '',
+                    'religion' => isset($data['religion']) ? $data['religion'] : '',
+                    'previous_school' => isset($data['previous_school']) ? $data['previous_school'] : '',
+                    'ecd_type' => isset($data['ecd_type']) ? $data['ecd_type'] : '',
+                    'ecd_no' => isset($data['ecd_no']) ? $data['ecd_no'] : '',
+                    'ecd_ppc_experience' => isset($data['ecd_ppc_experience']) ? $data['ecd_ppc_experience'] : '0',
+                    'new_admission_status' => isset($data['new_admission_status']) ? $data['new_admission_status'] : '0',
+                    'photo' => isset($data['photo']) ? $data['photo'] : ''
+                ]);
+            });
+            return redirect()->back()->with('message', 'Admission successfully done.');
         } else {
-
-            return redirect()->back()->with('error','Sorry this email has been taken');
+            return redirect()->back()->with('error', 'Sorry this email has been taken');
         }
+    }
+    public function editStudent(Request $request, $id)
+    {
+        $data['student'] = Student::where('user_id', $id)
+            ->first([
+                'students.user_id',
+                'students.name',
+                'students.student_type',
+                'students.class_id',
+                'students.section_id',
+                'students.registration_no',
+                'students.roll_no',
+                'students.gender',
+                'students.admitted_date',
+                'students.dob_ad',
+                'students.dob_bs',
+                'students.phone',
+                'students.email',
+                'students.address',
+                'students.blood_group',
+                'students.disability',
+                'students.caste',
+                'students.religion',
+                'students.previous_school',
+                'students.ecd_type',
+                'students.ecd_no',
+                'students.ecd_ppc_experience',
+                'students.new_admission_status',
+            ]);
+        $data['blood_group'] = ['a+', 'a-', 'b+', 'b-', 'ab+', 'ab-', 'o+', 'o-'];
+        $data['student_type'] = ['Day Scholar'];
+        $data['gender'] = ['male', 'female'];
+        $data['caste'] = ['brahmin/chhetri', 'dalit', 'janjati', 'others'];
+        $data['ecd_type'] = ['school based', 'community based'];
+        $data['disability'] = ['n/a', 'physical', 'mental', 'deaf', 'blind', 'low vision', 'deaf and blind', 'speech impairment', 'multiple disability'];
+        $data['parents'] = User::where(['role_id' => 6, 'school_id' => 1])->get();
+        $data['departments'] = Department::get()->where('school_id', auth()->user()->school_id);
+        $data['classes'] = Classes::get();
+        return view('admin.student.edit', ['data' => $data]);
     }
 
     public function offlineAdmissionBulkCreate(Request $request)
@@ -1109,10 +1194,10 @@ class AdminController extends Controller
 
         $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
 
-        foreach($students_name as $key => $value){
+        foreach ($students_name as $key => $value) {
             $duplicate_user_check = User::get()->where('email', $students_email[$key]);
 
-            if(count($duplicate_user_check) == 0) {
+            if (count($duplicate_user_check) == 0) {
 
                 $info = array(
                     'gender' => $students_gender[$key],
@@ -1144,7 +1229,6 @@ class AdminController extends Controller
                     'department_id' => $department_id,
                     'session_id' => $active_session,
                 ]);
-
             } else {
                 $duplication_counter++;
             }
@@ -1152,11 +1236,10 @@ class AdminController extends Controller
 
         if ($duplication_counter > 0) {
 
-            return redirect()->back()->with('warning','Some of the emails have been taken.');
-
+            return redirect()->back()->with('warning', 'Some of the emails have been taken.');
         } else {
 
-            return redirect()->back()->with('message','Students added successfully');
+            return redirect()->back()->with('message', 'Students added successfully');
         }
     }
 
@@ -1174,12 +1257,12 @@ class AdminController extends Controller
         if ($file) {
             $filename = $file->getClientOriginalName();
             $extension = $file->getClientOriginalExtension(); //Get extension of uploaded file
-           
+
             // Upload file
             $file->move(public_path('assets/csv_file/'), $filename);
 
             // In case the uploaded file path is to be stored in the database
-            $filepath = asset('public/assets/csv_file/'.$filename);
+            $filepath = asset('public/assets/csv_file/' . $filename);
         }
 
         if (($handle = fopen($filepath, 'r')) !== FALSE) { // Check the resource is valid
@@ -1187,12 +1270,12 @@ class AdminController extends Controller
             $duplication_counter = 0;
 
             while (($all_data = fgetcsv($handle, 1000, ",")) !== FALSE) { // Check opening the file is OK!
-                if($count > 0){
+                if ($count > 0) {
 
                     // check email duplication
                     $duplicate_user_check = User::get()->where('email', $all_data[1]);
 
-                    if(count($duplicate_user_check) == 0){
+                    if (count($duplicate_user_check) == 0) {
 
                         $info = array(
                             'gender' => $all_data[5],
@@ -1223,8 +1306,7 @@ class AdminController extends Controller
                             'school_id' => $school_id,
                             'session_id' => $session_id,
                         ]);
-
-                    }else{
+                    } else {
                         $duplication_counter++;
                     }
                 }
@@ -1235,11 +1317,10 @@ class AdminController extends Controller
 
         if ($duplication_counter > 0) {
 
-            return redirect()->back()->with('warning','Some of the emails have been taken.');
-
+            return redirect()->back()->with('warning', 'Some of the emails have been taken.');
         } else {
 
-            return redirect()->back()->with('message','Students added successfully');
+            return redirect()->back()->with('message', 'Students added successfully');
         }
     }
 
@@ -1272,10 +1353,10 @@ class AdminController extends Controller
             'session_id' => $active_session,
             'timestamp' => strtotime(date('Y-m-d')),
         ]);
-        return redirect()->back()->with('message','Exam category created successfully.');
+        return redirect()->back()->with('message', 'Exam category created successfully.');
     }
 
-    public function editExamCategory($id='')
+    public function editExamCategory($id = '')
     {
         $exam_category = ExamCategory::find($id);
         return view('admin.exam_category.edit', ['exam_category' => $exam_category]);
@@ -1292,14 +1373,14 @@ class AdminController extends Controller
             'session_id' => $active_session,
             'timestamp' => strtotime(date('Y-m-d')),
         ]);
-        return redirect()->back()->with('message','Exam category updated successfully.');
+        return redirect()->back()->with('message', 'Exam category updated successfully.');
     }
 
-    public function examCategoryDelete($id='')
+    public function examCategoryDelete($id = '')
     {
         $exam_category = ExamCategory::find($id);
         $exam_category->delete();
-        return redirect()->back()->with('message','You have successfully delete exam category.');
+        return redirect()->back()->with('message', 'You have successfully delete exam category.');
     }
 
 
@@ -1316,12 +1397,12 @@ class AdminController extends Controller
         return view('admin.examination.offline_exam_list', ['exams' => $exams, 'classes' => $classes, 'id' => $id]);
     }
 
-    public function offlineExamExport($id="")
+    public function offlineExamExport($id = "")
     {
-        if($id != "all") {
+        if ($id != "all") {
             $exams = Exam::where([
-               'exam_type' => 'offline',
-               'class_id' => $id
+                'exam_type' => 'offline',
+                'class_id' => $id
             ])->get();
         } else {
             $exams = Exam::get()->where('exam_type', 'offline');
@@ -1333,8 +1414,8 @@ class AdminController extends Controller
     public function classWiseOfflineExam($id)
     {
         $exams = Exam::where([
-           'exam_type' => 'offline',
-           'class_id' => $id
+            'exam_type' => 'offline',
+            'class_id' => $id
         ])->get();
         $classes = Classes::where('school_id', auth()->user()->school_id)->get();
         return view('admin.examination.exam_list', ['exams' => $exams, 'classes' => $classes, 'id' => $id]);
@@ -1344,15 +1425,15 @@ class AdminController extends Controller
     {
         $classes = Classes::where('school_id', auth()->user()->school_id)->get();
         $exam_categories = ExamCategory::where('school_id', auth()->user()->school_id)->get();
-        return view('admin.examination.add_offline_exam', ['classes' => $classes,'exam_categories' => $exam_categories]);
+        return view('admin.examination.add_offline_exam', ['classes' => $classes, 'exam_categories' => $exam_categories]);
     }
 
     public function classWiseSubject($id)
     {
         $subjects = Subject::get()->where('class_id', $id);
-        $options = '<option value="">'.'Select a subject'.'</option>';
-        foreach ($subjects as $subject):
-            $options .= '<option value="'.$subject->id.'">'.$subject->name.'</option>';
+        $options = '<option value="">' . 'Select a subject' . '</option>';
+        foreach ($subjects as $subject) :
+            $options .= '<option value="' . $subject->id . '">' . $subject->name . '</option>';
         endforeach;
         echo $options;
     }
@@ -1364,8 +1445,8 @@ class AdminController extends Controller
         Exam::create([
             'name' => $data['exam_name'],
             'exam_type' => 'offline',
-            'starting_time' => strtotime($data['starting_date'].''.$data['starting_time']),
-            'ending_time' => strtotime($data['ending_date'].''.$data['ending_time']),
+            'starting_time' => strtotime($data['starting_date'] . '' . $data['starting_time']),
+            'ending_time' => strtotime($data['ending_date'] . '' . $data['ending_time']),
             'total_marks' => $data['total_marks'],
             'status' => 'pending',
             'class_id' => $data['class_id'],
@@ -1374,10 +1455,11 @@ class AdminController extends Controller
             'session_id' => $active_session,
         ]);
 
-        return redirect()->back()->with('message','You have successfully create exam.');
+        return redirect()->back()->with('message', 'You have successfully create exam.');
     }
 
-    public function editOfflineExam($id){
+    public function editOfflineExam($id)
+    {
         $exam = Exam::find($id);
         $classes = Classes::where('school_id', auth()->user()->school_id)->get();
         $subjects = Subject::get()->where('class_id', $exam->class_id);
@@ -1392,8 +1474,8 @@ class AdminController extends Controller
         Exam::where('id', $id)->update([
             'name' => $data['exam_name'],
             'exam_type' => 'offline',
-            'starting_time' => strtotime($data['starting_date'].''.$data['starting_time']),
-            'ending_time' => strtotime($data['ending_date'].''.$data['ending_time']),
+            'starting_time' => strtotime($data['starting_date'] . '' . $data['starting_time']),
+            'ending_time' => strtotime($data['ending_date'] . '' . $data['ending_time']),
             'total_marks' => $data['total_marks'],
             'status' => 'pending',
             'class_id' => $data['class_id'],
@@ -1401,8 +1483,8 @@ class AdminController extends Controller
             'school_id' => auth()->user()->school_id,
             'session_id' => $active_session,
         ]);
-        
-        return redirect()->back()->with('message','You have successfully update exam.');
+
+        return redirect()->back()->with('message', 'You have successfully update exam.');
     }
 
     public function offlineExamDelete($id)
@@ -1410,7 +1492,7 @@ class AdminController extends Controller
         $exam = Exam::find($id);
         $exam->delete();
         $exams = Exam::get()->where('exam_type', 'offline');
-        return redirect()->back()->with('message','You have successfully delete exam.');
+        return redirect()->back()->with('message', 'You have successfully delete exam.');
     }
 
     /**
@@ -1424,14 +1506,14 @@ class AdminController extends Controller
         $classes = Classes::where('school_id', auth()->user()->school_id)->get();
         $attendance_of_students = array();
         $no_of_users = 0;
-        
+
         return view('admin.attendance.daily_attendance', ['classes' => $classes, 'attendance_of_students' => $attendance_of_students, 'no_of_users' => $no_of_users]);
     }
 
     public function dailyAttendanceFilter(Request $request)
     {
         $data = $request->all();
-        $date = '01 '.$data['month'].' '.$data['year'];
+        $date = '01 ' . $data['month'] . ' ' . $data['year'];
         $first_date = strtotime($date);
         $last_date = date("Y-m-t", strtotime($date));
         $last_date = strtotime($last_date);
@@ -1484,18 +1566,18 @@ class AdminController extends Controller
         $data['session_id'] = $active_session;
 
         $check_data = DailyAttendances::where(['timestamp' => $data['timestamp'], 'class_id' => $data['class_id'], 'section_id' => $data['section_id'], 'session_id' => $active_session, 'school_id' => auth()->user()->school_id])->get();
-        if(count($check_data) > 0){
-            foreach($students as $key => $student):
-                $data['status'] = $att_data['status-'.$student];
+        if (count($check_data) > 0) {
+            foreach ($students as $key => $student) :
+                $data['status'] = $att_data['status-' . $student];
                 $data['student_id'] = $student;
                 $attendance_id = $att_data['attendance_id'];
 
                 DailyAttendances::where('id', $attendance_id[$key])->update($data);
 
             endforeach;
-        }else{
-            foreach($students as $student):
-                $data['status'] = $att_data['status-'.$student];
+        } else {
+            foreach ($students as $student) :
+                $data['status'] = $att_data['status-' . $student];
                 $data['student_id'] = $student;
 
                 DailyAttendances::create($data);
@@ -1503,7 +1585,7 @@ class AdminController extends Controller
             endforeach;
         }
 
-        return redirect()->back()->with('message','Student attendance updated successfully.');
+        return redirect()->back()->with('message', 'Student attendance updated successfully.');
     }
 
     public function dailyAttendanceFilter_csv(Request $request)
@@ -1511,16 +1593,16 @@ class AdminController extends Controller
 
         $data = $request->all();
 
-        $store_get_data=array_keys($data);
+        $store_get_data = array_keys($data);
 
 
-        $data['month']= substr($store_get_data[0],0,3);
-        $data['year']= substr($store_get_data[0],4,4);
-        $data['role_id']=substr($store_get_data[0],9,5);
+        $data['month'] = substr($store_get_data[0], 0, 3);
+        $data['year'] = substr($store_get_data[0], 4, 4);
+        $data['role_id'] = substr($store_get_data[0], 9, 5);
 
         $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
 
-      
+
         $date = '01 ' . $data['month'] . ' ' . $data['year'];
 
 
@@ -1534,16 +1616,14 @@ class AdminController extends Controller
         $page_data['attendance_date'] = $first_date;
         $no_of_users = 0;
 
-            $no_of_users = DailyAttendances::whereBetween('timestamp', [$first_date, $last_date])->where(['school_id' => auth()->user()->school_id,  'session_id' => $active_session])->distinct()->count('student_id');
-            $attendance_of_students = DailyAttendances::whereBetween('timestamp', [$first_date, $last_date])->where(['school_id' => auth()->user()->school_id,  'session_id' => $active_session])->get()->toArray();
-       
+        $no_of_users = DailyAttendances::whereBetween('timestamp', [$first_date, $last_date])->where(['school_id' => auth()->user()->school_id,  'session_id' => $active_session])->distinct()->count('student_id');
+        $attendance_of_students = DailyAttendances::whereBetween('timestamp', [$first_date, $last_date])->where(['school_id' => auth()->user()->school_id,  'session_id' => $active_session])->get()->toArray();
 
-        $csv_content ="Student"."/".get_phrase('Date');
+
+        $csv_content = "Student" . "/" . get_phrase('Date');
         $number_of_days = date('m', $page_data['attendance_date']) == 2 ? (date('Y', $page_data['attendance_date']) % 4 ? 28 : (date('m', $page_data['attendance_date']) % 100 ? 29 : (date('m', $page_data['attendance_date']) % 400 ? 28 : 29))) : ((date('m', $page_data['attendance_date']) - 1) % 7 % 2 ? 30 : 31);
-        for ($i = 1; $i <= $number_of_days; $i++)
-        {
-            $csv_content .=','.get_phrase($i);
-
+        for ($i = 1; $i <= $number_of_days; $i++) {
+            $csv_content .= ',' . get_phrase($i);
         }
 
 
@@ -1553,51 +1633,43 @@ class AdminController extends Controller
         $student_id_count = 0;
 
 
-            foreach(array_slice($attendance_of_students, 0, $no_of_users) as $attendance_of_student ){
-                $csv_content .= "\n";
+        foreach (array_slice($attendance_of_students, 0, $no_of_users) as $attendance_of_student) {
+            $csv_content .= "\n";
 
-             $user_details = (new CommonController)->get_user_by_id_from_user_table($attendance_of_student['student_id']);
-           if(date('m', $page_data['attendance_date']) == date('m', $attendance_of_student['timestamp'])) {
-
-
-
-             if($student_id_count != $attendance_of_student['student_id'])
-             {
+            $user_details = (new CommonController)->get_user_by_id_from_user_table($attendance_of_student['student_id']);
+            if (date('m', $page_data['attendance_date']) == date('m', $attendance_of_student['timestamp'])) {
 
 
-                 $csv_content .= $user_details['name'] . ',';
+
+                if ($student_id_count != $attendance_of_student['student_id']) {
 
 
-             for ($i = 1; $i <= $number_of_days; $i++)
-             {
-             $page_data['date'] = $i.' '.$page_data['month'].' '.$page_data['year'];
-             $timestamp = strtotime($page_data['date']);
-
-                 $attendance_by_id = DailyAttendances::where([ 'student_id' => $attendance_of_student['student_id'], 'school_id' => auth()->user()->school_id, 'timestamp' => $timestamp])->first();
-                 if(isset($attendance_by_id->status) && $attendance_by_id->status == 1){
-                    $csv_content .= "P,";
-                 }elseif(isset($attendance_by_id->status) && $attendance_by_id->status == 0){
-                    $csv_content .= "A,";
-                 }
-                 else
-                 {
-                    $csv_content .= ",";
-
-                 }
+                    $csv_content .= $user_details['name'] . ',';
 
 
-                 if($i==$number_of_days)
-                 {
-                    $csv_content= substr_replace($csv_content,"", -1);
-                 }
+                    for ($i = 1; $i <= $number_of_days; $i++) {
+                        $page_data['date'] = $i . ' ' . $page_data['month'] . ' ' . $page_data['year'];
+                        $timestamp = strtotime($page_data['date']);
 
-             }
+                        $attendance_by_id = DailyAttendances::where(['student_id' => $attendance_of_student['student_id'], 'school_id' => auth()->user()->school_id, 'timestamp' => $timestamp])->first();
+                        if (isset($attendance_by_id->status) && $attendance_by_id->status == 1) {
+                            $csv_content .= "P,";
+                        } elseif (isset($attendance_by_id->status) && $attendance_by_id->status == 0) {
+                            $csv_content .= "A,";
+                        } else {
+                            $csv_content .= ",";
+                        }
 
+
+                        if ($i == $number_of_days) {
+                            $csv_content = substr_replace($csv_content, "", -1);
+                        }
+                    }
+                }
+
+                $student_id_count = $attendance_of_student['student_id'];
             }
-
-             $student_id_count = $attendance_of_student['student_id'];
         }
-    }
 
         $txt = fopen($file, "w") or die("Unable to open file!");
         fwrite($txt, $csv_content);
@@ -1663,11 +1735,12 @@ class AdminController extends Controller
             'school_id' => auth()->user()->school_id,
             'session_id' => $active_session,
         ]);
-        
-        return redirect('/admin/routine/list?class_id='.$data['class_id'].'&section_id='.$data['section_id'])->with('message','You have successfully create a class routine.');
+
+        return redirect('/admin/routine/list?class_id=' . $data['class_id'] . '&section_id=' . $data['section_id'])->with('message', 'You have successfully create a class routine.');
     }
 
-    public function routineEditModal($id){
+    public function routineEditModal($id)
+    {
         $routine = Routine::find($id);
         $classes = Classes::get()->where('school_id', auth()->user()->school_id);
         $teachers = User::where(['role_id' => 3, 'school_id' => auth()->user()->school_id])->get();
@@ -1695,15 +1768,15 @@ class AdminController extends Controller
             'school_id' => auth()->user()->school_id,
             'session_id' => $active_session,
         ]);
-        
-        return redirect()->back()->with('message','You have successfully update routine.');
+
+        return redirect()->back()->with('message', 'You have successfully update routine.');
     }
 
     public function routineDelete($id)
     {
         $routine = Routine::find($id);
         $routine->delete();
-        return redirect()->back()->with('message','You have successfully delete routine.');
+        return redirect()->back()->with('message', 'You have successfully delete routine.');
     }
 
     /**
@@ -1749,7 +1822,7 @@ class AdminController extends Controller
 
             $file->move(public_path('assets/uploads/syllabus/'), $filename);
 
-            $filepath = asset('public/assets/uploads/syllabus/'.$filename);
+            $filepath = asset('public/assets/uploads/syllabus/' . $filename);
         }
 
         Syllabus::create([
@@ -1761,11 +1834,12 @@ class AdminController extends Controller
             'school_id' => auth()->user()->school_id,
             'session_id' => $active_session,
         ]);
-        
-        return redirect('/admin/syllabus/list?class_id='.$data['class_id'].'&section_id='.$data['section_id'])->with('message','You have successfully create a syllabus.');
+
+        return redirect('/admin/syllabus/list?class_id=' . $data['class_id'] . '&section_id=' . $data['section_id'])->with('message', 'You have successfully create a syllabus.');
     }
 
-    public function syllabusEditModal($id){
+    public function syllabusEditModal($id)
+    {
         $syllabus = Syllabus::find($id);
         $classes = Classes::get()->where('school_id', auth()->user()->school_id);
         return view('admin.syllabus.edit_syllabus', ['syllabus' => $syllabus, 'classes' => $classes]);
@@ -1785,7 +1859,7 @@ class AdminController extends Controller
 
             $file->move(public_path('assets/uploads/syllabus/'), $filename);
 
-            $filepath = asset('public/assets/uploads/syllabus/'.$filename);
+            $filepath = asset('public/assets/uploads/syllabus/' . $filename);
         }
 
         Syllabus::where('id', $id)->update([
@@ -1797,15 +1871,15 @@ class AdminController extends Controller
             'school_id' => auth()->user()->school_id,
             'session_id' => $active_session,
         ]);
-        
-        return redirect('/admin/syllabus/list?class_id='.$data['class_id'].'&section_id='.$data['section_id'])->with('message','You have successfully update a syllabus.');
+
+        return redirect('/admin/syllabus/list?class_id=' . $data['class_id'] . '&section_id=' . $data['section_id'])->with('message', 'You have successfully update a syllabus.');
     }
 
     public function syllabusDelete($id)
     {
         $syllabus = Syllabus::find($id);
         $syllabus->delete();
-        return redirect()->back()->with('message','You have successfully delete syllabus.');
+        return redirect()->back()->with('message', 'You have successfully delete syllabus.');
     }
 
     /**
@@ -1821,7 +1895,7 @@ class AdminController extends Controller
 
         $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
 
-        if(count($request->all()) > 0){
+        if (count($request->all()) > 0) {
 
             $data = $request->all();
 
@@ -1831,7 +1905,6 @@ class AdminController extends Controller
             $section_id = $data['section_id'];
             $exam_category_id = $data['exam_category_id'];
             $subjects = Subject::where(['class_id' => $class_id, 'school_id' => auth()->user()->school_id])->get();
-
         } else {
             $filter_list = [];
 
@@ -1854,7 +1927,7 @@ class AdminController extends Controller
         echo view('admin.gradebook.list', ['exam_wise_student_list' => $exam_wise_student_list, 'class_id' => $data['class_id'], 'section_id' => $data['section_id'], 'exam_category_id' => $data['exam_category_id'], 'school_id' => auth()->user()->school_id, 'session_id' => $active_session]);
     }
 
-    public function subjectWiseMarks(Request $request, $student_id="")
+    public function subjectWiseMarks(Request $request, $student_id = "")
     {
         $data = $request->all();
 
@@ -1882,10 +1955,9 @@ class AdminController extends Controller
 
         $result = $subject_wise_mark_list->count();
 
-        if($result > 0){
+        if ($result > 0) {
 
-            return redirect()->back()->with('message','Mark added successfully.');
-
+            return redirect()->back()->with('message', 'Mark added successfully.');
         } else {
 
             $mark = array($data['subject_id'] => $data['mark']);
@@ -1899,7 +1971,7 @@ class AdminController extends Controller
 
             Gradebook::create($data);
 
-            return redirect()->back()->with('message','Mark added successfully.');
+            return redirect()->back()->with('message', 'Mark added successfully.');
         }
     }
 
@@ -1908,7 +1980,7 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function marks($value='')
+    public function marks($value = '')
     {
         $exam_categories = ExamCategory::where('school_id', auth()->user()->school_id)->get();
         $classes = Classes::where('school_id', auth()->user()->school_id)->get();
@@ -1930,8 +2002,8 @@ class AdminController extends Controller
 
 
         $enroll_students = Enrollment::where('class_id', $page_data['class_id'])
-        ->where('section_id', $page_data['section_id'])
-        ->get();
+            ->where('section_id', $page_data['section_id'])
+            ->get();
 
         $page_data['exam_categories'] = ExamCategory::where('school_id', auth()->user()->school_id)->get();
         $page_data['classes'] = Classes::where('school_id', auth()->user()->school_id)->get();
@@ -1961,7 +2033,7 @@ class AdminController extends Controller
 
         $duplicate_grade_check = Grade::get()->where('name', $data['grade']);
 
-        if(count($duplicate_grade_check) == 0) {
+        if (count($duplicate_grade_check) == 0) {
             Grade::create([
                 'name' => $data['grade'],
                 'grade_point' => $data['grade_point'],
@@ -1970,11 +2042,10 @@ class AdminController extends Controller
                 'school_id' => auth()->user()->school_id,
             ]);
 
-            return redirect()->back()->with('message','You have successfully create a new grade.');
-
+            return redirect()->back()->with('message', 'You have successfully create a new grade.');
         } else {
             return back()
-            ->with('error','Sorry this grade already exists');
+                ->with('error', 'Sorry this grade already exists');
         }
     }
 
@@ -1994,8 +2065,8 @@ class AdminController extends Controller
             'mark_upto' => $data['mark_upto'],
             'school_id' => auth()->user()->school_id,
         ]);
-        
-        return redirect()->back()->with('message','You have successfully update grade.');
+
+        return redirect()->back()->with('message', 'You have successfully update grade.');
     }
 
     public function gradeDelete($id)
@@ -2003,7 +2074,7 @@ class AdminController extends Controller
         $grade = Grade::find($id);
         $grade->delete();
         $grades = Grade::get()->where('school_id', auth()->user()->school_id);
-        return redirect()->back()->with('message','You have successfully delete grade.');
+        return redirect()->back()->with('message', 'You have successfully delete grade.');
     }
 
     /**
@@ -2044,12 +2115,14 @@ class AdminController extends Controller
         return true;
     }
 
-    public function classWiseSections($id)
+    public function classWiseSections(Request $request, $id)
     {
+        $request_section_id = isset($request->section_id) ? $request->section_id : '';
         $sections = Section::get()->where('class_id', $id);
-        $options = '<option value="">'.'Select a section'.'</option>';
-        foreach ($sections as $section):
-            $options .= '<option value="'.$section->id.'">'.$section->name.'</option>';
+        $options = '<option value="">' . 'Select a section' . '</option>';
+        foreach ($sections as $section) :
+            $selection_status = $request_section_id == $section->id ? 'selected' : '';
+            $options .= '<option value="' . $section->id . '" ' . $selection_status . '>' . $section->name . '</option>';
         endforeach;
         echo $options;
     }
@@ -2063,12 +2136,11 @@ class AdminController extends Controller
     {
         $classes = Classes::where('school_id', auth()->user()->school_id)->get();
 
-        if(count($request->all()) > 0 && $request->class_id != ''){
+        if (count($request->all()) > 0 && $request->class_id != '') {
 
             $data = $request->all();
             $class_id = $data['class_id'] ?? '';
             $subjects = Subject::where('class_id', $class_id)->paginate(10);
-
         } else {
             $subjects = Subject::where('school_id', auth()->user()->school_id)->paginate(10);
 
@@ -2095,8 +2167,8 @@ class AdminController extends Controller
             'school_id' => auth()->user()->school_id,
             'session_id' => $active_session,
         ]);
-        
-        return redirect('/admin/subject?class_id='.$data['class_id'])->with('message','You have successfully create subject.');
+
+        return redirect('/admin/subject?class_id=' . $data['class_id'])->with('message', 'You have successfully create subject.');
     }
 
     public function editSubject($id)
@@ -2114,8 +2186,8 @@ class AdminController extends Controller
             'class_id' => $data['class_id'],
             'school_id' => auth()->user()->school_id,
         ]);
-        
-        return redirect('/admin/subject?class_id='.$data['class_id'])->with('message','You have successfully update subject.');
+
+        return redirect('/admin/subject?class_id=' . $data['class_id'])->with('message', 'You have successfully update subject.');
     }
 
     public function subjectDelete($id)
@@ -2123,7 +2195,7 @@ class AdminController extends Controller
         $subject = Subject::find($id);
         $subject->delete();
         $subjects = Subject::get()->where('school_id', auth()->user()->school_id);
-        return redirect()->back()->with('message','You have successfully delete subject.');
+        return redirect()->back()->with('message', 'You have successfully delete subject.');
     }
 
     /**
@@ -2135,13 +2207,12 @@ class AdminController extends Controller
     {
         $search = $request['search'] ?? "";
 
-        if($search != "") {
+        if ($search != "") {
 
-            $departments = Department::where(function ($query) use($search) {
-                    $query->where('name', 'LIKE', "%{$search}%")
-                        ->where('school_id', auth()->user()->school_id);
-                })->paginate(10);
-
+            $departments = Department::where(function ($query) use ($search) {
+                $query->where('name', 'LIKE', "%{$search}%")
+                    ->where('school_id', auth()->user()->school_id);
+            })->paginate(10);
         } else {
             $departments = Department::where('school_id', auth()->user()->school_id)->paginate(10);
         }
@@ -2160,17 +2231,16 @@ class AdminController extends Controller
 
         $duplicate_department_check = Department::get()->where('name', $data['name']);
 
-        if(count($duplicate_department_check) == 0) {
+        if (count($duplicate_department_check) == 0) {
             Department::create([
                 'name' => $data['name'],
                 'school_id' => auth()->user()->school_id,
             ]);
 
-            return redirect()->back()->with('message','You have successfully create a new department.');
-
+            return redirect()->back()->with('message', 'You have successfully create a new department.');
         } else {
             return back()
-            ->with('error','Sorry this department already exists');
+                ->with('error', 'Sorry this department already exists');
         }
     }
 
@@ -2186,16 +2256,16 @@ class AdminController extends Controller
 
         $duplicate_department_check = Department::get()->where('name', $data['name']);
 
-        if(count($duplicate_department_check) == 0) {
+        if (count($duplicate_department_check) == 0) {
             Department::where('id', $id)->update([
                 'name' => $data['name'],
                 'school_id' => auth()->user()->school_id,
             ]);
-            
-            return redirect()->back()->with('message','You have successfully update subject.');
+
+            return redirect()->back()->with('message', 'You have successfully update subject.');
         } else {
             return back()
-            ->with('error','Sorry this department already exists');
+                ->with('error', 'Sorry this department already exists');
         }
     }
 
@@ -2203,7 +2273,7 @@ class AdminController extends Controller
     {
         $department = Department::find($id);
         $department->delete();
-        return redirect()->back()->with('message','You have successfully delete department.');
+        return redirect()->back()->with('message', 'You have successfully delete department.');
     }
 
 
@@ -2229,17 +2299,16 @@ class AdminController extends Controller
 
         $duplicate_class_room_check = ClassRoom::get()->where('name', $data['name']);
 
-        if(count($duplicate_class_room_check) == 0) {
+        if (count($duplicate_class_room_check) == 0) {
             ClassRoom::create([
                 'name' => $data['name'],
                 'school_id' => auth()->user()->school_id,
             ]);
 
-            return redirect()->back()->with('message','You have successfully create a new class room.');
-
+            return redirect()->back()->with('message', 'You have successfully create a new class room.');
         } else {
             return back()
-            ->with('error','Sorry this class room already exists');
+                ->with('error', 'Sorry this class room already exists');
         }
     }
 
@@ -2255,16 +2324,16 @@ class AdminController extends Controller
 
         $duplicate_class_room_check = ClassRoom::get()->where('name', $data['name']);
 
-        if(count($duplicate_class_room_check) == 0) {
+        if (count($duplicate_class_room_check) == 0) {
             ClassRoom::where('id', $id)->update([
                 'name' => $data['name'],
                 'school_id' => auth()->user()->school_id,
             ]);
-            
-            return redirect()->back()->with('message','You have successfully update class room.');
+
+            return redirect()->back()->with('message', 'You have successfully update class room.');
         } else {
             return back()
-            ->with('error','Sorry this class room already exists');
+                ->with('error', 'Sorry this class room already exists');
         }
     }
 
@@ -2272,7 +2341,7 @@ class AdminController extends Controller
     {
         $department = ClassRoom::find($id);
         $department->delete();
-        return redirect()->back()->with('message','You have successfully delete class room.');
+        return redirect()->back()->with('message', 'You have successfully delete class room.');
     }
 
     /**
@@ -2284,13 +2353,12 @@ class AdminController extends Controller
     {
         $search = $request['search'] ?? "";
 
-        if($search != "") {
+        if ($search != "") {
 
-            $class_lists = Classes::where(function ($query) use($search) {
-                    $query->where('name', 'LIKE', "%{$search}%")
-                        ->where('school_id', auth()->user()->school_id);
-                })->paginate(10);
-
+            $class_lists = Classes::where(function ($query) use ($search) {
+                $query->where('name', 'LIKE', "%{$search}%")
+                    ->where('school_id', auth()->user()->school_id);
+            })->paginate(10);
         } else {
             // $class_lists = Classes::where('school_id', auth()->user()->school_id)->paginate(10);
             $class_lists = Classes::whereNull('school_id')->paginate(10);
@@ -2310,7 +2378,7 @@ class AdminController extends Controller
 
         $duplicate_class_check = Classes::get()->where('name', $data['name']);
 
-        if(count($duplicate_class_check) == 0) {
+        if (count($duplicate_class_check) == 0) {
             $id = Classes::create([
                 'name' => $data['name'],
                 'school_id' => auth()->user()->school_id,
@@ -2321,11 +2389,10 @@ class AdminController extends Controller
                 'class_id' => $id,
             ]);
 
-            return redirect()->back()->with('message','You have successfully create a new class.');
-
+            return redirect()->back()->with('message', 'You have successfully create a new class.');
         } else {
             return back()
-            ->with('error','Sorry this class already exists');
+                ->with('error', 'Sorry this class already exists');
         }
     }
 
@@ -2341,16 +2408,16 @@ class AdminController extends Controller
 
         $duplicate_class_check = Classes::get()->where('name', $data['name']);
 
-        if(count($duplicate_class_check) == 0) {
+        if (count($duplicate_class_check) == 0) {
             Classes::where('id', $id)->update([
                 'name' => $data['name'],
                 'school_id' => auth()->user()->school_id,
             ]);
-            
-            return redirect()->back()->with('message','You have successfully update class.');
+
+            return redirect()->back()->with('message', 'You have successfully update class.');
         } else {
             return back()
-            ->with('error','Sorry this class already exists');
+                ->with('error', 'Sorry this class already exists');
         }
     }
 
@@ -2374,17 +2441,17 @@ class AdminController extends Controller
         // print_r($section_id);
         // die;
 
-        
 
-        foreach($section_id as $key => $value){
-            if($value == 0){
+
+        foreach ($section_id as $key => $value) {
+            if ($value == 0) {
                 Section::create([
                     'name' => $section_name[$key],
                     'class_id' => $id,
-                    'school_id' =>auth()->user()->school_id,
+                    'school_id' => auth()->user()->school_id,
                 ]);
             }
-            if($value != 0 && is_numeric($value)){
+            if ($value != 0 && is_numeric($value)) {
                 Section::where(['id' => $value, 'class_id' => $id, 'school_id' => $school_id])->update([
                     'name' => $section_name[$key],
                 ]);
@@ -2399,7 +2466,7 @@ class AdminController extends Controller
             }
         }
 
-        return redirect()->back()->with('message','You have successfully update sections.');
+        return redirect()->back()->with('message', 'You have successfully update sections.');
     }
 
     public function classDelete($id)
@@ -2408,7 +2475,7 @@ class AdminController extends Controller
         $class->delete();
         $sections = Section::get()->where('class_id', $id);
         $sections->map->delete();
-        return redirect()->back()->with('message','You have successfully delete class.');
+        return redirect()->back()->with('message', 'You have successfully delete class.');
     }
 
     /**
@@ -2420,11 +2487,11 @@ class AdminController extends Controller
     {
         $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
 
-        if(count($request->all()) > 0){
+        if (count($request->all()) > 0) {
             $data = $request->all();
             $date = explode('-', $data['eDateRange']);
-            $date_from = strtotime($date[0].' 00:00:00');
-            $date_to  = strtotime($date[1].' 23:59:59');
+            $date_from = strtotime($date[0] . ' 00:00:00');
+            $date_to  = strtotime($date[1] . ' 23:59:59');
             $selected_class = $data['class'];
             $selected_status = $data['status'];
 
@@ -2432,7 +2499,7 @@ class AdminController extends Controller
                 $invoices = StudentFeeManager::where('timestamp', '>=', $date_from)->where('timestamp', '<=', $date_to)->where('class_id', $selected_class)->where('status', $selected_status)->where('school_id', auth()->user()->school_id)->where('session_id', $active_session)->get();
             } else if ($selected_class != "all") {
                 $invoices = StudentFeeManager::where('timestamp', '>=', $date_from)->where('timestamp', '<=', $date_to)->where('class_id', $selected_class)->where('school_id', auth()->user()->school_id)->where('session_id', $active_session)->get();
-            } else if ($selected_status != "all"){
+            } else if ($selected_status != "all") {
                 $invoices = StudentFeeManager::where('timestamp', '>=', $date_from)->where('timestamp', '<=', $date_to)->where('status', $selected_status)->where('school_id', auth()->user()->school_id)->where('session_id', $active_session)->get();
             } else {
                 $invoices = StudentFeeManager::where('timestamp', '>=', $date_from)->where('timestamp', '<=', $date_to)->where('school_id', auth()->user()->school_id)->where('session_id', $active_session)->get();
@@ -2442,16 +2509,15 @@ class AdminController extends Controller
             $classes = Classes::where('school_id', auth()->user()->school_id)->get();
 
             return view('admin.student_fee_manager.student_fee_manager', ['classes' => $classes, 'invoices' => $invoices, 'date_from' => $date_from, 'date_to' => $date_to, 'selected_class' => $selected_class, 'selected_status' => $selected_status]);
-
-         } else {
+        } else {
             $classes = Classes::where('school_id', auth()->user()->school_id)->get();
-            $date_from = strtotime(date('d-m-Y',strtotime('first day of this month')).' 00:00:00');
-            $date_to = strtotime(date('d-m-Y',strtotime('last day of this month')).' 23:59:59');
+            $date_from = strtotime(date('d-m-Y', strtotime('first day of this month')) . ' 00:00:00');
+            $date_to = strtotime(date('d-m-Y', strtotime('last day of this month')) . ' 23:59:59');
             $selected_class = "";
             $selected_status = "";
             $invoices = StudentFeeManager::where('timestamp', '>=', $date_from)->where('timestamp', '<=', $date_to)->where('school_id', auth()->user()->school_id)->where('session_id', $active_session)->get();
             return view('admin.student_fee_manager.student_fee_manager', ['classes' => $classes, 'invoices' => $invoices, 'date_from' => $date_from, 'date_to' => $date_to, 'selected_class' => $selected_class, 'selected_status' => $selected_status]);
-         }
+        }
     }
 
     public function feeManagerExport($date_from = "", $date_to = "", $selected_class = "", $selected_status = "")
@@ -2463,7 +2529,7 @@ class AdminController extends Controller
             $invoices = StudentFeeManager::where('timestamp', '>=', $date_from)->where('timestamp', '<=', $date_to)->where('class_id', $selected_class)->where('status', $selected_status)->where('school_id', auth()->user()->school_id)->where('session_id', $active_session)->get();
         } else if ($selected_class != "all") {
             $invoices = StudentFeeManager::where('timestamp', '>=', $date_from)->where('timestamp', '<=', $date_to)->where('class_id', $selected_class)->where('school_id', auth()->user()->school_id)->where('session_id', $active_session)->get();
-        } else if ($selected_status != "all"){
+        } else if ($selected_status != "all") {
             $invoices = StudentFeeManager::where('timestamp', '>=', $date_from)->where('timestamp', '<=', $date_to)->where('status', $selected_status)->where('school_id', auth()->user()->school_id)->where('session_id', $active_session)->get();
         } else {
             $invoices = StudentFeeManager::where('timestamp', '>=', $date_from)->where('timestamp', '<=', $date_to)->where('school_id', auth()->user()->school_id)->where('session_id', $active_session)->get();
@@ -2473,7 +2539,7 @@ class AdminController extends Controller
 
 
 
-        $file = "student_fee-".date('d-m-Y', $date_from).'-'.date('d-m-Y', $date_to).'-'.$selected_class.'-'.$selected_status.".csv";
+        $file = "student_fee-" . date('d-m-Y', $date_from) . '-' . date('d-m-Y', $date_to) . '-' . $selected_class . '-' . $selected_status . ".csv";
 
         $csv_content = get_phrase('Invoice No') . ', ' . get_phrase('Student') . ', ' . get_phrase('Class') . ', ' . get_phrase('Invoice Title') . ', ' . get_phrase('Total Amount') . ', ' . get_phrase('Created At') . ', ' . get_phrase('Paid Amount') . ', ' . get_phrase('Status');
 
@@ -2497,7 +2563,6 @@ class AdminController extends Controller
         header('Content-Length: ' . filesize($file));
         header("Content-type: text/csv");
         readfile($file);
-
     }
 
 
@@ -2510,7 +2575,7 @@ class AdminController extends Controller
             $invoices = StudentFeeManager::where('timestamp', '>=', $date_from)->where('timestamp', '<=', $date_to)->where('class_id', $selected_class)->where('status', $selected_status)->where('school_id', auth()->user()->school_id)->where('session_id', $active_session)->get();
         } else if ($selected_class != "all") {
             $invoices = StudentFeeManager::where('timestamp', '>=', $date_from)->where('timestamp', '<=', $date_to)->where('class_id', $selected_class)->where('school_id', auth()->user()->school_id)->where('session_id', $active_session)->get();
-        } else if ($selected_status != "all"){
+        } else if ($selected_status != "all") {
             $invoices = StudentFeeManager::where('timestamp', '>=', $date_from)->where('timestamp', '<=', $date_to)->where('status', $selected_status)->where('school_id', auth()->user()->school_id)->where('session_id', $active_session)->get();
         } else {
             $invoices = StudentFeeManager::where('timestamp', '>=', $date_from)->where('timestamp', '<=', $date_to)->where('school_id', auth()->user()->school_id)->where('session_id', $active_session)->get();
@@ -2520,41 +2585,38 @@ class AdminController extends Controller
         $classes = Classes::where('school_id', auth()->user()->school_id)->get();
 
         return view('admin.student_fee_manager.pdf_print', ['classes' => $classes, 'invoices' => $invoices, 'date_from' => $date_from, 'date_to' => $date_to, 'selected_class' => $selected_class, 'selected_status' => $selected_status]);
-
-
     }
 
-    public function createFeeManager($value="")
+    public function createFeeManager($value = "")
     {
 
         $classes = Classes::where('school_id', auth()->user()->school_id)->get();
 
-        if($value == 'single'){
+        if ($value == 'single') {
             return view('admin.student_fee_manager.single', ['classes' => $classes]);
-        } else if($value == 'mass'){
+        } else if ($value == 'mass') {
             return view('admin.student_fee_manager.mass', ['classes' => $classes]);
         }
     }
 
-    public function feeManagerCreate(Request $request, $value="")
+    public function feeManagerCreate(Request $request, $value = "")
     {
         $data = $request->all();
 
-        if($value == 'single'){
+        if ($value == 'single') {
 
             if ($data['paid_amount'] > $data['total_amount']) {
 
-                return back()->with('error','Paid amount can not get bigger than total amount');
-
+                return back()->with('error', 'Paid amount can not get bigger than total amount');
             }
             if ($data['status'] == 'paid' && $data['total_amount'] != $data['paid_amount']) {
 
-               return back()->with('error','Paid amount is not equal to total amount');
+                return back()->with('error', 'Paid amount is not equal to total amount');
             }
 
 
-            $parent_id=User::find($data['student_id'])->toArray();
-            $parent_id=$parent_id['parent_id'];
+            $parent_id = User::find($data['student_id'])->toArray();
+            $parent_id = $parent_id['parent_id'];
             $data['parent_id'] = $parent_id;
 
             $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
@@ -2566,17 +2628,16 @@ class AdminController extends Controller
 
             StudentFeeManager::create($data);
 
-            return redirect()->back()->with('message','You have successfully create a new invoice.');
-        } else if($value == 'mass'){
+            return redirect()->back()->with('message', 'You have successfully create a new invoice.');
+        } else if ($value == 'mass') {
 
             if ($data['paid_amount'] > $data['total_amount']) {
 
-                return back()->with('error','Paid amount can not get bigger than total amount');
-
+                return back()->with('error', 'Paid amount can not get bigger than total amount');
             }
             if ($data['status'] == 'paid' && $data['total_amount'] != $data['paid_amount']) {
 
-               return back()->with('error','Paid amount is not equal to total amount');
+                return back()->with('error', 'Paid amount is not equal to total amount');
             }
 
             $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
@@ -2586,8 +2647,8 @@ class AdminController extends Controller
             $data['session_id'] = $active_session;
 
             $enrolments = Enrollment::where('class_id', $data['class_id'])
-            ->where('section_id', $data['section_id'])
-            ->get();
+                ->where('section_id', $data['section_id'])
+                ->get();
 
 
 
@@ -2595,35 +2656,34 @@ class AdminController extends Controller
 
 
                 $data['student_id'] = $enrolment['user_id'];
-                $parent_id=User::find($data['student_id'])->toArray();
-                $parent_id=$parent_id['parent_id'];
+                $parent_id = User::find($data['student_id'])->toArray();
+                $parent_id = $parent_id['parent_id'];
                 $data['parent_id'] = $parent_id;
                 StudentFeeManager::create($data);
             }
 
             if (sizeof($enrolments) > 0) {
 
-                return redirect()->back()->with('message','Invoice added successfully');
+                return redirect()->back()->with('message', 'Invoice added successfully');
+            } else {
 
-            }else{
-
-                return back()->with('error','No student found');
+                return back()->with('error', 'No student found');
             }
         }
     }
 
-    public function classWiseStudents($id='')
+    public function classWiseStudents($id = '')
     {
         $enrollments = Enrollment::get()->where('class_id', $id);
-        $options = '<option value="">'.'Select a student'.'</option>';
-        foreach ($enrollments as $enrollment):
+        $options = '<option value="">' . 'Select a student' . '</option>';
+        foreach ($enrollments as $enrollment) :
             $student = User::find($enrollment->user_id);
-            $options .= '<option value="'.$student->id.'">'.$student->name.'</option>';
+            $options .= '<option value="' . $student->id . '">' . $student->name . '</option>';
         endforeach;
         echo $options;
     }
 
-    public function editFeeManager($id='')
+    public function editFeeManager($id = '')
     {
         $invoice_details = StudentFeeManager::find($id);
         $enrollments = Enrollment::get()->where('class_id', $invoice_details->class_id);
@@ -2631,7 +2691,7 @@ class AdminController extends Controller
         return view('admin.student_fee_manager.edit', ['invoice_details' => $invoice_details, 'classes' => $classes, 'enrollments' => $enrollments]);
     }
 
-    public function feeManagerUpdate(Request $request, $id='')
+    public function feeManagerUpdate(Request $request, $id = '')
     {
         $data = $request->all();
 
@@ -2640,10 +2700,10 @@ class AdminController extends Controller
 
         if ($data['paid_amount'] > $data['total_amount']) {
 
-            return redirect()->back()->with('error','Paid amount can not get bigger than total amount');
+            return redirect()->back()->with('error', 'Paid amount can not get bigger than total amount');
         }
         if ($data['status'] == 'paid' && $data['total_amount'] != $data['paid_amount']) {
-            return redirect()->back()->with('error','Paid amount is not equal to total amount');
+            return redirect()->back()->with('error', 'Paid amount is not equal to total amount');
         }
 
         /*KEEPING TRACK OF PAYMENT DATE*/
@@ -2668,14 +2728,14 @@ class AdminController extends Controller
             'session_id' => $active_session,
         ]);
 
-        return redirect()->back()->with('message','You have successfully update invoice.');
+        return redirect()->back()->with('message', 'You have successfully update invoice.');
     }
 
     public function studentFeeDelete($id)
     {
         $invoice = StudentFeeManager::find($id);
         $invoice->delete();
-        return redirect()->back()->with('message','You have successfully delete invoice.');
+        return redirect()->back()->with('message', 'You have successfully delete invoice.');
     }
 
     /**
@@ -2686,43 +2746,42 @@ class AdminController extends Controller
     public function expenseList(Request $request)
     {
         $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
-        if(count($request->all()) > 0){
+        if (count($request->all()) > 0) {
             $data = $request->all();
 
             $date = explode('-', $data['eDateRange']);
-            $date_from = strtotime($date[0].' 00:00:00');
-            $date_to  = strtotime($date[1].' 23:59:59');
+            $date_from = strtotime($date[0] . ' 00:00:00');
+            $date_to  = strtotime($date[1] . ' 23:59:59');
             $expense_category_id = $data['expense_category_id'];
 
             $expense_categories = ExpenseCategory::where('school_id', auth()->user()->school_id)->get();
             $selected_category = ExpenseCategory::find($expense_category_id);
-            if($expense_category_id != 'all'){
+            if ($expense_category_id != 'all') {
                 $expenses = Expense::where('expense_category_id', $expense_category_id)
-                                ->where('date', '>=', $date_from)
-                                ->where('date', '<=', $date_to)
-                                ->where('school_id', auth()->user()->school_id)
-                                ->where('session_id', $active_session)
-                                ->get();
+                    ->where('date', '>=', $date_from)
+                    ->where('date', '<=', $date_to)
+                    ->where('school_id', auth()->user()->school_id)
+                    ->where('session_id', $active_session)
+                    ->get();
             } else {
                 $expenses = Expense::where('date', '>=', $date_from)
-                                ->where('date', '<=', $date_to)
-                                ->where('school_id', auth()->user()->school_id)
-                                ->where('session_id', $active_session)
-                                ->get();
+                    ->where('date', '<=', $date_to)
+                    ->where('school_id', auth()->user()->school_id)
+                    ->where('session_id', $active_session)
+                    ->get();
             }
 
             return view('admin.expenses.expense_manager', ['expense_categories' => $expense_categories, 'expenses' => $expenses, 'selected_category' => $selected_category, 'date_from' => $date_from, 'date_to' => $date_to]);
-
         } else {
             $expense_categories = ExpenseCategory::where('school_id', auth()->user()->school_id)->get();
             $selected_category = "";
-            $date_from = strtotime(date('d-m-Y',strtotime('first day of this month')).' 00:00:00');
-            $date_to = strtotime(date('d-m-Y',strtotime('last day of this month')).' 23:59:59');
+            $date_from = strtotime(date('d-m-Y', strtotime('first day of this month')) . ' 00:00:00');
+            $date_to = strtotime(date('d-m-Y', strtotime('last day of this month')) . ' 23:59:59');
             $expenses = Expense::where('date', '>=', $date_from)
-                                ->where('date', '<=', $date_to)
-                                ->where('school_id', auth()->user()->school_id)
-                                ->where('session_id', $active_session)
-                                ->get();
+                ->where('date', '<=', $date_to)
+                ->where('school_id', auth()->user()->school_id)
+                ->where('session_id', $active_session)
+                ->get();
             return view('admin.expenses.expense_manager', ['expense_categories' => $expense_categories, 'expenses' => $expenses, 'selected_category' => $selected_category, 'date_from' => $date_from, 'date_to' => $date_to]);
         }
     }
@@ -2747,7 +2806,7 @@ class AdminController extends Controller
             'session_id' => $active_session,
         ]);
 
-        return redirect()->back()->with('message','You have successfully create a new expense.');
+        return redirect()->back()->with('message', 'You have successfully create a new expense.');
     }
 
     public function editExpense($id)
@@ -2771,14 +2830,14 @@ class AdminController extends Controller
             'session_id' => $active_session,
         ]);
 
-        return redirect()->back()->with('message','You have successfully update expense.');
+        return redirect()->back()->with('message', 'You have successfully update expense.');
     }
 
     public function expenseDelete($id)
     {
         $expense = Expense::find($id);
         $expense->delete();
-        return redirect()->back()->with('message','You have successfully delete expense.');
+        return redirect()->back()->with('message', 'You have successfully delete expense.');
     }
 
 
@@ -2804,7 +2863,7 @@ class AdminController extends Controller
 
         $duplicate_category_check = ExpenseCategory::get()->where('name', $data['name']);
 
-        if(count($duplicate_category_check) == 0) {
+        if (count($duplicate_category_check) == 0) {
 
             $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
 
@@ -2814,11 +2873,10 @@ class AdminController extends Controller
                 'session_id' => $active_session,
             ]);
 
-            return redirect()->back()->with('message','You have successfully create a new expense category.');
-
+            return redirect()->back()->with('message', 'You have successfully create a new expense category.');
         } else {
             return back()
-            ->with('error','Sorry this expense category already exists');
+                ->with('error', 'Sorry this expense category already exists');
         }
     }
 
@@ -2834,7 +2892,7 @@ class AdminController extends Controller
 
         $duplicate_category_check = ExpenseCategory::get()->where('name', $data['name']);
 
-        if(count($duplicate_category_check) == 0) {
+        if (count($duplicate_category_check) == 0) {
 
             $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
 
@@ -2844,11 +2902,10 @@ class AdminController extends Controller
                 'session_id' => $active_session,
             ]);
 
-            return redirect()->back()->with('message','You have successfully update expense category.');
-
+            return redirect()->back()->with('message', 'You have successfully update expense category.');
         } else {
             return back()
-            ->with('error','Sorry this expense category already exists');
+                ->with('error', 'Sorry this expense category already exists');
         }
     }
 
@@ -2856,7 +2913,7 @@ class AdminController extends Controller
     {
         $expense_category = ExpenseCategory::find($id);
         $expense_category->delete();
-        return redirect()->back()->with('message','You have successfully delete expense category.');
+        return redirect()->back()->with('message', 'You have successfully delete expense category.');
     }
 
     /**
@@ -2868,16 +2925,15 @@ class AdminController extends Controller
     {
         $search = $request['search'] ?? "";
 
-        if($search != "") {
+        if ($search != "") {
 
-            $books = Book::where(function ($query) use($search) {
-                    $query->where('name', 'LIKE', "%{$search}%")
-                        ->where('school_id', auth()->user()->school_id);
-                })->orWhere(function ($query) use($search) {
-                    $query->where('author', 'LIKE', "%{$search}%")
-                        ->where('school_id', auth()->user()->school_id);
-                })->paginate(10);
-
+            $books = Book::where(function ($query) use ($search) {
+                $query->where('name', 'LIKE', "%{$search}%")
+                    ->where('school_id', auth()->user()->school_id);
+            })->orWhere(function ($query) use ($search) {
+                $query->where('author', 'LIKE', "%{$search}%")
+                    ->where('school_id', auth()->user()->school_id);
+            })->paginate(10);
         } else {
             $books = Book::where('school_id', auth()->user()->school_id)->paginate(10);
         }
@@ -2896,7 +2952,7 @@ class AdminController extends Controller
 
         $duplicate_book_check = Book::get()->where('name', $data['name']);
 
-        if(count($duplicate_book_check) == 0) {
+        if (count($duplicate_book_check) == 0) {
 
             $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
 
@@ -2906,38 +2962,37 @@ class AdminController extends Controller
 
             Book::create($data);
 
-            return redirect()->back()->with('message','You have successfully create a book.');
-
+            return redirect()->back()->with('message', 'You have successfully create a book.');
         } else {
             return back()
-            ->with('error','Sorry this book already exists');
+                ->with('error', 'Sorry this book already exists');
         }
     }
 
-    public function editBook($id="")
+    public function editBook($id = "")
     {
         $book_details = Book::find($id);
         return view('admin.book.edit', ['book_details' => $book_details]);
     }
 
-    public function bookUpdate(Request $request, $id='')
+    public function bookUpdate(Request $request, $id = '')
     {
         $data = $request->all();
 
         $duplicate_book_check = Book::get()->where('name', $data['name']);
 
-        if(count($duplicate_book_check) == 0) {
+        if (count($duplicate_book_check) == 0) {
             Book::where('id', $id)->update([
                 'name' => $data['name'],
                 'author' => $data['author'],
                 'copies' => $data['copies'],
                 'timestamp' => strtotime(date('d-M-Y')),
             ]);
-            
-            return redirect()->back()->with('message','You have successfully update book.');
+
+            return redirect()->back()->with('message', 'You have successfully update book.');
         } else {
             return back()
-            ->with('error','Sorry this book already exists');
+                ->with('error', 'Sorry this book already exists');
         }
     }
 
@@ -2945,7 +3000,7 @@ class AdminController extends Controller
     {
         $book = Book::find($id);
         $book->delete();
-        return redirect()->back()->with('message','You have successfully delete book.');
+        return redirect()->back()->with('message', 'You have successfully delete book.');
     }
 
 
@@ -2958,31 +3013,30 @@ class AdminController extends Controller
     {
         $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
 
-        if(count($request->all()) > 0) {
+        if (count($request->all()) > 0) {
 
             $data = $request->all();
 
             $date = explode('-', $data['eDateRange']);
-            $date_from = strtotime($date[0].' 00:00:00');
-            $date_to  = strtotime($date[1].' 23:59:59');
+            $date_from = strtotime($date[0] . ' 00:00:00');
+            $date_to  = strtotime($date[1] . ' 23:59:59');
             $book_issues = BookIssue::where('issue_date', '>=', $date_from)
-                                    ->where('issue_date', '<=', $date_to)
-                                    ->where('school_id', auth()->user()->school_id)
-                                    ->where('session_id', $active_session)
-                                    ->get();
+                ->where('issue_date', '<=', $date_to)
+                ->where('school_id', auth()->user()->school_id)
+                ->where('session_id', $active_session)
+                ->get();
 
             return view('admin.book_issue.book_issue', ['book_issues' => $book_issues, 'date_from' => $date_from, 'date_to' => $date_to]);
         } else {
-            $date_from = strtotime(date('d-m-Y',strtotime('first day of this month')).' 00:00:00');
-            $date_to = strtotime(date('d-m-Y',strtotime('last day of this month')).' 23:59:59');
+            $date_from = strtotime(date('d-m-Y', strtotime('first day of this month')) . ' 00:00:00');
+            $date_to = strtotime(date('d-m-Y', strtotime('last day of this month')) . ' 23:59:59');
             $book_issues = BookIssue::where('issue_date', '>=', $date_from)
-                                ->where('issue_date', '<=', $date_to)
-                                ->where('school_id', auth()->user()->school_id)
-                                ->where('session_id', $active_session)
-                                ->get();
+                ->where('issue_date', '<=', $date_to)
+                ->where('school_id', auth()->user()->school_id)
+                ->where('session_id', $active_session)
+                ->get();
 
             return view('admin.book_issue.book_issue', ['book_issues' => $book_issues, 'date_from' => $date_from, 'date_to' => $date_to]);
-
         }
     }
 
@@ -3007,10 +3061,10 @@ class AdminController extends Controller
 
         BookIssue::create($data);
 
-        return redirect()->back()->with('message','You have successfully issued a book.');
+        return redirect()->back()->with('message', 'You have successfully issued a book.');
     }
 
-    public function editBookIssue($id="")
+    public function editBookIssue($id = "")
     {
         $book_issue_details = BookIssue::find($id);
         $classes = Classes::get()->where('school_id', auth()->user()->school_id);
@@ -3018,7 +3072,7 @@ class AdminController extends Controller
         return view('admin.book_issue.edit', ['book_issue_details' => $book_issue_details, 'classes' => $classes, 'books' => $books]);
     }
 
-    public function bookIssueUpdate(Request $request, $id="")
+    public function bookIssueUpdate(Request $request, $id = "")
     {
         $data = $request->all();
 
@@ -3033,7 +3087,7 @@ class AdminController extends Controller
 
         BookIssue::where('id', $id)->update($data);
 
-        return redirect()->back()->with('message','Updated successfully.');
+        return redirect()->back()->with('message', 'Updated successfully.');
     }
 
     public function bookIssueReturn($id)
@@ -3043,14 +3097,14 @@ class AdminController extends Controller
             'timestamp' => strtotime(date('d-M-Y')),
         ]);
 
-        return redirect()->back()->with('message','Return successfully.');
+        return redirect()->back()->with('message', 'Return successfully.');
     }
 
     public function bookIssueDelete($id)
     {
         $book_issue = BookIssue::find($id);
         $book_issue->delete();
-        return redirect()->back()->with('message','You have successfully delete a issued book.');
+        return redirect()->back()->with('message', 'You have successfully delete a issued book.');
     }
 
 
@@ -3065,41 +3119,41 @@ class AdminController extends Controller
 
         $events = array();
 
-        foreach($notices as $notice) {
-            if($notice['end_date'] !=""){
-                if($notice['start_date'] != $notice['end_date']){
-                    $end_date = strtotime($notice['end_date']) + 24*60*60;
+        foreach ($notices as $notice) {
+            if ($notice['end_date'] != "") {
+                if ($notice['start_date'] != $notice['end_date']) {
+                    $end_date = strtotime($notice['end_date']) + 24 * 60 * 60;
                     $end_date = date('Y-m-d', $end_date);
                 } else {
                     $end_date = date('Y-m-d', strtotime($notice['end_date']));
                 }
             }
 
-            if($notice['end_date'] =="" && $notice['start_time'] =="" && $notice['end_time'] ==""){
+            if ($notice['end_date'] == "" && $notice['start_time'] == "" && $notice['end_time'] == "") {
                 $info = array(
                     'id' => $notice['id'],
                     'title' => $notice['notice_title'],
                     'start' => date('Y-m-d', strtotime($notice['start_date']))
                 );
-            } else if($notice['start_time'] !="" && ($notice['end_date'] =="" && $notice['end_time'] =="")){
+            } else if ($notice['start_time'] != "" && ($notice['end_date'] == "" && $notice['end_time'] == "")) {
                 $info = array(
                     'id' => $notice['id'],
                     'title' => $notice['notice_title'],
-                    'start' => date('Y-m-d', strtotime($notice['start_date'])).'T'.$notice['start_time']
+                    'start' => date('Y-m-d', strtotime($notice['start_date'])) . 'T' . $notice['start_time']
                 );
-            } else if($notice['end_date'] !="" && ($notice['start_time'] =="" && $notice['end_time'] =="")){
+            } else if ($notice['end_date'] != "" && ($notice['start_time'] == "" && $notice['end_time'] == "")) {
                 $info = array(
                     'id' => $notice['id'],
                     'title' => $notice['notice_title'],
                     'start' => date('Y-m-d', strtotime($notice['start_date'])),
                     'end' => $end_date
                 );
-            } else if($notice['end_date'] !="" && $notice['start_time'] !="" && $notice['end_time'] !=""){
+            } else if ($notice['end_date'] != "" && $notice['start_time'] != "" && $notice['end_time'] != "") {
                 $info = array(
                     'id' => $notice['id'],
                     'title' => $notice['notice_title'],
-                    'start' => date('Y-m-d', strtotime($notice['start_date'])).'T'.$notice['start_time'],
-                    'end' => date('Y-m-d', strtotime($notice['end_date'])).'T'.$notice['end_time']
+                    'start' => date('Y-m-d', strtotime($notice['start_date'])) . 'T' . $notice['start_time'],
+                    'end' => date('Y-m-d', strtotime($notice['end_date'])) . 'T' . $notice['end_time']
                 );
             } else {
                 $info = array(
@@ -3131,9 +3185,9 @@ class AdminController extends Controller
         $data['school_id'] = auth()->user()->school_id;
         $data['session_id'] = $active_session;
 
-        if(!empty($data['image'])){
+        if (!empty($data['image'])) {
 
-            $imageName = time().'.'.$data['image']->extension();
+            $imageName = time() . '.' . $data['image']->extension();
 
             $data['image']->move(public_path('assets/uploads/noticeboard/'), $imageName);
 
@@ -3142,16 +3196,16 @@ class AdminController extends Controller
 
         Noticeboard::create($data);
 
-        return redirect()->back()->with('message','You have successfully create a notice.');
+        return redirect()->back()->with('message', 'You have successfully create a notice.');
     }
 
-    public function editNoticeboard($id="")
+    public function editNoticeboard($id = "")
     {
         $notice = Noticeboard::find($id);
         return view('admin.noticeboard.edit', ['notice' => $notice]);
     }
 
-    public function noticeboardUpdate(Request $request, $id="")
+    public function noticeboardUpdate(Request $request, $id = "")
     {
         $data = $request->all();
 
@@ -3161,9 +3215,9 @@ class AdminController extends Controller
         $data['school_id'] = auth()->user()->school_id;
         $data['session_id'] = $active_session;
 
-        if(!empty($data['image'])){
+        if (!empty($data['image'])) {
 
-            $imageName = time().'.'.$data['image']->extension();
+            $imageName = time() . '.' . $data['image']->extension();
 
             $data['image']->move(public_path('assets/uploads/noticeboard/'), $imageName);
 
@@ -3174,14 +3228,14 @@ class AdminController extends Controller
 
         Noticeboard::where('id', $id)->update($data);
 
-        return redirect()->back()->with('message','Updated successfully.');
+        return redirect()->back()->with('message', 'Updated successfully.');
     }
 
-    public function noticeboardDelete($id='')
+    public function noticeboardDelete($id = '')
     {
         $notice = Noticeboard::find($id);
         $notice->delete();
-        return redirect()->back()->with('message','You have successfully delete a notice.');
+        return redirect()->back()->with('message', 'You have successfully delete a notice.');
     }
 
 
@@ -3194,18 +3248,18 @@ class AdminController extends Controller
     public function subscription(Request $request)
     {
 
-        $if_pending_payment=PaymentHistory::where('user_id',auth()->user()->id)->where('status','pending')->get()->count();
+        $if_pending_payment = PaymentHistory::where('user_id', auth()->user()->id)->where('status', 'pending')->get()->count();
 
-        if(count($request->all()) > 0){
+        if (count($request->all()) > 0) {
             $data = $request->all();
             $date = explode('-', $data['eDateRange']);
-            $date_from = strtotime($date[0].' 00:00:00');
-            $date_to  = strtotime($date[1].' 23:59:59');
+            $date_from = strtotime($date[0] . ' 00:00:00');
+            $date_to  = strtotime($date[1] . ' 23:59:59');
             $subscriptions = Subscription::where('school_id', auth()->user()->school_id)
                 ->where('date_added', '>=', $date_from)
                 ->where('date_added', '<=', $date_to)
                 ->get();
-        } else{
+        } else {
             $date_from = strtotime('first day of january this year');
             $date_to = strtotime('last day of december this year');
             $subscriptions = Subscription::where('school_id', auth()->user()->school_id)
@@ -3215,17 +3269,17 @@ class AdminController extends Controller
         }
 
         $subscription_details = Subscription::where(['school_id' => auth()->user()->school_id, 'active' => '1']);
-        if($subscription_details->get()->count() > 0){
+        if ($subscription_details->get()->count() > 0) {
             $package_details = Package::find($subscription_details->first()->package_id);
         } else {
             $subscription_details = Subscription::where(['school_id' => auth()->user()->school_id, 'status' => '0']);
-            if($subscription_details->get()->count() > 0){
+            if ($subscription_details->get()->count() > 0) {
                 $package_details = Package::find($subscription_details->first()->package_id);
             } else {
-                $package_details ='';
+                $package_details = '';
             }
         }
-        return view('admin.subscription.subscription', ['if_pending_payment'=>$if_pending_payment,'subscriptions' => $subscriptions, 'subscription_details' => $subscription_details, 'package_details' => $package_details, 'date_from' => $date_from, 'date_to' => $date_to]);
+        return view('admin.subscription.subscription', ['if_pending_payment' => $if_pending_payment, 'subscriptions' => $subscriptions, 'subscription_details' => $subscription_details, 'package_details' => $package_details, 'date_from' => $date_from, 'date_to' => $date_to]);
     }
 
     public function subscriptionPurchase()
@@ -3245,12 +3299,11 @@ class AdminController extends Controller
     {
         $search = $request['search'] ?? "";
 
-        if($search != "") {
+        if ($search != "") {
 
-            $events = FrontendEvent::where(function ($query) use($search) {
-                    $query->where('title', 'LIKE', "%{$search}%");
-                })->paginate(10);
-
+            $events = FrontendEvent::where(function ($query) use ($search) {
+                $query->where('title', 'LIKE', "%{$search}%");
+            })->paginate(10);
         } else {
             $events = FrontendEvent::where('school_id', auth()->user()->school_id)->paginate(10);
         }
@@ -3276,16 +3329,16 @@ class AdminController extends Controller
 
         FrontendEvent::create($data);
 
-        return redirect()->back()->with('message','You have successfully create a event.');
+        return redirect()->back()->with('message', 'You have successfully create a event.');
     }
 
-    public function editEvent($id="")
+    public function editEvent($id = "")
     {
         $event = FrontendEvent::find($id);
         return view('admin.events.edit_event', ['event' => $event]);
     }
 
-    public function eventUpdate(Request $request, $id="")
+    public function eventUpdate(Request $request, $id = "")
     {
         $data = $request->all();
 
@@ -3300,14 +3353,14 @@ class AdminController extends Controller
 
         FrontendEvent::where('id', $id)->update($data);
 
-        return redirect()->back()->with('message','Updated successfully.');
+        return redirect()->back()->with('message', 'Updated successfully.');
     }
 
     public function eventDelete($id)
     {
         $event = FrontendEvent::find($id);
         $event->delete();
-        return redirect()->back()->with('message','You have successfully delete a event.');
+        return redirect()->back()->with('message', 'You have successfully delete a event.');
     }
 
     public function schoolSettings()
@@ -3327,7 +3380,7 @@ class AdminController extends Controller
             'phone' => $data['phone'],
             'address' => $data['address'],
         ]);
-        return redirect()->back()->with('message','School details updated successfully.');
+        return redirect()->back()->with('message', 'School details updated successfully.');
     }
 
 
@@ -3338,21 +3391,21 @@ class AdminController extends Controller
 
     public function studentFeeinvoice($id)
     {
-        $invoice_details=StudentFeeManager::find($id)->toArray();
+        $invoice_details = StudentFeeManager::find($id)->toArray();
         $student_details = (new CommonController)->get_student_details_by_id($invoice_details['student_id'])->toArray();
 
 
-      return view('admin.student_fee_manager.invoice',['invoice_details' => $invoice_details,'student_details' => $student_details]);
+        return view('admin.student_fee_manager.invoice', ['invoice_details' => $invoice_details, 'student_details' => $student_details]);
     }
 
-    public function offline_payment_pending(Request $request )
+    public function offline_payment_pending(Request $request)
     {
         $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
-         if(count($request->all()) > 0){
+        if (count($request->all()) > 0) {
             $data = $request->all();
             $date = explode('-', $data['eDateRange']);
-            $date_from = strtotime($date[0].' 00:00:00');
-            $date_to  = strtotime($date[1].' 23:59:59');
+            $date_from = strtotime($date[0] . ' 00:00:00');
+            $date_to  = strtotime($date[1] . ' 23:59:59');
             $selected_class = $data['class'];
             $selected_status = 'pending';
 
@@ -3362,7 +3415,7 @@ class AdminController extends Controller
                 $invoices = StudentFeeManager::where('timestamp', '>=', $date_from)->where('timestamp', '<=', $date_to)->where('class_id', $selected_class)->where('status', $selected_status)->where('school_id', auth()->user()->school_id)->where('session_id', $active_session)->get();
             } else if ($selected_class != "all") {
                 $invoices = StudentFeeManager::where('timestamp', '>=', $date_from)->where('timestamp', '<=', $date_to)->where('class_id', $selected_class)->where('school_id', auth()->user()->school_id)->where('session_id', $active_session)->get();
-            } else if ($selected_status != "all"){
+            } else if ($selected_status != "all") {
                 $invoices = StudentFeeManager::where('timestamp', '>=', $date_from)->where('timestamp', '<=', $date_to)->where('status', $selected_status)->where('school_id', auth()->user()->school_id)->where('session_id', $active_session)->get();
             } else {
                 $invoices = StudentFeeManager::where('timestamp', '>=', $date_from)->where('timestamp', '<=', $date_to)->where('school_id', auth()->user()->school_id)->where('session_id', $active_session)->get();
@@ -3372,49 +3425,41 @@ class AdminController extends Controller
             $classes = Classes::where('school_id', auth()->user()->school_id)->get();
 
             return view('admin.student_fee_manager.student_fee_manager_pending', ['classes' => $classes, 'invoices' => $invoices, 'date_from' => $date_from, 'date_to' => $date_to, 'selected_class' => $selected_class, 'selected_status' => $selected_status]);
-
-         } else {
+        } else {
             $classes = Classes::where('school_id', auth()->user()->school_id)->get();
-            $date_from = strtotime(date('d-m-Y',strtotime('first day of this month')).' 00:00:00');
-            $date_to = strtotime(date('d-m-Y',strtotime('last day of this month')).' 23:59:59');
+            $date_from = strtotime(date('d-m-Y', strtotime('first day of this month')) . ' 00:00:00');
+            $date_to = strtotime(date('d-m-Y', strtotime('last day of this month')) . ' 23:59:59');
             $selected_class = "";
             $selected_status = "";
-            $invoices = StudentFeeManager::where('timestamp', '>=', $date_from)->where('timestamp', '<=', $date_to)->where('status','pending')->where('school_id', auth()->user()->school_id)->where('session_id', $active_session)->get();
+            $invoices = StudentFeeManager::where('timestamp', '>=', $date_from)->where('timestamp', '<=', $date_to)->where('status', 'pending')->where('school_id', auth()->user()->school_id)->where('session_id', $active_session)->get();
             return view('admin.student_fee_manager.student_fee_manager_pending', ['classes' => $classes, 'invoices' => $invoices, 'date_from' => $date_from, 'date_to' => $date_to, 'selected_class' => $selected_class, 'selected_status' => $selected_status]);
-         }
-
-
+        }
     }
 
-    public function update_offline_payment($id,$status)
+    public function update_offline_payment($id, $status)
     {
-        $amount= StudentFeeManager::find($id)->toArray();
-        $amount=$amount['total_amount'];
+        $amount = StudentFeeManager::find($id)->toArray();
+        $amount = $amount['total_amount'];
 
-        if($status=='approve')
-        {
+        if ($status == 'approve') {
             StudentFeeManager::where('id', $id)->update([
                 'status' => 'paid',
-                'updated_at'=>date("Y-m-d H:i:s"),
-                'paid_amount' =>$amount,
-                'payment_method' => 'offline']);
+                'updated_at' => date("Y-m-d H:i:s"),
+                'paid_amount' => $amount,
+                'payment_method' => 'offline'
+            ]);
 
-                return redirect()->back()->with('message','Payment Approved');
-        }
-        elseif($status=='decline')
-        {
-            StudentFeeManager::where('id',$id)->update([
+            return redirect()->back()->with('message', 'Payment Approved');
+        } elseif ($status == 'decline') {
+            StudentFeeManager::where('id', $id)->update([
                 'status' => 'unpaid',
-                'updated_at'=>date("Y-m-d H:i:s"),
-                'paid_amount' =>$amount,
-                'payment_method' => 'offline']);
+                'updated_at' => date("Y-m-d H:i:s"),
+                'paid_amount' => $amount,
+                'payment_method' => 'offline'
+            ]);
 
-                return redirect()->back()->with('message','Payment Decline');
-
-
+            return redirect()->back()->with('message', 'Payment Decline');
         }
-
-
     }
 
     public function paymentSettings()
@@ -3423,239 +3468,207 @@ class AdminController extends Controller
 
         $payment_gateways = PaymentMethods::where('school_id', auth()->user()->school_id)->get();
 
-         if(count($payment_gateways)==0)
-         {
+        if (count($payment_gateways) == 0) {
 
-           $this->insert_gateways();
-           $payment_gateways = PaymentMethods::where('school_id', auth()->user()->school_id)->get();
-
-         }
+            $this->insert_gateways();
+            $payment_gateways = PaymentMethods::where('school_id', auth()->user()->school_id)->get();
+        }
 
 
-        $school_currency=School::where('id', auth()->user()->school_id)->first()->toArray();
-        $currencies=Currency::all()->toArray();
-        $paypal="";
-        $paypal_keys="";$stripe="";$stripe_keys="";$razorpay="";$razorpay_keys="";$paytm="";$paytm_keys="";
+        $school_currency = School::where('id', auth()->user()->school_id)->first()->toArray();
+        $currencies = Currency::all()->toArray();
+        $paypal = "";
+        $paypal_keys = "";
+        $stripe = "";
+        $stripe_keys = "";
+        $razorpay = "";
+        $razorpay_keys = "";
+        $paytm = "";
+        $paytm_keys = "";
 
         foreach ($payment_gateways as  $single_gateway) {
 
-            if($single_gateway->name=="paypal")
-            {
-                $paypal=$single_gateway->toArray();
-                $paypal_keys=json_decode($paypal['payment_keys']);
+            if ($single_gateway->name == "paypal") {
+                $paypal = $single_gateway->toArray();
+                $paypal_keys = json_decode($paypal['payment_keys']);
+            } elseif ($single_gateway->name == "stripe") {
+                $stripe = $single_gateway->toArray();
+                $stripe_keys = json_decode($stripe['payment_keys']);
+            } elseif ($single_gateway->name == "razorpay") {
+                $razorpay = $single_gateway->toArray();
+                $razorpay_keys = json_decode($razorpay['payment_keys']);
+            } elseif ($single_gateway->name == "paytm") {
+                $paytm = $single_gateway->toArray();
+                $paytm_keys = json_decode($paytm['payment_keys']);
             }
-            elseif($single_gateway->name=="stripe")
-            {
-                $stripe=$single_gateway->toArray();
-                $stripe_keys=json_decode($stripe['payment_keys']);
-            }
-            elseif($single_gateway->name=="razorpay")
-            {
-                $razorpay=$single_gateway->toArray();
-                $razorpay_keys=json_decode($razorpay['payment_keys']);
-            }
-            elseif($single_gateway->name=="paytm")
-            {
-                $paytm=$single_gateway->toArray();
-                $paytm_keys=json_decode($paytm['payment_keys']);
-            }
-
-
         }
 
 
 
-        return view('admin.payment_settings.key_settings', ['paytm' => $paytm,'paytm_keys' => $paytm_keys,'razorpay' => $razorpay,'razorpay_keys' => $razorpay_keys,'stripe' => $stripe,'stripe_keys' => $stripe_keys,'paypal' => $paypal,'paypal_keys' => $paypal_keys,'school_currency'=> $school_currency,'currencies'=>$currencies]);
+        return view('admin.payment_settings.key_settings', ['paytm' => $paytm, 'paytm_keys' => $paytm_keys, 'razorpay' => $razorpay, 'razorpay_keys' => $razorpay_keys, 'stripe' => $stripe, 'stripe_keys' => $stripe_keys, 'paypal' => $paypal, 'paypal_keys' => $paypal_keys, 'school_currency' => $school_currency, 'currencies' => $currencies]);
     }
 
 
     public function paymentSettings_post(Request $request)
     {
-        $data=$request->all();
+        $data = $request->all();
 
-        $method=$data['method'];
-        $update_id=$data['update_id'];
+        $method = $data['method'];
+        $update_id = $data['update_id'];
 
 
-        if($method=='currency')
-        {
+        if ($method == 'currency') {
             $Currency = School::find($update_id);
-            $Currency['school_currency']= $data['school_currency'];
-            $Currency['currency_position']=$data['currency_position'];
+            $Currency['school_currency'] = $data['school_currency'];
+            $Currency['currency_position'] = $data['currency_position'];
             $Currency->save();
+        } elseif ($method == 'paypal') {
 
-        }
-        elseif($method=='paypal')
-        {
-
-            $keys=array();
-            $paypal=PaymentMethods::find($update_id);
-            $paypal['status']=$data['status'];
-            $paypal['mode']=$data['mode'];
-            $keys['test_client_id']=$data['test_client_id'];
-            $keys['test_secret_key']=$data['test_secret_key'];
-            $keys['live_client_id']=$data['live_client_id'];
-            $keys['live_secret_key']=$data['live_secret_key'];
-            $paypal['payment_keys']=json_encode($keys);
-            $paypal['school_id']=auth()->user()->school_id;
+            $keys = array();
+            $paypal = PaymentMethods::find($update_id);
+            $paypal['status'] = $data['status'];
+            $paypal['mode'] = $data['mode'];
+            $keys['test_client_id'] = $data['test_client_id'];
+            $keys['test_secret_key'] = $data['test_secret_key'];
+            $keys['live_client_id'] = $data['live_client_id'];
+            $keys['live_secret_key'] = $data['live_secret_key'];
+            $paypal['payment_keys'] = json_encode($keys);
+            $paypal['school_id'] = auth()->user()->school_id;
             $paypal->save();
-
-
-        }
-        elseif($method=='stripe')
-        {
-            $keys=array();
-            $stripe=PaymentMethods::find($update_id);
-            $stripe['status']=$data['status'];
-            $stripe['mode']=$data['mode'];
-            $keys['test_key']=$data['test_key'];
-            $keys['test_secret_key']=$data['test_secret_key'];
-            $keys['public_live_key']=$data['public_live_key'];
-            $keys['secret_live_key']=$data['secret_live_key'];
-            $stripe['payment_keys']=json_encode($keys);
-            $stripe['school_id']=auth()->user()->school_id;
+        } elseif ($method == 'stripe') {
+            $keys = array();
+            $stripe = PaymentMethods::find($update_id);
+            $stripe['status'] = $data['status'];
+            $stripe['mode'] = $data['mode'];
+            $keys['test_key'] = $data['test_key'];
+            $keys['test_secret_key'] = $data['test_secret_key'];
+            $keys['public_live_key'] = $data['public_live_key'];
+            $keys['secret_live_key'] = $data['secret_live_key'];
+            $stripe['payment_keys'] = json_encode($keys);
+            $stripe['school_id'] = auth()->user()->school_id;
             $stripe->save();
-        }
-        elseif($method=='razorpay')
-        {
-            $keys=array();
-            $razorpay=PaymentMethods::find($update_id);
-            $razorpay['status']=$data['status'];
-            $razorpay['mode']=$data['mode'];
-            $keys['test_key']=$data['test_key'];
-            $keys['test_secret_key']=$data['test_secret_key'];
-            $keys['live_key']=$data['live_key'];
-            $keys['live_secret_key']=$data['live_secret_key'];
-            $keys['theme_color']=$data['theme_color'];
-            $razorpay['payment_keys']=json_encode($keys);
-            $razorpay['school_id']=auth()->user()->school_id;
+        } elseif ($method == 'razorpay') {
+            $keys = array();
+            $razorpay = PaymentMethods::find($update_id);
+            $razorpay['status'] = $data['status'];
+            $razorpay['mode'] = $data['mode'];
+            $keys['test_key'] = $data['test_key'];
+            $keys['test_secret_key'] = $data['test_secret_key'];
+            $keys['live_key'] = $data['live_key'];
+            $keys['live_secret_key'] = $data['live_secret_key'];
+            $keys['theme_color'] = $data['theme_color'];
+            $razorpay['payment_keys'] = json_encode($keys);
+            $razorpay['school_id'] = auth()->user()->school_id;
             $razorpay->save();
-
-
-        }
-        elseif($method=='paytm')
-        {
-            $keys=array();
-            $paytm=PaymentMethods::find($update_id);
-            $paytm['status']=$data['status'];
-            $paytm['mode']=$data['mode'];
-            $keys['test_merchant_id']=$data['test_merchant_id'];
-            $keys['test_merchant_key']=$data['test_merchant_key'];
-            $keys['live_merchant_id']=$data['live_merchant_id'];
-            $keys['live_merchant_key']=$data['live_merchant_key'];
-            $keys['environment']=$data['environment'];
-            $keys['merchant_website']=$data['merchant_website'];
-            $keys['channel']=$data['channel'];
-            $keys['industry_type']=$data['industry_type'];
-            $paytm['payment_keys']=json_encode($keys);
-            $paytm['school_id']=auth()->user()->school_id;
+        } elseif ($method == 'paytm') {
+            $keys = array();
+            $paytm = PaymentMethods::find($update_id);
+            $paytm['status'] = $data['status'];
+            $paytm['mode'] = $data['mode'];
+            $keys['test_merchant_id'] = $data['test_merchant_id'];
+            $keys['test_merchant_key'] = $data['test_merchant_key'];
+            $keys['live_merchant_id'] = $data['live_merchant_id'];
+            $keys['live_merchant_key'] = $data['live_merchant_key'];
+            $keys['environment'] = $data['environment'];
+            $keys['merchant_website'] = $data['merchant_website'];
+            $keys['channel'] = $data['channel'];
+            $keys['industry_type'] = $data['industry_type'];
+            $paytm['payment_keys'] = json_encode($keys);
+            $paytm['school_id'] = auth()->user()->school_id;
             $paytm->save();
-
         }
 
-       return redirect()->route('admin.settings.payment')->with('message', 'key has been updated');
-
-
-
+        return redirect()->route('admin.settings.payment')->with('message', 'key has been updated');
     }
 
     public function insert_gateways()
     {
-        $keys=array();
-        $paypal= new PaymentMethods;
-        $paypal['name']="paypal";
-        $paypal['image']="paypal.png";
-        $paypal['status']=1;
-        $paypal['mode']="test";
-        $keys['test_client_id']="snd_cl_id_xxxxxxxxxxxxx";
-        $keys['test_secret_key']="snd_cl_sid_xxxxxxxxxxxx";
-        $keys['live_client_id']="lv_cl_id_xxxxxxxxxxxxxxx";
-        $keys['live_secret_key']="lv_cl_sid_xxxxxxxxxxxxxx";
-        $paypal['payment_keys']=json_encode($keys);
-        $paypal['school_id']=auth()->user()->school_id;
+        $keys = array();
+        $paypal = new PaymentMethods;
+        $paypal['name'] = "paypal";
+        $paypal['image'] = "paypal.png";
+        $paypal['status'] = 1;
+        $paypal['mode'] = "test";
+        $keys['test_client_id'] = "snd_cl_id_xxxxxxxxxxxxx";
+        $keys['test_secret_key'] = "snd_cl_sid_xxxxxxxxxxxx";
+        $keys['live_client_id'] = "lv_cl_id_xxxxxxxxxxxxxxx";
+        $keys['live_secret_key'] = "lv_cl_sid_xxxxxxxxxxxxxx";
+        $paypal['payment_keys'] = json_encode($keys);
+        $paypal['school_id'] = auth()->user()->school_id;
         $paypal->save();
 
-        $keys=array();
-        $stripe= new PaymentMethods ;
-        $stripe['name']="stripe";
-        $stripe['image']="stripe.png";
-        $stripe['status']=1;
-        $stripe['mode']="test";
-        $keys['test_key']="pk_test_xxxxxxxxxxxxx";
-        $keys['test_secret_key']="sk_test_xxxxxxxxxxxxxx";
-        $keys['public_live_key']="pk_live_xxxxxxxxxxxxxx";
-        $keys['secret_live_key']="sk_live_xxxxxxxxxxxxxx";
-        $stripe['payment_keys']=json_encode($keys);
-        $stripe['school_id']=auth()->user()->school_id;
+        $keys = array();
+        $stripe = new PaymentMethods;
+        $stripe['name'] = "stripe";
+        $stripe['image'] = "stripe.png";
+        $stripe['status'] = 1;
+        $stripe['mode'] = "test";
+        $keys['test_key'] = "pk_test_xxxxxxxxxxxxx";
+        $keys['test_secret_key'] = "sk_test_xxxxxxxxxxxxxx";
+        $keys['public_live_key'] = "pk_live_xxxxxxxxxxxxxx";
+        $keys['secret_live_key'] = "sk_live_xxxxxxxxxxxxxx";
+        $stripe['payment_keys'] = json_encode($keys);
+        $stripe['school_id'] = auth()->user()->school_id;
         $stripe->save();
 
-        $keys=array();
-        $razorpay= new PaymentMethods ;
-        $razorpay['name']="razorpay";
-        $razorpay['image']="razorpay.png";
-        $razorpay['status']=1;
-        $razorpay['mode']="test";
-        $keys['test_key']="rzp_test_xxxxxxxxxxxxx";
-        $keys['test_secret_key']="rzs_test_xxxxxxxxxxxxx";
-        $keys['live_key']="rzp_live_xxxxxxxxxxxxx";
-        $keys['live_secret_key']="rzs_live_xxxxxxxxxxxxx";
-        $keys['theme_color']="#c7a600";
-        $razorpay['payment_keys']=json_encode($keys);
-        $razorpay['school_id']=auth()->user()->school_id;
+        $keys = array();
+        $razorpay = new PaymentMethods;
+        $razorpay['name'] = "razorpay";
+        $razorpay['image'] = "razorpay.png";
+        $razorpay['status'] = 1;
+        $razorpay['mode'] = "test";
+        $keys['test_key'] = "rzp_test_xxxxxxxxxxxxx";
+        $keys['test_secret_key'] = "rzs_test_xxxxxxxxxxxxx";
+        $keys['live_key'] = "rzp_live_xxxxxxxxxxxxx";
+        $keys['live_secret_key'] = "rzs_live_xxxxxxxxxxxxx";
+        $keys['theme_color'] = "#c7a600";
+        $razorpay['payment_keys'] = json_encode($keys);
+        $razorpay['school_id'] = auth()->user()->school_id;
         $razorpay->save();
 
-        $keys=array();
-        $paytm= new PaymentMethods ;
-        $paytm['name']="paytm";
-        $paytm['image']="paytm.png";
-        $paytm['status']=1;
-        $paytm['mode']="test";
-        $keys['test_merchant_id']="tm_id_xxxxxxxxxxxx";
-        $keys['test_merchant_key']="tm_key_xxxxxxxxxx";
-        $keys['live_merchant_id']="lv_mid_xxxxxxxxxxx";
-        $keys['live_merchant_key']="lv_key_xxxxxxxxxxx";
-        $keys['environment']="provide-a-environment";
-        $keys['merchant_website']="merchant-website";
-        $keys['channel']="provide-channel-type";
-        $keys['industry_type']="provide-industry-type";
-        $paytm['payment_keys']=json_encode($keys);
-        $paytm['school_id']=auth()->user()->school_id;
+        $keys = array();
+        $paytm = new PaymentMethods;
+        $paytm['name'] = "paytm";
+        $paytm['image'] = "paytm.png";
+        $paytm['status'] = 1;
+        $paytm['mode'] = "test";
+        $keys['test_merchant_id'] = "tm_id_xxxxxxxxxxxx";
+        $keys['test_merchant_key'] = "tm_key_xxxxxxxxxx";
+        $keys['live_merchant_id'] = "lv_mid_xxxxxxxxxxx";
+        $keys['live_merchant_key'] = "lv_key_xxxxxxxxxxx";
+        $keys['environment'] = "provide-a-environment";
+        $keys['merchant_website'] = "merchant-website";
+        $keys['channel'] = "provide-channel-type";
+        $keys['industry_type'] = "provide-industry-type";
+        $paytm['payment_keys'] = json_encode($keys);
+        $paytm['school_id'] = auth()->user()->school_id;
         $paytm->save();
-
-
     }
 
     public function subscriptionPayment($package_id)
     {
 
-        $selected_package=Package::find($package_id)->toArray();
-        $user_info=User::where('id',auth()->user()->id)->first()->toArray();
+        $selected_package = Package::find($package_id)->toArray();
+        $user_info = User::where('id', auth()->user()->id)->first()->toArray();
 
-        if($selected_package['price']==0) 
-        {
-             $check_duplication=Subscription::where('package_id',$selected_package['id'])->where('school_id',auth()->user()->school_id)->get()->count();
-             if($check_duplication==0)
-             {
-                return redirect()->route('admin_free_subcription',['user_id'=>auth()->user()->id,'package_id'=>$selected_package['id']]);
-
-             }
-             else
-             {
-                 return redirect()->back()->with('error', 'you can not subscribe the free trail twice');
-             }
-
-
+        if ($selected_package['price'] == 0) {
+            $check_duplication = Subscription::where('package_id', $selected_package['id'])->where('school_id', auth()->user()->school_id)->get()->count();
+            if ($check_duplication == 0) {
+                return redirect()->route('admin_free_subcription', ['user_id' => auth()->user()->id, 'package_id' => $selected_package['id']]);
+            } else {
+                return redirect()->back()->with('error', 'you can not subscribe the free trail twice');
+            }
         }
 
-        return view('admin.subscription.payment_gateway',['selected_package'=>$selected_package,'user_info'=>$user_info]);
+        return view('admin.subscription.payment_gateway', ['selected_package' => $selected_package, 'user_info' => $user_info]);
     }
 
     public function admin_free_subcription(Request $request)
     {
-        $data=$request->all();
+        $data = $request->all();
 
-        $selected_package=Package::find($data['package_id'])->toArray();
-        $user_info=User::where('id',$data['user_id'])->first()->toArray();
+        $selected_package = Package::find($data['package_id'])->toArray();
+        $user_info = User::where('id', $data['user_id'])->first()->toArray();
 
         $data['document_file'] = "sample-payment.pdf";
 
@@ -3668,14 +3681,12 @@ class AdminController extends Controller
             'payment_method' => 'free',
             'transaction_keys' => $transaction_keys,
             'date_added' =>  strtotime(date("Y-m-d H:i:s")),
-            'expire_date' => strtotime('+'.$selected_package['days'].' days', strtotime(date("Y-m-d H:i:s")) ),
+            'expire_date' => strtotime('+' . $selected_package['days'] . ' days', strtotime(date("Y-m-d H:i:s"))),
             'status' => '1',
             'active' => '1',
         ]);
 
-            return redirect()->route('admin.subscription')->with('message', 'Free Subscription Completed Successfully');
-
-
+        return redirect()->route('admin.subscription')->with('message', 'Free Subscription Completed Successfully');
     }
 
 
@@ -3683,47 +3694,44 @@ class AdminController extends Controller
 
     public function admin_subscription_offline_payment(Request $request, $id = "")
     {
-    	$data = $request->all();
+        $data = $request->all();
 
-    	if ($data['amount'] > 0) {
+        if ($data['amount'] > 0) {
 
-			$file = $data['document_image'];
+            $file = $data['document_image'];
 
-	    	if ($file) {
-	            $filename = $file->getClientOriginalName();
-	            $extension = $file->getClientOriginalExtension(); //Get extension of uploaded file
+            if ($file) {
+                $filename = $file->getClientOriginalName();
+                $extension = $file->getClientOriginalExtension(); //Get extension of uploaded file
 
-	            
-	            $file->move(public_path('assets/uploads/offline_payment'), $filename);
-	            $data['document_image'] = $filename;
 
-	        } else {
-	        	$data['document_image'] = '';
-	        }
+                $file->move(public_path('assets/uploads/offline_payment'), $filename);
+                $data['document_image'] = $filename;
+            } else {
+                $data['document_image'] = '';
+            }
 
-           $pending_payment = new PaymentHistory;
+            $pending_payment = new PaymentHistory;
 
-           $pending_payment['payment_type']='subscription';
-           $pending_payment['user_id']=auth()->user()->id;
-           $pending_payment['package_id']=$id;
-           $pending_payment['amount']=$data['amount'];
-           $pending_payment['school_id']=auth()->user()->school_id;
-           $pending_payment['transaction_keys']='[]';
-           $pending_payment['document_image']=$data['document_image'];
-           $pending_payment['paid_by']='offline';
-           $pending_payment['status']='pending';
-           $pending_payment['timestamp']=strtotime(date("Y-m-d H:i:s"));
+            $pending_payment['payment_type'] = 'subscription';
+            $pending_payment['user_id'] = auth()->user()->id;
+            $pending_payment['package_id'] = $id;
+            $pending_payment['amount'] = $data['amount'];
+            $pending_payment['school_id'] = auth()->user()->school_id;
+            $pending_payment['transaction_keys'] = '[]';
+            $pending_payment['document_image'] = $data['document_image'];
+            $pending_payment['paid_by'] = 'offline';
+            $pending_payment['status'] = 'pending';
+            $pending_payment['timestamp'] = strtotime(date("Y-m-d H:i:s"));
 
-           $pending_payment->save();
+            $pending_payment->save();
 
 
 
             return redirect()->route('admin.subscription')->with('message', 'offline payment requested successfully');
-        }else{
+        } else {
             return redirect()->route('admin.subscription')->with('message', 'offline payment requested fail');
         }
-
-
     }
 
     public function offlinePayment(Request $request, $id = "")
@@ -3738,7 +3746,7 @@ class AdminController extends Controller
                 $filename = $file->getClientOriginalName();
                 $extension = $file->getClientOriginalExtension(); //Get extension of uploaded file
 
-                
+
                 $file->move(public_path('assets/uploads/offline_payment'), $filename);
                 $data['document_image'] = $filename;
             } else {
@@ -3766,25 +3774,27 @@ class AdminController extends Controller
     }
 
 
-    function profile(){
+    function profile()
+    {
         return view('admin.profile.view');
     }
 
-    function profile_update(Request $request){
+    function profile_update(Request $request)
+    {
         $data['name'] = $request->name;
         $data['email'] = $request->email;
         $data['designation'] = $request->designation;
-        
+
         $user_info['birthday'] = strtotime($request->eDefaultDateRange);
         $user_info['gender'] = $request->gender;
         $user_info['phone'] = $request->phone;
         $user_info['address'] = $request->address;
 
 
-        if(empty($request->photo)){
+        if (empty($request->photo)) {
             $user_info['photo'] = $request->old_photo;
-        }else{
-            $file_name = random(10).'.png';
+        } else {
+            $file_name = random(10) . '.png';
             $user_info['photo'] = $file_name;
 
             $request->photo->move(public_path('assets/uploads/user-images/'), $file_name);
@@ -3793,24 +3803,25 @@ class AdminController extends Controller
         $data['user_information'] = json_encode($user_info);
 
         User::where('id', auth()->user()->id)->update($data);
-        
+
         return redirect(route('admin.profile'))->with('message', get_phrase('Profile info updated successfully'));
     }
 
-    function password($action_type = null, Request $request){
+    function password($action_type = null, Request $request)
+    {
 
 
 
-        if($action_type == 'update'){
+        if ($action_type == 'update') {
 
-            
 
-            if($request->new_password != $request->confirm_password){
+
+            if ($request->new_password != $request->confirm_password) {
                 return back()->with("error", "Confirm Password Doesn't match!");
             }
 
 
-            if(!Hash::check($request->old_password, auth()->user()->password)){
+            if (!Hash::check($request->old_password, auth()->user()->password)) {
                 return back()->with("error", "Current Password Doesn't match!");
             }
 
@@ -3907,7 +3918,7 @@ class AdminController extends Controller
     {
         $previous_session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
 
-        if($previous_session_id != $id){
+        if ($previous_session_id != $id) {
             $session = Session::find($id);
             $session->delete();
             return redirect()->back()->with('message', 'You have successfully delete a session.');
@@ -3915,6 +3926,4 @@ class AdminController extends Controller
             return redirect()->back()->with('error', 'Can not delete active session.');
         }
     }
-
-
 }
