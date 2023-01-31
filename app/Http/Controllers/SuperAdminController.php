@@ -146,7 +146,7 @@ class SuperAdminController extends Controller
             
             $session = Session::create($data);
 
-            $session = Session::where('session_title', date("Y"));
+            // $session = Session::where('session_title', date("Y"));
 
             School::where('id', $school->id)->update([
                 'running_session' => $session->id,

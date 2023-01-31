@@ -85,7 +85,8 @@
                                                 <option value="">{{ get_phrase('Select a class') }}</option>
                                                 @foreach ($classes as $class)
                                                     <option value="{{ $class->id }}"
-                                                        {{ $class_id == $class->id ? 'selected' : '' }}>{{ $class->name }}
+                                                        {{ $class_id == $class->id ? 'selected' : '' }}>
+                                                        {{ $class->name }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -217,8 +218,8 @@
                                                     </li>
 
                                                     <li>
-                                                        <a class="dropdown-item" href="javascript:;"
-                                                            onclick="rightModal('{{ route('admin.student_edit_modal', ['id' => $student->id]) }}', 'Edit Student')">{{ get_phrase('Edit') }}</a>
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('admin.student.edit', ['id' => $student->id]) }}">{{ get_phrase('Edit') }}</a>
                                                     </li>
                                                     <li>
                                                         <a class="dropdown-item" href="javascript:;"

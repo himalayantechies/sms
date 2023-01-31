@@ -800,6 +800,7 @@
     });
 
     </script>
+    @yield('scripts')
 
 </body>
 
