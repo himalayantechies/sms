@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\CommonController;
 
+
 use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -126,63 +127,89 @@ class SuperAdminController extends Controller
     {
         $data = $request->all();
 
-        $school = School::create([
-            'title' => $data['school_name'],
-            'email' => $data['school_email'],
-            'phone' => $data['school_phone'],
-            'address' => $data['school_address'],
-            'year_established' => $data['year_established'],
-            'district_code' => $data['district_code'],
-            'vcd_code' => $data['vcd_code'],
-            'school_info' => $data['school_info'],
-            'status' => '2',
-        ]);
+        try{
+            DB::beginTransaction();
 
-        if (isset($school->id) && $school->id != "") {
+            $school = School::create([
+                'title' => $data['school_name'],
+                'email' => $data['school_email'],
+                'phone' => $data['school_phone'],
+                'address' => $data['school_address'],
+                'year_established' => $data['year_established'],
+                'district_code' => $data['district_code'],
+                'vcd_code' => $data['vcd_code'],
+                'school_info' => $data['school_info'],
+                'school_code' => $data['school_code'],
+                'school_type_id' => $data['school_type_id'],
+                'status' => '2',
+            ]);
 
-            $data['status'] = '1';
-            $data['session_title'] = date("Y");
-            $data['school_id'] = $school->id;
-            
-            $session = Session::create($data);
+            // COMMENTED OUT BY RAM - NO NEED TO CREATE NEW SESSION FOR INDIVIDUAL SCHOOL
+            // $data['status'] = '1';
+            // $data['session_title'] = date("Y");
+            // $data['school_id'] = $school->id;
+            // $session = Session::create($data);
 
-            // $session = Session::where('session_title', date("Y"));
+            $session_id = Session::where('session_title', date("Y"))->whereNull('school_id')->value('id');
 
             School::where('id', $school->id)->update([
-                'running_session' => $session->id,
+                // 'running_session' => $session->id,
+                'running_session' => $session_id,
             ]);
 
-            if (!empty($data['photo'])) {
-
-                $imageName = time() . '.' . $data['photo']->extension();
-
-                $data['photo']->move(public_path('assets/uploads/user-images/'), $imageName);
-
-                $photo  = $imageName;
-            } else {
-                $photo = '';
+            if (isset($school->id) && $school->id != "") {
+                if (!empty($data['photo'])) {
+                    $imageName = time() . '.' . $data['photo']->extension();
+                    $data['photo']->move(public_path('assets/uploads/user-images/'), $imageName);
+                    $photo  = $imageName;
+                } else {
+                    $photo = '';
+                }
+    
+                $info = array(
+                    'gender' => $data['gender'],
+                    'blood_group' => $data['blood_group'],
+                    'birthday' => isset($data['birthday'])? strtotime($data['birthday']):"",
+                    'phone' => $data['admin_phone'],
+                    'address' => $data['admin_address'],
+                    'photo' => $photo
+                );
+                
+                $data['user_information'] = json_encode($info);
+    
+                User::create([
+                    'name' => $data['admin_name'],
+                    'email' => $data['admin_email'],
+                    'password' => Hash::make($data['admin_password']),
+                    'role_id' => '2',
+                    'school_id' => $school->id,
+                    'user_information' => $data['user_information'],
+                ]);
             }
-            $info = array(
-                'gender' => $data['gender'],
-                'blood_group' => $data['blood_group'],
-                'birthday' => isset($data['birthday'])? strtotime($data['birthday']):"",
-                'phone' => $data['admin_phone'],
-                'address' => $data['admin_address'],
-                'photo' => $photo
-            );
-            $data['user_information'] = json_encode($info);
-            User::create([
-                'name' => $data['admin_name'],
-                'email' => $data['admin_email'],
-                'password' => Hash::make($data['admin_password']),
-                'role_id' => '2',
-                'school_id' => $school->id,
-                'user_information' => $data['user_information'],
-            ]);
+
+            DB::commit();    
+
+            return to_route('superadmin.school.list');
+
+        }catch(Exception $exp){
+            DB::rollBack();
+            
+            $message = $e->getMessage();
+            var_dump('Exception Message: '. $message);
+
+            $code = $e->getCode();       
+            var_dump('Exception Code: '. $code);
+
+            $string = $e->__toString();       
+            var_dump('Exception String: '. $string);
+
+            return response([
+                'message'=> $exp->getMessage(),
+                'status'=> 'failed'
+                ], 400);
+            // exit;
         }
-
-
-        return to_route('superadmin.school.list');
+        
     }
 
     public function schoolStatusUpdate($id='', $status='')
