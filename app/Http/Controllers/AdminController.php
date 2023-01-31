@@ -1620,7 +1620,12 @@ class AdminController extends Controller
      */
     public function routine()
     {
-        $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+        // $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+        
+        $classes = Classes::select('id', 'name')->whereNull('school_id')->orWhere('school_id', auth()->user()->school_id)->get();
+        // echo "<pre>";
+        // print_r($classes->toArray());
+        // die;
         return view('admin.routine.routine', ['classes' => $classes]);
     }
 
@@ -1630,14 +1635,16 @@ class AdminController extends Controller
 
         $class_id = $data['class_id'];
         $section_id = $data['section_id'];
-        $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+        // $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+        $classes = Classes::select('id', 'name')->whereNull('school_id')->orWhere('school_id', auth()->user()->school_id)->get();
 
         return view('admin.routine.routine_list', ['class_id' => $class_id, 'section_id' => $section_id, 'classes' => $classes]);
     }
 
     public function addRoutine()
     {
-        $classes = Classes::get()->where('school_id', auth()->user()->school_id);
+        // $classes = Classes::get()->where('school_id', auth()->user()->school_id);
+        $classes = Classes::select('id', 'name')->whereNull('school_id')->orWhere('school_id', auth()->user()->school_id)->get();
         $teachers = User::where(['role_id' => 3, 'school_id' => auth()->user()->school_id])->get();
         $class_rooms = ClassRoom::get()->where('school_id', auth()->user()->school_id);
         return view('admin.routine.add_routine', ['classes' => $classes, 'teachers' => $teachers, 'class_rooms' => $class_rooms]);
@@ -1669,7 +1676,8 @@ class AdminController extends Controller
 
     public function routineEditModal($id){
         $routine = Routine::find($id);
-        $classes = Classes::get()->where('school_id', auth()->user()->school_id);
+        // $classes = Classes::get()->where('school_id', auth()->user()->school_id);
+        $classes = Classes::select('id', 'name')->whereNull('school_id')->orWhere('school_id', auth()->user()->school_id)->get();
         $teachers = User::where(['role_id' => 3, 'school_id' => auth()->user()->school_id])->get();
         $class_rooms = ClassRoom::get()->where('school_id', auth()->user()->school_id);
         return view('admin.routine.edit_routine', ['routine' => $routine, 'classes' => $classes, 'teachers' => $teachers, 'class_rooms' => $class_rooms]);
