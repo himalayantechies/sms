@@ -197,9 +197,7 @@
                 <li>
                     <a class="<?php echo e((request()->is('admin/marks')) ? 'active' : ''); ?>" href="<?php echo e(route('admin.marks')); ?>"><span><?php echo e(get_phrase('Marks')); ?></span></a>
                 </li>
-                <li>
-                    <a class="<?php echo e((request()->is('admin/grade')) ? 'active' : ''); ?>" href="<?php echo e(route('admin.grade_list')); ?>"><span><?php echo e(get_phrase('Grades')); ?></span></a>
-                </li>
+                
                 <li>
                     <a class="<?php echo e((request()->is('admin/promotion*')) ? 'active' : ''); ?>" href="<?php echo e(route('admin.promotion')); ?>"><span><?php echo e(get_phrase('Promotion')); ?></span></a>
                 </li>

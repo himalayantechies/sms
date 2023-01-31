@@ -16,6 +16,7 @@ use App\Models\Classes;
 use App\Models\Subject;
 use App\Models\Gradebook;
 use App\Models\Grade;
+use App\Models\GradeSubject;
 use App\Models\Department;
 use App\Models\ClassRoom;
 use App\Models\ClassList;
@@ -40,6 +41,8 @@ use App\Models\Payments;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
+
 class AdminController extends Controller
 {
 
@@ -2069,17 +2072,17 @@ class AdminController extends Controller
      */
     public function subjectList(Request $request)
     {
-        $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+        $classes = Classes::get();
 
         if(count($request->all()) > 0 && $request->class_id != ''){
 
             $data = $request->all();
             $class_id = $data['class_id'] ?? '';
-            $subjects = Subject::where('class_id', $class_id)->paginate(10);
-
+            //$subjects = GradeSubject::where('class_id', $class_id)->paginate(10);
+            $subjects = GradeSubject::with('subject')->where('class_id', $class_id)->paginate(10);
+            
         } else {
-            $subjects = Subject::where('school_id', auth()->user()->school_id)->paginate(10);
-
+            $subjects = GradeSubject::with('subject')->where('school_id', auth()->user()->school_id)->paginate(10);
             $class_id = '';
         }
 
@@ -2088,20 +2091,34 @@ class AdminController extends Controller
 
     public function createSubject()
     {
-        $classes = Classes::where('school_id', auth()->user()->school_id)->get();
-        return view('admin.subject.add_subject', ['classes' => $classes]);
+        $classes = Classes::get();
+        $subjects = Subject::get();
+        return view('admin.subject.add_subject', 
+                    [
+                        'classes' => $classes,
+                        'subjects' => $subjects
+                    ]);
     }
 
     public function subjectCreate(Request $request)
     {
         $data = $request->all();
         $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
-
-        Subject::create([
-            'name' => $data['name'],
+        $user_id = auth()->user()->id;
+        $grade_subject = GradeSubject::where('school_id',auth()->user()->school_id)
+                        ->where('class_id','=',$data['class_id'])
+                        ->where('subject_id','=',$data['subject_id'])
+                        ->first();
+        if($grade_subject !== null){
+            return redirect('/admin/subject?class_id='.$data['class_id'])->with('error',"Subject already asigned to class. ");
+        }                    
+        GradeSubject::create([
+            
             'class_id' => $data['class_id'],
             'school_id' => auth()->user()->school_id,
             'session_id' => $active_session,
+            'subject_id' => $data['subject_id'],
+            'modified_by' => $user_id
         ]);
         
         return redirect('/admin/subject?class_id='.$data['class_id'])->with('message','You have successfully create subject.');
@@ -2109,18 +2126,20 @@ class AdminController extends Controller
 
     public function editSubject($id)
     {
-        $subject = Subject::find($id);
-        $classes = Classes::where('school_id', auth()->user()->school_id)->get();
-        return view('admin.subject.edit_subject', ['subject' => $subject, 'classes' => $classes]);
+        $subject = GradeSubject::with('subject')->find($id);
+        $classes = Classes::get();
+        $subject_list = Subject::get();
+        return view('admin.subject.edit_subject', ['subject' => $subject, 'classes' => $classes,'subject_list' => $subject_list]);
     }
 
     public function subjectUpdate(Request $request, $id)
     {
         $data = $request->all();
-        Subject::where('id', $id)->update([
-            'name' => $data['name'],
+        $user_id = auth()->user()->id;
+        GradeSubject::where('id', $id)->update([
             'class_id' => $data['class_id'],
-            'school_id' => auth()->user()->school_id,
+            'subject_id' => $data['subject_id'],
+            'modified_by' => $user_id
         ]);
         
         return redirect('/admin/subject?class_id='.$data['class_id'])->with('message','You have successfully update subject.');
@@ -2128,9 +2147,9 @@ class AdminController extends Controller
 
     public function subjectDelete($id)
     {
-        $subject = Subject::find($id);
+        $subject = GradeSubject::find($id);
         $subject->delete();
-        $subjects = Subject::get()->where('school_id', auth()->user()->school_id);
+        //$subjects = Subject::get()->where('school_id', auth()->user()->school_id);
         return redirect()->back()->with('message','You have successfully delete subject.');
     }
 
