@@ -1692,7 +1692,12 @@ class AdminController extends Controller
      */
     public function routine()
     {
-        $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+        // $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+        
+        $classes = Classes::select('id', 'name')->whereNull('school_id')->orWhere('school_id', auth()->user()->school_id)->get();
+        // echo "<pre>";
+        // print_r($classes->toArray());
+        // die;
         return view('admin.routine.routine', ['classes' => $classes]);
     }
 
@@ -1702,14 +1707,16 @@ class AdminController extends Controller
 
         $class_id = $data['class_id'];
         $section_id = $data['section_id'];
-        $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+        // $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+        $classes = Classes::select('id', 'name')->whereNull('school_id')->orWhere('school_id', auth()->user()->school_id)->get();
 
         return view('admin.routine.routine_list', ['class_id' => $class_id, 'section_id' => $section_id, 'classes' => $classes]);
     }
 
     public function addRoutine()
     {
-        $classes = Classes::get()->where('school_id', auth()->user()->school_id);
+        // $classes = Classes::get()->where('school_id', auth()->user()->school_id);
+        $classes = Classes::select('id', 'name')->whereNull('school_id')->orWhere('school_id', auth()->user()->school_id)->get();
         $teachers = User::where(['role_id' => 3, 'school_id' => auth()->user()->school_id])->get();
         $class_rooms = ClassRoom::get()->where('school_id', auth()->user()->school_id);
         return view('admin.routine.add_routine', ['classes' => $classes, 'teachers' => $teachers, 'class_rooms' => $class_rooms]);
@@ -1742,7 +1749,8 @@ class AdminController extends Controller
     public function routineEditModal($id)
     {
         $routine = Routine::find($id);
-        $classes = Classes::get()->where('school_id', auth()->user()->school_id);
+        // $classes = Classes::get()->where('school_id', auth()->user()->school_id);
+        $classes = Classes::select('id', 'name')->whereNull('school_id')->orWhere('school_id', auth()->user()->school_id)->get();
         $teachers = User::where(['role_id' => 3, 'school_id' => auth()->user()->school_id])->get();
         $class_rooms = ClassRoom::get()->where('school_id', auth()->user()->school_id);
         return view('admin.routine.edit_routine', ['routine' => $routine, 'classes' => $classes, 'teachers' => $teachers, 'class_rooms' => $class_rooms]);
@@ -3673,8 +3681,8 @@ class AdminController extends Controller
         $data['document_file'] = "sample-payment.pdf";
 
         $transaction_keys = json_encode($data);
-
-        $status = Subscription::create([
+        
+        if(Subscription::create([
             'package_id' => $selected_package['id'],
             'school_id' => auth()->user()->school_id,
             'paid_amount' => $selected_package['price'],
@@ -3684,9 +3692,14 @@ class AdminController extends Controller
             'expire_date' => strtotime('+' . $selected_package['days'] . ' days', strtotime(date("Y-m-d H:i:s"))),
             'status' => '1',
             'active' => '1',
-        ]);
+        ])){
+            return redirect()->route('admin.subscription')->with('message', 'Free Subscription Completed Successfully');
+        }
 
-        return redirect()->route('admin.subscription')->with('message', 'Free Subscription Completed Successfully');
+
+            return redirect()->route('admin.subscription')->with('error', 'Free Subscription Could not be Completed ');
+
+
     }
 
 

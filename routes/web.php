@@ -96,6 +96,15 @@ Route::controller(SuperAdminController::class)->middleware('auth', 'superAdmin')
     Route::post('superadmin/class/sections/{id}', 'sectionUpdate')->name('superadmin.section.update');
     // Route::get('superadmin/class/delete/{id}', 'classDelete')->name('superadmin.class.delete');
 
+    // Grade routes
+    Route::get('superadmin/grade', 'gradeList')->name('superadmin.grade_list');
+    Route::get('superadmin/grade_create', 'createGrade')->name('superadmin.grade.open_modal');
+    Route::post('superadmin/grade', 'gradeCreate')->name('superadmin.create.grade');
+    Route::get('superadmin/grade/{id}', 'editGrade')->name('superadmin.edit.grade');
+    Route::post('superadmin/grade/{id}', 'gradeUpdate')->name('superadmin.grade.update');
+    // Route::get('admin/grade/delete/{id}', 'gradeDelete')->name('admin.grade.delete');
+
+
     //Subject list routes
     Route::get('superadmin/subject', 'subjectList')->name('superadmin.subject_list');
     Route::get('superadmin/subject_create', 'createSubject')->name('superadmin.subject.open_modal');

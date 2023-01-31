@@ -138,15 +138,6 @@ class SuperAdminController extends Controller
             'status' => '2',
         ]);
 
-        // echo "<pre>";
-        // print_r($school->toArray());
-        // $arr = array('id'=>6);
-        // $school = new stdClass();
-        // $school = (object) $arr;
-        // $school->id = 6;
-        // print_r($school->id);
-        // die;
-
         if (isset($school->id) && $school->id != "") {
 
             $data['status'] = '1';
@@ -154,6 +145,8 @@ class SuperAdminController extends Controller
             $data['school_id'] = $school->id;
             
             $session = Session::create($data);
+
+            $session = Session::where('session_title', date("Y"));
 
             School::where('id', $school->id)->update([
                 'running_session' => $session->id,
@@ -199,6 +192,70 @@ class SuperAdminController extends Controller
             'status' => $status,
         ]);
         return redirect()->back()->with('message', 'School status updated successfully.');
+    }
+
+
+     /**
+     * Show the grade list.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function gradeList()
+    {
+        // $grades = Grade::get()->where('school_id', auth()->user()->school_id);
+        $grades = Grade::get();
+        return view('superadmin.grade.grade_list', ['grades' => $grades]);
+    }
+
+    public function createGrade()
+    {
+        return view('superadmin.grade.add_grade');
+    }
+
+    public function gradeCreate(Request $request)
+    {
+        $data = $request->all();
+
+        $duplicate_grade_check = Grade::get()->where('name', $data['grade']);
+
+        if(count($duplicate_grade_check) == 0) {
+            Grade::create([
+                'name' => $data['grade'],
+                'grade_point' => $data['grade_point'],
+                'mark_from' => $data['mark_from'],
+                'mark_upto' => $data['mark_upto'],
+                'grade_type' => $data['grade_type'],
+                // 'school_id' => auth()->user()->school_id,
+            ]);
+
+            return redirect()->back()->with('message','You have successfully create a new grade.');
+
+        } else {
+            return back()
+            ->with('error','Sorry this grade already exists');
+        }
+    }
+
+    public function editGrade($id)
+    {
+        $grade = Grade::find($id);
+        return view('superadmin.grade.edit_grade', ['grade' => $grade]);
+    }
+
+
+    public function gradeUpdate(Request $request, $id)
+    {
+        $data = $request->all();
+        Grade::where('id', $id)->update([
+            'name' => $data['grade'],
+            'grade_point' => $data['grade_point'],
+            'mark_from' => $data['mark_from'],
+            'mark_upto' => $data['mark_upto'],
+            'grade_type' => $data['grade_type'],
+            // 'school_id' => auth()->user()->school_id,
+        ]);
+        
+        return redirect()->back()->with('message','You have successfully update grade.');
     }
 
     /**
@@ -312,11 +369,11 @@ class SuperAdminController extends Controller
         if(count($request->all()) > 0 && $request->class_id != ''){
 
             $data = $request->all();
-            $class_id = $data['class_id'] ?? '';
-            $subjects = Subject::where('class_id', $class_id)->paginate(10);
+            //$class_id = $data['class_id'] ?? '';
+            $subjects = Subject::paginate(10);
 
         } else {
-            $subjects = Subject::where('school_id', null)->paginate(10);
+            $subjects = Subject::paginate(10);
 
             $class_id = '';
         }
@@ -326,42 +383,53 @@ class SuperAdminController extends Controller
 
     public function createSubject()
     {
-        $classes = Classes::where('school_id', null)->get();
-        return view('superadmin.subject.add_subject', ['classes' => $classes]);
+        //$classes = Classes::where('school_id', null)->get();
+        return view('superadmin.subject.add_subject');
     }
 
     public function subjectCreate(Request $request)
     {
         $data = $request->all();
         //$active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
-        
+        $name = $data['name'];
+        $subject = Subject::where('name','=', $name)->first();
+        if($subject !== null){
+            return redirect('/superadmin/subject')->with('error','This subject already exists.');
+        }
+
         Subject::create([
             'name' => $data['name'],
-            'class_id' => $data['class_id'],
+            'class_id' => null,
             'school_id' =>null,
             'session_id' => null,
         ]);
         
-        return redirect('/superadmin/subject?class_id='.$data['class_id'])->with('message','You have successfully create subject.');
+        return redirect('/superadmin/subject')->with('message','You have successfully create subject.');
     }
 
     public function editSubject($id)
     {
         $subject = Subject::find($id);
-        $classes = Classes::where('school_id', null)->get();
-        return view('superadmin.subject.edit_subject', ['subject' => $subject, 'classes' => $classes]);
+        //$classes = Classes::where('school_id', null)->get();
+        
+        return view('superadmin.subject.edit_subject', ['subject' => $subject]);
     }
 
     public function subjectUpdate(Request $request, $id)
     {
         $data = $request->all();
+        $name = $data['name'];
+        $subject = Subject::where('name','=', $name)->first();
+        if($subject !== null){
+            return redirect('/superadmin/subject')->with('error','This subject already exists.');
+        }
         Subject::where('id', $id)->update([
             'name' => $data['name'],
-            'class_id' => $data['class_id'],
+            'class_id' => null,
             'school_id' => null,
         ]);
         
-        return redirect('/superadmin/subject?class_id='.$data['class_id'])->with('message','You have successfully update subject.');
+        return redirect('/superadmin/subject')->with('message','You have successfully update subject.');
     }
 
     public function subjectDelete($id)

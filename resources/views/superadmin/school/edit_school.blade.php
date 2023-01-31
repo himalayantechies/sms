@@ -19,12 +19,23 @@
                 <input type="text" class="form-control eForm-control" id="year_established" name="year_established" value="{{$school->year_established}}" >
             </div>
             <div class="fpb-7">
+                <label for="school_type" class="eForm-label">School Type</label>
+                <select name="school_type_id" id="school_type_id" class="form-select eForm-select eChoice-multiple-with-remove">
+                    <option value="1" @if ($school->school_type_id == 1) selected @endif >Community School</option>	
+                    <option value="2" @if ($school->school_type_id == 2) selected @endif >Institutional School</option>	
+                </select>
+            </div>
+            <div class="fpb-7">
                 <label for="district_code" class="eForm-label">District Code</label>
                 <input type="text" class="form-control eForm-control" id="district_code" name="district_code"  value="{{$school->district_code}}">
             </div>
             <div class="fpb-7">
-                <label for="vcd_code" class="eForm-label">VCD Code</label>
+                <label for="vcd_code" class="eForm-label">VDC Code</label>
                 <input type="text" class="form-control eForm-control" id="vcd_code" name="vcd_code" value="{{$school->vcd_code}}">
+            </div>
+            <div class="fpb-7">
+                <label for="school_code" class="eForm-label">School Code</label>
+                <input type="text" class="form-control eForm-control" id="school_code" name="school_code" value="{{$school->school_code}}" >
             </div>
             <div class="fpb-7">
                 <label for="school_info" class="eForm-label">{{ get_phrase('School information') }}</label>
