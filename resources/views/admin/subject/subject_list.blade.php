@@ -60,7 +60,7 @@
                             <?php $class = Classes::get()->where('id', $subject->class_id)->first(); ?>
                              <tr>
                                 <td>{{ $loop->index + 1 }}</td>
-                                <td>{{ $subject->name }}</td>
+                                <td>{{ $subject->subject->name }}</td>
                                 <td>{{ $class->name }}</td>
                                 <td class="text-start">
                                     <div class="adminTable-action">

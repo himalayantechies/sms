@@ -14,9 +14,15 @@
             </div>
 
             <div class="fpb-7">
-                <label for="name" class="eForm-label">{{ get_phrase('Name') }}</label>
-                <input type="text" class="form-control eForm-control" value="{{ $subject->name }}" id="name" name = "name" required>
+                <label for="subject_id_on_create" class="eForm-label">{{ get_phrase('Subject') }}</label>
+                <select name="subject_id" id="subject_id" class="form-select eForm-select eChoice-multiple-with-remove" required>
+                    <option value="">{{ get_phrase('Select a subject') }}</option>
+                     @foreach($subject_list as $subject_item)
+                    <option value="{{ $subject_item->id }}" {{ $subject_item->id == $subject->subject_id ? 'selected':'' }}>{{ $subject_item->name }}</option>
+                    @endforeach
+                </select>
             </div>
+
 
             <div class="fpb-7 pt-2">
                 <button class="btn-form" type="submit">{{ get_phrase('Update subject') }}</button>

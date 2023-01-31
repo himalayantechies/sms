@@ -39,7 +39,6 @@ Route::controller(InstallController::class)->group(function () {
     Route::post('install/validate', 'validatePurchaseCode')->name('install.validate');
     Route::any('install/finalizing_setup', 'finalizingSetup')->name('finalizing_setup');
     Route::get('install/success', 'success')->name('success');
-
 });
 //Installation routes end here
 
@@ -49,7 +48,7 @@ Auth::routes();
 
 
 // Clear application cache:
-Route::get('/clear-cache', function() {
+Route::get('/clear-cache', function () {
     Artisan::call('cache:clear');
 
     Artisan::call('route:cache');
@@ -69,13 +68,12 @@ Route::controller(HomeController::class)->group(function () {
 
     Route::get('home', 'index')->name('landingPage');
     Route::post('school/create', 'schoolCreate')->name('school.create');
-
 });
 //Landing page routes end here
 
 
 //Superadmin routes are here
-Route::controller(SuperAdminController::class)->middleware('auth','superAdmin')->group(function () {
+Route::controller(SuperAdminController::class)->middleware('auth', 'superAdmin')->group(function () {
 
     Route::get('superadmin/dashboard', 'superadminDashboard')->name('superadmin.dashboard')->middleware('role_id');
 
@@ -194,13 +192,12 @@ Route::controller(SuperAdminController::class)->middleware('auth','superAdmin')-
 
     //Logo update
     Route::post('superadmin/logo/update', 'update_logo')->name('superadmin.logo.update');
-
 });
 //Superadmin routes end here
 
 
 //Admin routes are here
-Route::controller(AdminController::class)->middleware('admin','auth')->group(function () {
+Route::controller(AdminController::class)->middleware('admin', 'auth')->group(function () {
 
     Route::get('admin/dashboard', 'adminDashboard')->name('admin.dashboard')->middleware('role_id');
 
@@ -264,7 +261,7 @@ Route::controller(AdminController::class)->middleware('admin','auth')->group(fun
     Route::get('admin/student/edit/{id}', 'studentEditModal')->name('admin.student_edit_modal');
     Route::post('admin/student/{id}', 'studentUpdate')->name('admin.student.update');
     Route::get('admin/student/delete/{id}', 'studentDelete')->name('admin.student.delete');
-
+    Route::get('admin/student/edit/{id}', 'editStudent')->name('admin.student.edit');
 
     //Teacher permission route
     Route::get('admin/permission', 'teacherPermission')->name('admin.teacher.permission');
@@ -498,13 +495,12 @@ Route::controller(AdminController::class)->middleware('admin','auth')->group(fun
     Route::get('admin/profile', 'profile')->name('admin.profile');
     Route::post('admin/profile/update', 'profile_update')->name('admin.profile.update');
     Route::any('admin/password/{action_type}', 'password')->name('admin.password');
-
 });
 //Admin routes end here
 
 
 //Teacher routes are here
-Route::controller(TeacherController::class)->middleware('teacher','auth')->group(function () {
+Route::controller(TeacherController::class)->middleware('teacher', 'auth')->group(function () {
 
     Route::get('teacher/dashboard', 'teacherDashboard')->name('teacher.dashboard')->middleware('role_id');
 
@@ -566,13 +562,12 @@ Route::controller(TeacherController::class)->middleware('teacher','auth')->group
     Route::get('teacher/profile', 'profile')->name('teacher.profile');
     Route::post('teacher/profile/update', 'profile_update')->name('teacher.profile.update');
     Route::any('teacher/password/{action_type}', 'password')->name('teacher.password');
-
 });
 //Teacher routes end here
 
 
 //Parent routes are here
-Route::controller(ParentController::class)->middleware('parent','auth')->group(function () {
+Route::controller(ParentController::class)->middleware('parent', 'auth')->group(function () {
 
     Route::get('parent/dashboard', 'parentDashboard')->name('parent.dashboard')->middleware('role_id');
 
@@ -642,14 +637,12 @@ Route::controller(ParentController::class)->middleware('parent','auth')->group(f
     Route::get('parent/profile', 'profile')->name('parent.profile');
     Route::post('parent/profile/update', 'profile_update')->name('parent.profile.update');
     Route::any('parent/password/{action_type}', 'password')->name('parent.password');
-    
-
 });
 //Parent routes end here
 
 
 //Student routes are here
-Route::controller(StudentController::class)->middleware('student','auth')->group(function () {
+Route::controller(StudentController::class)->middleware('student', 'auth')->group(function () {
 
     Route::get('student/dashboard', 'studentDashboard')->name('student.dashboard')->middleware('role_id');
 
@@ -729,13 +722,12 @@ Route::controller(CommonController::class)->middleware('auth')->group(function (
 
 
     Route::get('user/{id}', 'idWiseUserName')->name('id_wise_user_name');
-
 });
 //Common routes end here
 
 
 //Accountant routes are here
-Route::controller(AccountantController::class)->middleware('accountant','auth')->group(function () {
+Route::controller(AccountantController::class)->middleware('accountant', 'auth')->group(function () {
 
     Route::get('accountant/dashboard', 'accountantDashboard')->name('accountant.dashboard')->middleware('role_id');
 
@@ -786,13 +778,12 @@ Route::controller(AccountantController::class)->middleware('accountant','auth')-
     Route::get('accountant/profile', 'profile')->name('accountant.profile');
     Route::post('accountant/profile/update', 'profile_update')->name('accountant.profile.update');
     Route::any('accountant/password/{action_type}', 'password')->name('accountant.password');
-
 });
 //Accountant routes end here
 
 
 //Librarian routes are here
-Route::controller(LibrarianController::class)->middleware('librarian','auth')->group(function () {
+Route::controller(LibrarianController::class)->middleware('librarian', 'auth')->group(function () {
 
     Route::get('librarian/dashboard', 'librarianDashboard')->name('librarian.dashboard')->middleware('role_id');
 
@@ -822,23 +813,21 @@ Route::controller(LibrarianController::class)->middleware('librarian','auth')->g
 
     //Event routes
     Route::get('librarian/events/list', 'eventList')->name('librarian.events.list');
-    
+
 
     //Profile
     Route::get('librarian/profile', 'profile')->name('librarian.profile');
     Route::post('librarian/profile/update', 'profile_update')->name('librarian.profile.update');
     Route::any('librarian/password/{action_type}', 'password')->name('librarian.password');
-
 });
 //Librarian routes end here
 
 
 //Updater routes are here
-Route::controller(Updater::class)->middleware('superAdmin','auth')->group(function () {
+Route::controller(Updater::class)->middleware('superAdmin', 'auth')->group(function () {
 
     Route::post('superadmin/addon/create', 'update')->name('superadmin.addon.create');
     Route::post('superadmin/addon/update', 'update')->name('superadmin.addon.update');
     Route::post('superadmin/product/update', 'update')->name('superadmin.product.update');
-
 });
 //Updater routes end here
