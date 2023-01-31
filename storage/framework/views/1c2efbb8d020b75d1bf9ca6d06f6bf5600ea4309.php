@@ -844,6 +844,7 @@
     });
 
     </script>
+    <?php echo $__env->yieldContent('scripts'); ?>
 
 </body>
 

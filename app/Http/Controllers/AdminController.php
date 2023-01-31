@@ -2145,7 +2145,7 @@ class AdminController extends Controller
     public function subjectList(Request $request)
     {
         $classes = Classes::get();
-
+        
         if (count($request->all()) > 0 && $request->class_id != '') {
 
             $data = $request->all();
@@ -2153,7 +2153,6 @@ class AdminController extends Controller
             //$subjects = GradeSubject::where('class_id', $class_id)->paginate(10);
             $subjects = GradeSubject::with('subject')->where('class_id', $class_id)->paginate(10);
             
-            $subjects = Subject::where('class_id', $class_id)->paginate(10);
         } else {
             $subjects = GradeSubject::with('subject')->where('school_id', auth()->user()->school_id)->paginate(10);
             $class_id = '';
