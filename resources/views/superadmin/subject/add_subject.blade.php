@@ -2,15 +2,13 @@
     <form method="POST" enctype="multipart/form-data" class="d-block ajaxForm" action="{{ route('superadmin.create.subject') }}">
          @csrf 
         <div class="form-row">
-            <div class="fpb-7">
+            <!-- <div class="fpb-7">
                 <label for="class_id_on_create" class="eForm-label">{{ get_phrase('Class') }}</label>
                 <select name="class_id" id="class_id" class="form-select eForm-select eChoice-multiple-with-remove" required>
                     <option value="">{{ get_phrase('Select a class') }}</option>
-                     @foreach($classes as $class)
-                    <option value="{{ $class->id }}">{{ $class->name }}</option>
-                    @endforeach
+                    
                 </select>
-            </div>
+            </div> -->
             
             <div class="fpb-7">
                 <label for="name" class="eForm-label">{{ get_phrase('Name') }}</label>
