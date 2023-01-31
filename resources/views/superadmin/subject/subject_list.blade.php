@@ -1,6 +1,6 @@
 <?php use App\Models\Classes; ?>
 
-@extends('admin.navigation')
+@extends('superadmin.navigation')
    
 @section('content')
 <div class="mainSection-title">
@@ -27,22 +27,7 @@
 <div class="row">
     <div class="col-8 offset-md-2">
         <div class="eSection-wrap">
-            <form method="GET" class="d-block ajaxForm" action="{{ route('superadmin.subject_list') }}">
-                <div class="row mt-3">
-                    <div class="col-md-4"></div>
-                    <div class="col-md-3">
-                        <select name="class_id" id="class_id" class="form-select eForm-select eChoice-multiple-with-remove" required onchange="classWiseSection(this.value)">
-                            <option value="">{{ get_phrase('Select a class') }}</option>
-                            @foreach($classes as $class)
-                                <option value="{{ $class->id }}" {{ $class_id == $class->id ?  'selected':'' }}>{{ $class->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <button class="eBtn eBtn btn-secondary" type="submit" id = "filter_routine">{{ get_phrase('Filter') }}</button>
-                    </div>
-                </div>
-            </form>
+           
 
             @if(count($subjects) > 0)
             <div class="table-responsive">
@@ -51,7 +36,7 @@
                         <tr>
                             <th>#</th>
                             <th>{{ get_phrase('Name') }}</th>
-                            <th>{{ get_phrase('Class') }}</th>
+                            <!-- <th>{{ get_phrase('Class') }}</th> -->
                             <th class="text-end">{{ get_phrase('Action') }}</th>
                         </tr>
                     </thead>
@@ -61,7 +46,7 @@
                              <tr>
                                 <td>{{ $loop->index + 1 }}</td>
                                 <td>{{ $subject->name }}</td>
-                                <td>{{ $class->name }}</td>
+                               
                                 <td class="text-start">
                                     <div class="adminTable-action">
                                         <button

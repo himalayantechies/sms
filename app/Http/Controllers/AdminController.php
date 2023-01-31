@@ -3668,8 +3668,8 @@ class AdminController extends Controller
         $data['document_file'] = "sample-payment.pdf";
 
         $transaction_keys = json_encode($data);
-
-        $status = Subscription::create([
+        
+        if(Subscription::create([
             'package_id' => $selected_package['id'],
             'school_id' => auth()->user()->school_id,
             'paid_amount' => $selected_package['price'],
@@ -3679,9 +3679,12 @@ class AdminController extends Controller
             'expire_date' => strtotime('+'.$selected_package['days'].' days', strtotime(date("Y-m-d H:i:s")) ),
             'status' => '1',
             'active' => '1',
-        ]);
-
+        ])){
             return redirect()->route('admin.subscription')->with('message', 'Free Subscription Completed Successfully');
+        }
+
+
+            return redirect()->route('admin.subscription')->with('error', 'Free Subscription Could not be Completed ');
 
 
     }

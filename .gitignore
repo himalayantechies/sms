@@ -2,4 +2,7 @@
 /storage/*.key
 /storage/framework/views/*
 /vendor
+/public/assets/uploads/*
+/storage/*.php
+/storage/framework/views/
 .env

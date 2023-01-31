@@ -119,7 +119,9 @@
                                     <ul>
                                         <?php $sections = Section::get()->where('class_id', $class_list['id']); ?>
                                         <?php $__currentLoopData = $sections; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $section): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                            <li><?php echo e($section->name); ?></li>
+                                          <?php if($section->school_id == null): ?>
+                                              <li><?php echo e($section->name); ?></li>
+                                          <?php endif; ?>    
                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </ul>
                                 </td>

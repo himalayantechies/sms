@@ -27,22 +27,7 @@
 <div class="row">
     <div class="col-8 offset-md-2">
         <div class="eSection-wrap">
-            <form method="GET" class="d-block ajaxForm" action="<?php echo e(route('superadmin.subject_list')); ?>">
-                <div class="row mt-3">
-                    <div class="col-md-4"></div>
-                    <div class="col-md-3">
-                        <select name="class_id" id="class_id" class="form-select eForm-select eChoice-multiple-with-remove" required onchange="classWiseSection(this.value)">
-                            <option value=""><?php echo e(get_phrase('Select a class')); ?></option>
-                            <?php $__currentLoopData = $classes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $class): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <option value="<?php echo e($class->id); ?>" <?php echo e($class_id == $class->id ?  'selected':''); ?>><?php echo e($class->name); ?></option>
-                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <button class="eBtn eBtn btn-secondary" type="submit" id = "filter_routine"><?php echo e(get_phrase('Filter')); ?></button>
-                    </div>
-                </div>
-            </form>
+           
 
             <?php if(count($subjects) > 0): ?>
             <div class="table-responsive">
@@ -51,7 +36,7 @@
                         <tr>
                             <th>#</th>
                             <th><?php echo e(get_phrase('Name')); ?></th>
-                            <th><?php echo e(get_phrase('Class')); ?></th>
+                            <!-- <th><?php echo e(get_phrase('Class')); ?></th> -->
                             <th class="text-end"><?php echo e(get_phrase('Action')); ?></th>
                         </tr>
                     </thead>
@@ -61,7 +46,7 @@
                              <tr>
                                 <td><?php echo e($loop->index + 1); ?></td>
                                 <td><?php echo e($subject->name); ?></td>
-                                <td><?php echo e($class->name); ?></td>
+                               
                                 <td class="text-start">
                                     <div class="adminTable-action">
                                         <button
@@ -103,4 +88,4 @@
     </div>
 </div>
 <?php $__env->stopSection(); ?>
-<?php echo $__env->make('admin.navigation', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Applications/XAMPP/xamppfiles/htdocs/sms/resources/views/superadmin/subject/subject_list.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('superadmin.navigation', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Applications/XAMPP/xamppfiles/htdocs/sms/resources/views/superadmin/subject/subject_list.blade.php ENDPATH**/ ?>
