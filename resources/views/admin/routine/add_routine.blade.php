@@ -88,7 +88,7 @@
             <select name="starting_minute" id = "starting_minute_on_routine_creation" class="form-select eForm-select eChoice-multiple-with-remove"  required>
                 <option value="">{{ get_phrase('Starting minute') }}</option>
                 <?php for($i = 0; $i <= 55; $i = $i+5){ ?>
-                    <option value="{{ $i }}">{{ $i }}</option>
+                    <option value="{{ $i }}">{{   ($i < 10)? "0". $i: $i }}</option>
                 <?php } ?>
             </select>
         </div>
@@ -122,7 +122,7 @@
             <select name="ending_minute" id = "ending_minute_on_routine_creation" class="form-select eForm-select eChoice-multiple-with-remove"  required>
                 <option value="">{{ get_phrase('Ending minute') }}</option>
                 <?php for($i = 0; $i <= 55; $i = $i+5){ ?>
-                    <option value="{{ $i }}">{{ $i }}</option>
+                    <option value="{{ $i }}">{{   ($i < 10)? "0". $i: $i }}</option>
                 <?php } ?>
             </select>
         </div>

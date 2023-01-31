@@ -133,7 +133,13 @@ $active_session = get_school_settings(auth()->user()->school_id)->value('running
                       />
                     </svg>
                   </div>
-                  <p class="info">{{ $perday_routine['starting_hour'].':'.$perday_routine['starting_minute'].' - '.$perday_routine['ending_hour'].':'.$perday_routine['ending_minute'] }}</p>
+                  @php
+                  $starting_minute ='';
+                  $ending_minute='';
+                    // $starting_minute = ($perday_routine['starting_minute'] <10 )? "0".$perday_routine['starting_minute'] ? $perday_routine['starting_minute'];
+                    // $ending_minute = ($perday_routine['ending_minute'] <10 )? "0".$perday_routine['ending_minute'] ? $perday_routine['ending_minute'];
+                  @endphp
+                  <p class="info">{{ $perday_routine['starting_hour'].':'.$starting_minute.' - '.$perday_routine['ending_hour'].':'.$ending_minute }}</p>
                 </li>
                 <li
                   class="classDetails-info d-flex align-items-center"
@@ -257,7 +263,11 @@ $active_session = get_school_settings(auth()->user()->school_id)->value('running
                       />
                     </svg>
                   </div>
-                  <p class="info">{{ $perday_routine['starting_hour'].':'.$perday_routine['starting_minute'].' - '.$perday_routine['ending_hour'].':'.$perday_routine['ending_minute'] }}</p>
+                  <?php
+                    $starting_minute = ($perday_routine['starting_minute'] <10 )? "0".$perday_routine['starting_minute'] : $perday_routine['starting_minute'];
+                    $ending_minute = ($perday_routine['ending_minute'] <10 )? "0".$perday_routine['ending_minute'] : $perday_routine['ending_minute'];
+                  ?>
+                  <p class="info">{{ $perday_routine['starting_hour'].':'.$starting_minute.' - '.$perday_routine['ending_hour'].':'.$ending_minute}}</p>
                 </li>
                 <li
                   class="classDetails-info d-flex align-items-center"

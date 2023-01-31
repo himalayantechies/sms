@@ -30,7 +30,8 @@
                                 </div>
                                 <div class="fpb-7">
                                     <label for="address" class="eForm-label">{{ get_phrase('Address') }}</label>
-                                    <textarea class="form-control eForm-control" id="address" name="address" required="" spellcheck="false">{{ $school_details->address }}</textarea>
+                                    <textarea type="text" rows="1" class="form-control eForm-control" id="address" name="address" required="" spellcheck="false" >{{ $school_details->address }}
+                                    </textarea>
                                 </div>
                                 <div class="fpb-7">
 									<label for="school_email" class="eForm-label">{{ get_phrase('School Email') }}</label>
@@ -44,14 +45,25 @@
 									<label for="year_established" class="eForm-label">Est. Year</label>
 									<input type="text" class="form-control eForm-control" id="year_established" name="year_established"  value={{$school_details->year_established}}>
 								</div>
+                                <div class="fpb-7">
+									<label for="school_type" class="eForm-label">School Type</label>
+									<select id = "school_type_id" name="school_type_id" class="form-select eForm-select eChoice-multiple-with-remove">
+                                        <option value="1" @if ($school_details->school_type_id == 1) selected @endif >Community School</option>	
+                                        <option value="2" @if ($school_details->school_type_id == 2) selected @endif >Institutional School</option>	
+                                    </select>
+								</div>
 								<div class="fpb-7">
 									<label for="district_code" class="eForm-label">District Code</label>
 									<input type="text" class="form-control eForm-control" id="district_code" name="district_code" value={{$school_details->district_code}}>
 								</div>
 								<div class="fpb-7">
-									<label for="vcd_code" class="eForm-label">VCD Code</label>
+									<label for="vcd_code" class="eForm-label">VDC Code</label>
 									<input type="text" class="form-control eForm-control" id="vcd_code" name="vcd_code" value={{$school_details->vcd_code}}>
 								</div>
+                                <div class="fpb-7">
+                                    <label for="school_code" class="eForm-label">School Code</label>
+                                    <input type="text" class="form-control eForm-control" id="school_code" name="school_code" value="{{$school_details->school_code}}" >
+                                </div>
                                 <div class="fpb-7">
                                     <label for="school_info" class="eForm-label">{{ get_phrase('School information') }}</label>
                                     <textarea class="form-control eForm-control" id="school_info" name="school_info" rows="4" required="" spellcheck="false">{{ $school_details->school_info }}</textarea>

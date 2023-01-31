@@ -4,7 +4,9 @@ use App\Models\Section;
 use App\Models\Subject;
 use App\Models\Session;
 
-$active_session = Session::where('status', 1)->first();
+// $active_session = Session::where('status', 1)->first();
+$active_session = Session::where(['status'=> 1, 'school_id'=>auth()->user()->school_id])->first();
+// $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
 
 ?>
 <form method="POST" class="d-block ajaxForm" action="{{ route('admin.routine.update', ['id' => $routine->id ]) }}">
@@ -53,7 +55,7 @@ $active_session = Session::where('status', 1)->first();
         </div>
 
         <div class="fpb-7">
-            <label for="class_room_id" class="eForm-label">{{ get_phrase('Class room') }}</label>
+            <label for="class_room_id" class="eForm-label">{{ get_phrase('Class Room') }}</label>
             <select name="class_room_id" id = "class_room_id_on_routine_creation" class="form-select eForm-select eChoice-multiple-with-remove"  required>
                 <option value="">{{ get_phrase('Select a class room') }}</option>
                 <?php foreach($class_rooms as $class_room): ?>
@@ -105,7 +107,8 @@ $active_session = Session::where('status', 1)->first();
             <select name="starting_minute" id = "starting_minute_on_routine_creation" class="form-select eForm-select eChoice-multiple-with-remove"  required>
                 <option value="">{{ get_phrase('Starting minute') }}</option>
                 <?php for($i = 0; $i <= 55; $i = $i+5){ ?>
-                    <option value="{{ $i }}" {{ $routine->starting_minute == $i ?  'selected':'' }}>{{ $i }}</option>
+                    <option value="{{ $i }}" {{ $routine->starting_minute == $i ?  'selected':'' }}>{{   ($i < 10)? "0". $i: $i }}</option>
+                    
                 <?php } ?>
             </select>
         </div>
@@ -139,7 +142,7 @@ $active_session = Session::where('status', 1)->first();
             <select name="ending_minute" id = "ending_minute_on_routine_creation" class="form-select eForm-select eChoice-multiple-with-remove"  required>
                 <option value="">{{ get_phrase('Ending minute') }}</option>
                 <?php for($i = 0; $i <= 55; $i = $i+5){ ?>
-                    <option value="{{ $i }}" {{ $routine->ending_minute == $i ?  'selected':'' }}>{{ $i }}</option>
+                    <option value="{{ $i }}" {{ $routine->ending_minute == $i ?  'selected':'' }}>{{ ($i < 10)? "0". $i: $i }}</option>
                 <?php } ?>
             </select>
         </div>
