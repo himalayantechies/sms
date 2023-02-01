@@ -37,12 +37,13 @@
                 </select>
             </div>
             <div class="col-md-6 col-sm-12 mt-2">
-                <label for="registration_no" class="form-label col-eForm-label">{{ get_phrase('Registration No')}}</label>
+                <label for="registration_no"
+                    class="form-label col-eForm-label">{{ get_phrase('Registration No') }}</label>
                 <input type="text" class="form-control eForm-control" id="registration_no" name="registration_no"
                     required>
             </div>
             <div class="col-md-6 col-sm-12 mt-2">
-                <label for="roll_no" class="form-label col-eForm-label">{{ get_phrase('Roll No')}}</label>
+                <label for="roll_no" class="form-label col-eForm-label">{{ get_phrase('Roll No') }}</label>
                 <input type="text" class="form-control eForm-control" id="roll_no" name="roll_no" required>
             </div>
             <div class="col-md-6 col-sm-12 mt-2">
@@ -57,7 +58,7 @@
             </div>
 
             <div class="col-md-6 col-sm-12 mt-2">
-                <label for="admitted_date" class="form-label col-eForm-label">{{ get_phrase('Admitted Date')}}</label>
+                <label for="admitted_date" class="form-label col-eForm-label">{{ get_phrase('Admitted Date') }}</label>
                 <input type="date" class="form-control eForm-control" id="admitted_date" name="admitted_date"
                     required>
             </div>
@@ -131,7 +132,8 @@
                 <input type="text" class="form-control eForm-control" id="religion" name="religion" required>
             </div>
             <div class="col-md-6 col-sm-12 mt-2">
-                <label for="previous_school" class="form-label col-eForm-label">{{ get_phrase('Previous School') }}</label>
+                <label for="previous_school"
+                    class="form-label col-eForm-label">{{ get_phrase('Previous School') }}</label>
                 <input type="text" class="form-control eForm-control" id="previous_school" name="previous_school"
                     required>
             </div>
@@ -150,15 +152,21 @@
                 <input type="text" class="form-control eForm-control" id="ecd_no" name="ecd_no" required>
             </div>
 
-            <div class="col-md-6 col-sm-12 mt-2">
-                <label for="ecd_ppc_experience" class="form-label col-eForm-label">{{ get_phrase('ECD/PPC Experience') }}</label>
-                <input type="checkbox" class="form-check-input mx-3" id="ecd_ppc_experience" value="1"
-                    name="ecd_ppc_experience">
+            <div class="col-md-6 col-sm-12 mt-2 d-flex align-items-center">
+                <div>
+                    <label for="ecd_ppc_experience"
+                        class="form-label col-eForm-label">{{ get_phrase('ECD/PPC Experience') }}</label>
+                    <input type="checkbox" class="form-check-input mx-3" id="ecd_ppc_experience" value="1"
+                        name="ecd_ppc_experience">
+                </div>
+                <div>
+                    <label for="new_admission_status"
+                        class="form-label col-eForm-label">{{ get_phrase('Is new admission ?') }}</label>
+                    <input type="checkbox" class="form-check-input mx-3" id="new_admission_status" value="1"
+                        name="new_admission_status">
+                </div>
             </div>
             <div class="col-md-6 col-sm-12 mt-2">
-                <label for="new_admission_status" class="form-label col-eForm-label">{{ get_phrase('Is new admission ?') }}</label>
-                <input type="checkbox" class="form-check-input mx-3" id="new_admission_status" value="1"
-                    name="new_admission_status">
             </div>
         </div>
         <div class="row">
