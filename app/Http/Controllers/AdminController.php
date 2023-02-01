@@ -862,13 +862,13 @@ class AdminController extends Controller
         return view('admin.student.id_card', ['student_details' => $student_details]);
     }
 
-    public function studentEditModal($id)
-    {
-        $user = User::find($id);
-        $student_details = (new CommonController)->get_student_details_by_id($id);
-        $classes = Classes::get()->where('school_id', auth()->user()->school_id);
-        return view('admin.student.edit_student', ['user' => $user, 'student_details' => $student_details, 'classes' => $classes]);
-    }
+    // public function studentEditModal($id)
+    // {
+    //     $user = User::find($id);
+    //     $student_details = (new CommonController)->get_student_details_by_id($id);
+    //     $classes = Classes::get()->where('school_id', auth()->user()->school_id);
+    //     return view('admin.student.edit_student', ['user' => $user, 'student_details' => $student_details, 'classes' => $classes]);
+    // }
 
     public function studentUpdate(Request $request, $id)
     {
@@ -913,7 +913,7 @@ class AdminController extends Controller
             $student = Student::where('user_id', $id)->first();
 
             $student->name = $data['name'];
-            $student->student_type = $data['student_type'];
+            $student->student_type = $data['student_type']??'';
             $student->class_id = $data['class_id'];
             $student->section_id = $data['section_id'];
             $student->registration_no = $data['registration_no'];
@@ -1166,6 +1166,7 @@ class AdminController extends Controller
                 'students.ecd_no',
                 'students.ecd_ppc_experience',
                 'students.new_admission_status',
+                'students.photo'
             ]);
         $data['blood_group'] = ['a+', 'a-', 'b+', 'b-', 'ab+', 'ab-', 'o+', 'o-'];
         $data['student_type'] = ['Day Scholar'];
@@ -1173,7 +1174,7 @@ class AdminController extends Controller
         $data['caste'] = ['brahmin/chhetri', 'dalit', 'janjati', 'others'];
         $data['ecd_type'] = ['school based', 'community based'];
         $data['disability'] = ['n/a', 'physical', 'mental', 'deaf', 'blind', 'low vision', 'deaf and blind', 'speech impairment', 'multiple disability'];
-        $data['parents'] = User::where(['role_id' => 6, 'school_id' => 1])->get();
+        // $data['parents'] = User::where(['role_id' => 6, 'school_id' => 1])->get();
         $data['departments'] = Department::get()->where('school_id', auth()->user()->school_id);
         $data['classes'] = Classes::get();
         return view('admin.student.edit', ['data' => $data]);

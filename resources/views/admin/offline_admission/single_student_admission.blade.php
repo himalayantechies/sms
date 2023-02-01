@@ -8,7 +8,7 @@
                 <input type="text" class="form-control eForm-control" id="name" name="name" required>
             </div>
             <div class="col-md-6 col-sm-12 mt-2">
-                <label for="student_type" class="form-label col-eForm-label">Student Type</label>
+                <label for="student_type" class="form-label col-eForm-label">{{ get_phrase('Student Type') }}</label>
                 <select name="student_type" id="student_type"
                     class="form-control form-select eForm-select eChoice-multiple-with-remove">
                     <option value="" selected="selected">-Select student type-</option>
@@ -27,27 +27,7 @@
                     @endforeach
                 </select>
             </div>
-            {{-- <div class="col-md-6 col-sm-12 mt-2">
-                <label for="grade" class="form-label col-eForm-label">Grade</label>
-                <select name="grade" id="grade" class="form-select eForm-select eChoice-multiple-with-remove"
-                    required>
-                    <option value="">Select a class</option>
-                    @foreach ($data['grade'] as $class)
-                        <option value="{{ $class }}">{{ $class }}</option>
-                    @endforeach
-                </select>
-            </div> --}}
 
-            {{-- <div class="col-md-6 col-sm-12 mt-2">
-                <label for="section_id" class="form-label col-eForm-label">{{ get_phrase('Section') }}</label>
-                <select name="section_id" id="section_id" class="form-select eForm-select eChoice-multiple-with-remove"
-                    required>
-                    <option value="">{{ get_phrase('Select section') }}</option>
-                    @foreach ($data['section'] as $section)
-                    <option value="{{ $section }}">{{ $section }}</option>
-                @endforeach
-                </select>
-            </div> --}}
 
             <div class="col-md-6 col-sm-12 mt-2">
                 <label for="section_id" class="form-label col-eForm-label">{{ get_phrase('Section') }}</label>
@@ -57,11 +37,12 @@
                 </select>
             </div>
             <div class="col-md-6 col-sm-12 mt-2">
-                <label for="registration_no" class="form-label col-eForm-label">Registration No.</label>
-                <input type="text" class="form-control eForm-control" id="registration_no" name="registration_no" required>
+                <label for="registration_no" class="form-label col-eForm-label">{{ get_phrase('Registration No')}}</label>
+                <input type="text" class="form-control eForm-control" id="registration_no" name="registration_no"
+                    required>
             </div>
             <div class="col-md-6 col-sm-12 mt-2">
-                <label for="roll_no" class="form-label col-eForm-label">Roll No.</label>
+                <label for="roll_no" class="form-label col-eForm-label">{{ get_phrase('Roll No')}}</label>
                 <input type="text" class="form-control eForm-control" id="roll_no" name="roll_no" required>
             </div>
             <div class="col-md-6 col-sm-12 mt-2">
@@ -76,23 +57,23 @@
             </div>
 
             <div class="col-md-6 col-sm-12 mt-2">
-                <label for="admitted_date" class="form-label col-eForm-label">Admitted Date</label>
+                <label for="admitted_date" class="form-label col-eForm-label">{{ get_phrase('Admitted Date')}}</label>
                 <input type="date" class="form-control eForm-control" id="admitted_date" name="admitted_date"
                     required>
             </div>
             <div class="col-md-6 col-sm-12 mt-2">
-                <label for="dob_ad" class="form-label col-eForm-label">Date of Birth(AD)<span
+                <label for="dob_ad" class="form-label col-eForm-label">{{ get_phrase('Date of Birth(AD)') }}<span
                         class="required"></span></label>
                 <input type="date" class="form-control eForm-control" id="dob_ad" name="dob_ad" />
             </div>
             <div class="col-md-6 col-sm-12 mt-2">
-                <label for="dob_bs" class="form-label col-eForm-label">Date of Birth(BS)<span
+                <label for="dob_bs" class="form-label col-eForm-label">{{ get_phrase('Date of Birth(BS)') }}<span
                         class="required"></span></label>
                 <input type="date" class="form-control eForm-control" id="dob_bs" name="dob_bs" />
             </div>
 
             <div class="col-md-6 col-sm-12 mt-2">
-                <label for="phone" class="form-label col-eForm-label">Contact No.</label>
+                <label for="phone" class="form-label col-eForm-label">{{ get_phrase('Contact No') }}</label>
                 <input type="text" id="phone" name="phone" class="form-control eForm-control" required>
             </div>
 
@@ -125,7 +106,7 @@
                 </select>
             </div>
             <div class="col-md-6 col-sm-12 mt-2">
-                <label for="disability" class="form-label col-eForm-label">Disability</label>
+                <label for="disability" class="form-label col-eForm-label">{{ get_phrase('Disability') }}</label>
                 <select name="disability" id="disability"
                     class="form-select eForm-select eChoice-multiple-with-remove" required>
                     <option value="">--Select disability type--</option>
@@ -135,7 +116,7 @@
                 </select>
             </div>
             <div class="col-md-6 col-sm-12 mt-2">
-                <label for="caste" class="form-label col-eForm-label">Caste</label>
+                <label for="caste" class="form-label col-eForm-label">{{ get_phrase('Caste') }}</label>
                 <select name="caste" id="caste" class="form-select eForm-select eChoice-multiple-with-remove"
                     required>
                     <option value="">--Select caste--</option>
@@ -146,16 +127,16 @@
             </div>
 
             <div class="col-md-6 col-sm-12 mt-2">
-                <label for="religion" class="form-label col-eForm-label">Religion</label>
+                <label for="religion" class="form-label col-eForm-label">{{ get_phrase('Religion') }}</label>
                 <input type="text" class="form-control eForm-control" id="religion" name="religion" required>
             </div>
             <div class="col-md-6 col-sm-12 mt-2">
-                <label for="previous_school" class="form-label col-eForm-label">Previous School</label>
+                <label for="previous_school" class="form-label col-eForm-label">{{ get_phrase('Previous School') }}</label>
                 <input type="text" class="form-control eForm-control" id="previous_school" name="previous_school"
                     required>
             </div>
             <div class="col-md-6 col-sm-12 mt-2">
-                <label for="ecd_type" class="form-label col-eForm-label">ECD Type</label>
+                <label for="ecd_type" class="form-label col-eForm-label">{{ get_phrase('ECD Type') }}</label>
                 <select name="ecd_type" id="ecd_type" class="form-select eForm-select eChoice-multiple-with-remove"
                     required>
                     <option value="">--Select ecd_type--</option>
@@ -165,17 +146,17 @@
                 </select>
             </div>
             <div class="col-md-6 col-sm-12 mt-2">
-                <label for="ecd_no" class="form-label col-eForm-label">ECD No.</label>
+                <label for="ecd_no" class="form-label col-eForm-label">{{ get_phrase('ECD No') }}</label>
                 <input type="text" class="form-control eForm-control" id="ecd_no" name="ecd_no" required>
             </div>
 
             <div class="col-md-6 col-sm-12 mt-2">
-                <label for="ecd_ppc_experience" class="form-label col-eForm-label">ECD/PPC Experience</label>
+                <label for="ecd_ppc_experience" class="form-label col-eForm-label">{{ get_phrase('ECD/PPC Experience') }}</label>
                 <input type="checkbox" class="form-check-input mx-3" id="ecd_ppc_experience" value="1"
                     name="ecd_ppc_experience">
             </div>
             <div class="col-md-6 col-sm-12 mt-2">
-                <label for="new_admission_status" class="form-label col-eForm-label">Is new admission ?</label>
+                <label for="new_admission_status" class="form-label col-eForm-label">{{ get_phrase('Is new admission ?') }}</label>
                 <input type="checkbox" class="form-check-input mx-3" id="new_admission_status" value="1"
                     name="new_admission_status">
             </div>

@@ -12,6 +12,8 @@ use App\Http\Controllers\ParentController;
 use App\Http\Controllers\LibrarianController;
 use App\Http\Controllers\AccountantController;
 use App\Http\Controllers\Updater;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -258,7 +260,7 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
     Route::get('admin/student/create_modal', 'createStudentModal')->name('admin.student.open_modal');
     Route::post('admin/student', 'studentCreate')->name('admin.student.create');
     Route::get('admin/student/id_card/{id}', 'studentIdCardGenerate')->name('admin.student.id_card');
-    Route::get('admin/student/edit/{id}', 'studentEditModal')->name('admin.student_edit_modal');
+    // Route::get('admin/student/edit/{id}', 'studentEditModal')->name('admin.student_edit_modal');
     Route::post('admin/student/{id}', 'studentUpdate')->name('admin.student.update');
     Route::get('admin/student/delete/{id}', 'studentDelete')->name('admin.student.delete');
     Route::get('admin/student/edit/{id}', 'editStudent')->name('admin.student.edit');
