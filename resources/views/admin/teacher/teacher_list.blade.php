@@ -17,8 +17,8 @@
                         </ul>
                     </div>
                     <div class="export-btn-area">
-                        <a href="javascript:;" class="export_btn"
-                            onclick="rightModal('{{ route('admin.teacher.open_modal') }}', '{{ get_phrase('Create Teacher') }}')">{{ get_phrase('Create Teacher') }}</a>
+                        <a href="{{ route('admin.teacher.form.create') }}"
+                            class="export_btn">{{ get_phrase('Create Teacher') }}</a>
                     </div>
                 </div>
             </div>
@@ -132,8 +132,8 @@
                                                 <ul
                                                     class="dropdown-menu dropdown-menu-end eDropdown-menu-2 eDropdown-table-action">
                                                     <li>
-                                                        <a class="dropdown-item" href="javascript:;"
-                                                            onclick="rightModal('{{ route('admin.teacher_edit_modal', ['id' => $teacher->id]) }}', '{{ get_phrase('Edit Admin') }}')">{{ get_phrase('Edit') }}</a>
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('admin.teacher.edit', ['id' => $teacher->id]) }}">{{ get_phrase('Edit') }}</a>
                                                     </li>
                                                     <li>
                                                         <a class="dropdown-item" href="javascript:;"

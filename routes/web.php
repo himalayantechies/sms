@@ -221,9 +221,11 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
 
     //Teacher users route
     Route::get('admin/teacher', 'teacherList')->name('admin.teacher');
-    Route::get('admin/teacher/create_modal', 'createTeacherModal')->name('admin.teacher.open_modal');
+    // Route::get('admin/teacher/create_modal', 'createTeacherModal')->name('admin.teacher.open_modal');
+    Route::get('/admin/teacher/create','createTeacher')->name('admin.teacher.form.create');
     Route::post('admin/teacher', 'adminTeacherCreate')->name('admin.teacher.create');
-    Route::get('admin/teacher/edit/{id}', 'teacherEditModal')->name('admin.teacher_edit_modal');
+    // Route::get('admin/teacher/edit/{id}', 'teacherEditModal')->name('admin.teacher_edit_modal');
+    Route::get('admin/teacher/edit/{id}', 'editTeacher')->name('admin.teacher.edit');
     Route::post('admin/teacher/{id}', 'teacherUpdate')->name('admin.teacher.update');
     Route::get('admin/teacher/delete/{id}', 'teacherDelete')->name('admin.teacher.delete');
 
