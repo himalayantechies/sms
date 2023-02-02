@@ -40,6 +40,7 @@ use App\Models\PaymentHistory;
 use App\Models\TeacherPermission;
 use App\Models\Payments;
 use App\Models\Student;
+use App\Models\Teacher;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -50,6 +51,7 @@ class AdminController extends Controller
 {
 
     private $user;
+    private $_data = [];
     /**
      * Show the admin dashboard.
      *
@@ -296,41 +298,36 @@ class AdminController extends Controller
         $departments = Department::get()->where('school_id', auth()->user()->school_id);
         return view('admin.teacher.add_teacher', ['departments' => $departments]);
     }
+    public function createTeacher()
+    {
+        $this->_data['departments'] = Department::get()->where('school_id', auth()->user()->school_id);
+        $this->_data['caste'] = ['brahmin/chhetri', 'dalit', 'janjati', 'others'];
+        $this->_data['disability'] = ['n/a', 'physical', 'mental', 'deaf', 'blind', 'low vision', 'deaf and blind', 'speech impairment', 'multiple disability'];
+        return view('admin.teacher.create', $this->_data);
+    }
 
     public function adminTeacherCreate(Request $request)
     {
-        $data = $request->all();
-        if (!empty($data['photo'])) {
-
-            $imageName = time() . '.' . $data['photo']->extension();
-
-            $data['photo']->move(public_path('assets/uploads/user-images/'), $imageName);
-
-            $photo  = $imageName;
-        } else {
-            $photo = '';
+        try {
+            (new Teacher)->storeTeacher($request);
+            return redirect()->back()->with('message', 'Teacher Created Successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', "Teacher couldn't be created");
         }
-        $info = array(
-            'gender' => $data['gender'],
-            'blood_group' => $data['blood_group'],
-            'birthday' => strtotime($data['birthday']),
-            'phone' => $data['phone'],
-            'address' => $data['address'],
-            'photo' => $photo
-        );
-
-        $data['user_information'] = json_encode($info);
-        User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'role_id' => '3',
-            'school_id' => auth()->user()->school_id,
-            'user_information' => $data['user_information'],
-            'department_id' => $data['department_id'],
-            'designation' => $data['designation'],
-        ]);
-        return redirect()->back()->with('message', 'You have successfully add teacher.');
+    }
+    public function editTeacher(Request $request, $id)
+    {
+        $this->_data['departments'] = Department::get()->where('school_id', auth()->user()->school_id);
+        $this->_data['caste'] = ['brahmin/chhetri', 'dalit', 'janjati', 'others'];
+        $this->_data['disability'] = ['n/a', 'physical', 'mental', 'deaf', 'blind', 'low vision', 'deaf and blind', 'speech impairment', 'multiple disability'];
+        $this->_data['gender'] = ['Male', 'Female', 'Others'];
+        $this->_data['nationality'] = ['Nepali', 'Indian', 'Others'];
+        $this->_data['teacher_type'] = ['Full Time', 'Part Time'];
+        $this->_data['marital_status'] = ['Single', 'Married', 'Divorced'];
+        $this->_data['teaching_medium'] = ['Nepali', 'English', 'Nepal Bhasa', 'Hindi', 'Maithali', 'Bhojpuri', 'Tamang', 'Sanskrit'];
+        $this->_data['mother_tongue'] = ['Nepali', 'English', 'Nepal Bhasa', 'Hindi', 'Maithali', 'Bhojpuri', 'Tamang', 'Sanskrit'];
+        $this->_data['user'] = (new Teacher)->specificTeacherDetail($id);
+        return view('admin.teacher.edit', $this->_data);
     }
 
     public function teacherEditModal($id)
@@ -342,42 +339,17 @@ class AdminController extends Controller
 
     public function teacherUpdate(Request $request, $id)
     {
-        $data = $request->all();
-        if (!empty($data['photo'])) {
-
-            $imageName = time() . '.' . $data['photo']->extension();
-
-            $data['photo']->move(public_path('assets/uploads/user-images/'), $imageName);
-
-            $photo  = $imageName;
-        } else {
-            $photo = '';
+        try {
+            (new Teacher)->updateTeacher($request, $id);
+            return redirect()->back()->with('message', 'You have successfully updated teacher.');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', "Teacher couldn't be updated");
         }
-        $info = array(
-            'gender' => $data['gender'],
-            'blood_group' => $data['blood_group'],
-            'birthday' => strtotime($data['birthday']),
-            'phone' => $data['phone'],
-            'address' => $data['address'],
-            'photo' => $photo
-        );
-
-        $data['user_information'] = json_encode($info);
-        User::where('id', $id)->update([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'user_information' => $data['user_information'],
-            'department_id' => $data['department_id'],
-            'designation' => $data['designation'],
-        ]);
-        return redirect()->back()->with('message', 'You have successfully update teacher.');
     }
 
     public function teacherDelete($id)
     {
-        $user = User::find($id);
-        $user->delete();
-        $admins = User::get()->where('role_id', 3);
+        (new Teacher)->deleteTeacher($id);
         return redirect()->route('admin.teacher')->with('message', 'You have successfully deleted teacher.');
     }
 
@@ -862,13 +834,13 @@ class AdminController extends Controller
         return view('admin.student.id_card', ['student_details' => $student_details]);
     }
 
-    public function studentEditModal($id)
-    {
-        $user = User::find($id);
-        $student_details = (new CommonController)->get_student_details_by_id($id);
-        $classes = Classes::get()->where('school_id', auth()->user()->school_id);
-        return view('admin.student.edit_student', ['user' => $user, 'student_details' => $student_details, 'classes' => $classes]);
-    }
+    // public function studentEditModal($id)
+    // {
+    //     $user = User::find($id);
+    //     $student_details = (new CommonController)->get_student_details_by_id($id);
+    //     $classes = Classes::get()->where('school_id', auth()->user()->school_id);
+    //     return view('admin.student.edit_student', ['user' => $user, 'student_details' => $student_details, 'classes' => $classes]);
+    // }
 
     public function studentUpdate(Request $request, $id)
     {
@@ -899,11 +871,14 @@ class AdminController extends Controller
                 'photo' => $photo
             );
             $data['user_information'] = json_encode($info);
-            User::where('id', $id)->update([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'user_information' => $data['user_information'],
-            ]);
+            $user = User::where('id', $id)->first();
+            $user->name = $data['name'];
+            $user->email = $data['email'];
+            $user->user_information = $data['user_information'];
+            if (isset($data['password'])) {
+                $user->password = $data['password'];
+            }
+            $user->save();
 
             Enrollment::where('user_id', $id)->update([
                 'class_id' => $data['class_id'],
@@ -913,7 +888,7 @@ class AdminController extends Controller
             $student = Student::where('user_id', $id)->first();
 
             $student->name = $data['name'];
-            $student->student_type = $data['student_type'];
+            $student->student_type = $data['student_type'] ?? '';
             $student->class_id = $data['class_id'];
             $student->section_id = $data['section_id'];
             $student->registration_no = $data['registration_no'];
@@ -925,9 +900,7 @@ class AdminController extends Controller
             $student->phone = $data['phone'];
             $student->email = $data['email'];
 
-            if (isset($data['password'])) {
-                $student->password = $data['password'];
-            }
+
 
             $student->address = $data['address'];
             $student->blood_group = $data['blood_group'];
@@ -1166,6 +1139,7 @@ class AdminController extends Controller
                 'students.ecd_no',
                 'students.ecd_ppc_experience',
                 'students.new_admission_status',
+                'students.photo'
             ]);
         $data['blood_group'] = ['a+', 'a-', 'b+', 'b-', 'ab+', 'ab-', 'o+', 'o-'];
         $data['student_type'] = ['Day Scholar'];
@@ -1173,7 +1147,7 @@ class AdminController extends Controller
         $data['caste'] = ['brahmin/chhetri', 'dalit', 'janjati', 'others'];
         $data['ecd_type'] = ['school based', 'community based'];
         $data['disability'] = ['n/a', 'physical', 'mental', 'deaf', 'blind', 'low vision', 'deaf and blind', 'speech impairment', 'multiple disability'];
-        $data['parents'] = User::where(['role_id' => 6, 'school_id' => 1])->get();
+        // $data['parents'] = User::where(['role_id' => 6, 'school_id' => 1])->get();
         $data['departments'] = Department::get()->where('school_id', auth()->user()->school_id);
         $data['classes'] = Classes::get();
         return view('admin.student.edit', ['data' => $data]);
@@ -1746,7 +1720,7 @@ class AdminController extends Controller
     public function routine()
     {
         // $classes = Classes::where('school_id', auth()->user()->school_id)->get();
-        
+
         $classes = Classes::select('id', 'name')->whereNull('school_id')->orWhere('school_id', auth()->user()->school_id)->get();
         // echo "<pre>";
         // print_r($classes->toArray());
@@ -2209,14 +2183,13 @@ class AdminController extends Controller
     public function subjectList(Request $request)
     {
         $classes = Classes::get();
-        
+
         if (count($request->all()) > 0 && $request->class_id != '') {
 
             $data = $request->all();
             $class_id = $data['class_id'] ?? '';
             //$subjects = GradeSubject::where('class_id', $class_id)->paginate(10);
             $subjects = GradeSubject::with('subject')->where('class_id', $class_id)->paginate(10);
-            
         } else {
             $subjects = GradeSubject::with('subject')->where('school_id', auth()->user()->school_id)->paginate(10);
             $class_id = '';
@@ -2229,11 +2202,13 @@ class AdminController extends Controller
     {
         $classes = Classes::get();
         $subjects = Subject::get();
-        return view('admin.subject.add_subject', 
-                    [
-                        'classes' => $classes,
-                        'subjects' => $subjects
-                    ]);
+        return view(
+            'admin.subject.add_subject',
+            [
+                'classes' => $classes,
+                'subjects' => $subjects
+            ]
+        );
     }
 
     public function subjectCreate(Request $request)
@@ -2241,15 +2216,15 @@ class AdminController extends Controller
         $data = $request->all();
         $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
         $user_id = auth()->user()->id;
-        $grade_subject = GradeSubject::where('school_id',auth()->user()->school_id)
-                        ->where('class_id','=',$data['class_id'])
-                        ->where('subject_id','=',$data['subject_id'])
-                        ->first();
-        if($grade_subject !== null){
-            return redirect('/admin/subject?class_id='.$data['class_id'])->with('error',"Subject already asigned to class. ");
-        }                    
+        $grade_subject = GradeSubject::where('school_id', auth()->user()->school_id)
+            ->where('class_id', '=', $data['class_id'])
+            ->where('subject_id', '=', $data['subject_id'])
+            ->first();
+        if ($grade_subject !== null) {
+            return redirect('/admin/subject?class_id=' . $data['class_id'])->with('error', "Subject already asigned to class. ");
+        }
         GradeSubject::create([
-            
+
             'class_id' => $data['class_id'],
             'school_id' => auth()->user()->school_id,
             'session_id' => $active_session,
@@ -2265,7 +2240,7 @@ class AdminController extends Controller
         $subject = GradeSubject::with('subject')->find($id);
         $classes = Classes::get();
         $subject_list = Subject::get();
-        return view('admin.subject.edit_subject', ['subject' => $subject, 'classes' => $classes,'subject_list' => $subject_list]);
+        return view('admin.subject.edit_subject', ['subject' => $subject, 'classes' => $classes, 'subject_list' => $subject_list]);
     }
 
     public function subjectUpdate(Request $request, $id)
@@ -2286,8 +2261,7 @@ class AdminController extends Controller
         $subject = GradeSubject::find($id);
         $subject->delete();
         //$subjects = Subject::get()->where('school_id', auth()->user()->school_id);
-        return redirect()->back()->with('message','You have successfully delete subject.');
-        
+        return redirect()->back()->with('message', 'You have successfully delete subject.');
     }
 
     /**
@@ -3765,8 +3739,8 @@ class AdminController extends Controller
         $data['document_file'] = "sample-payment.pdf";
 
         $transaction_keys = json_encode($data);
-        
-        if(Subscription::create([
+
+        if (Subscription::create([
             'package_id' => $selected_package['id'],
             'school_id' => auth()->user()->school_id,
             'paid_amount' => $selected_package['price'],
@@ -3776,14 +3750,12 @@ class AdminController extends Controller
             'expire_date' => strtotime('+' . $selected_package['days'] . ' days', strtotime(date("Y-m-d H:i:s"))),
             'status' => '1',
             'active' => '1',
-        ])){
+        ])) {
             return redirect()->route('admin.subscription')->with('message', 'Free Subscription Completed Successfully');
         }
 
 
-            return redirect()->route('admin.subscription')->with('error', 'Free Subscription Could not be Completed ');
-
-
+        return redirect()->route('admin.subscription')->with('error', 'Free Subscription Could not be Completed ');
     }
 
 

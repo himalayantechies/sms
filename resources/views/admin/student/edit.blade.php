@@ -33,7 +33,8 @@
                                 value="{{ $data['student']['name'] }}" required>
                         </div>
                         <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="student_type" class="form-label col-eForm-label">Student Type</label>
+                            <label for="student_type"
+                                class="form-label col-eForm-label">{{ get_phrase('Student Type') }}</label>
                             <select name="student_type" id="student_type"
                                 class="form-control form-select eForm-select eChoice-multiple-with-remove">
                                 <option value="">-Select student type-</option>
@@ -68,12 +69,13 @@
                                 id="section_id">
                         </div>
                         <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="registration_no" class="form-label col-eForm-label">Registration No.</label>
+                            <label for="registration_no"
+                                class="form-label col-eForm-label">{{ get_phrase('Registration No') }}</label>
                             <input type="text" class="form-control eForm-control" id="registration_no"
                                 value="{{ $data['student']['registration_no'] }}" name="registration_no" required>
                         </div>
                         <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="roll_no" class="form-label col-eForm-label">Roll No.</label>
+                            <label for="roll_no" class="form-label col-eForm-label">{{ get_phrase('Roll No') }}</label>
                             <input type="text" class="form-control eForm-control" id="roll_no" name="roll_no" required
                                 value="{{ $data['student']['roll_no'] }}">
                         </div>
@@ -91,25 +93,29 @@
                         </div>
 
                         <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="admitted_date" class="form-label col-eForm-label">Admitted Date</label>
+                            <label for="admitted_date"
+                                class="form-label col-eForm-label">{{ get_phrase('Admitted Date') }}</label>
                             <input type="date" class="form-control eForm-control" id="admitted_date" name="admitted_date"
                                 value="{{ $data['student']['admitted_date'] }}" required>
                         </div>
                         <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="dob_ad" class="form-label col-eForm-label">Date of Birth(AD)<span
+                            <label for="dob_ad"
+                                class="form-label col-eForm-label">{{ get_phrase('Date of Birth(AD)') }}<span
                                     class="required"></span></label>
                             <input type="date" class="form-control eForm-control" id="dob_ad" name="dob_ad"
                                 value="{{ $data['student']['dob_ad'] }}" />
                         </div>
                         <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="dob_bs" class="form-label col-eForm-label">Date of Birth(BS)<span
+                            <label for="dob_bs"
+                                class="form-label col-eForm-label">{{ get_phrase('Date of Birth(BS)') }}<span
                                     class="required"></span></label>
                             <input type="date" class="form-control eForm-control" id="dob_bs" name="dob_bs"
                                 value="{{ $data['student']['dob_bs'] }}" />
                         </div>
 
                         <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="phone" class="form-label col-eForm-label">Contact No.</label>
+                            <label for="phone"
+                                class="form-label col-eForm-label">{{ get_phrase('Contact No') }}</label>
                             <input type="text" id="phone" name="phone" class="form-control eForm-control"
                                 required value="{{ $data['student']['phone'] }}">
                         </div>
@@ -120,7 +126,8 @@
                                 value="{{ $data['student']['email'] }}" required>
                         </div>
                         <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="password" class="form-label col-eForm-label">Change password</label>
+                            <label for="password"
+                                class="form-label col-eForm-label">{{ get_phrase('Change password') }}</label>
                             <input type="checkbox" class="form-check-input mx-3" id="change_password"
                                 name="change_password">
                             <span id="enable_change_password">
@@ -147,7 +154,8 @@
                             </select>
                         </div>
                         <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="disability" class="form-label col-eForm-label">Disability</label>
+                            <label for="disability"
+                                class="form-label col-eForm-label">{{ get_phrase('Disability') }}</label>
                             <select name="disability" id="disability"
                                 class="form-select eForm-select eChoice-multiple-with-remove" required>
                                 <option value="">--Select disability type--</option>
@@ -159,7 +167,7 @@
                             </select>
                         </div>
                         <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="caste" class="form-label col-eForm-label">Caste</label>
+                            <label for="caste" class="form-label col-eForm-label">{{ get_phrase('Caste') }}</label>
                             <select name="caste" id="caste"
                                 class="form-select eForm-select eChoice-multiple-with-remove" required>
                                 <option value="">--Select caste--</option>
@@ -172,17 +180,18 @@
                         </div>
 
                         <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="religion" class="form-label col-eForm-label">Religion</label>
+                            <label for="religion" class="form-label col-eForm-label">{{ get_phrase('Religion') }}</label>
                             <input type="text" class="form-control eForm-control" id="religion" name="religion"
                                 value="{{ $data['student']['religion'] }}" required>
                         </div>
                         <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="previous_school" class="form-label col-eForm-label">Previous School</label>
+                            <label for="previous_school"
+                                class="form-label col-eForm-label">{{ get_phrase('Previous School') }}</label>
                             <input type="text" class="form-control eForm-control" id="previous_school"
                                 value="{{ $data['student']['previous_school'] }}" name="previous_school" required>
                         </div>
                         <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="ecd_type" class="form-label col-eForm-label">ECD Type</label>
+                            <label for="ecd_type" class="form-label col-eForm-label">{{ get_phrase('ECD Type') }}</label>
                             <select name="ecd_type" id="ecd_type"
                                 class="form-select eForm-select eChoice-multiple-with-remove" required>
                                 <option value="">--Select ecd_type--</option>
@@ -194,23 +203,26 @@
                             </select>
                         </div>
                         <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="ecd_no" class="form-label col-eForm-label">ECD No.</label>
+                            <label for="ecd_no" class="form-label col-eForm-label">{{ get_phrase('ECD No') }}</label>
                             <input type="text" class="form-control eForm-control" id="ecd_no" name="ecd_no"
                                 value="{{ $data['student']['ecd_no'] }}" required>
                         </div>
 
-                        <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="ecd_ppc_experience" class="form-label col-eForm-label">ECD/PPC Experience</label>
-                            <input type="checkbox" class="form-check-input mx-3" id="ecd_ppc_experience" value="1"
-                                {{ $data['student']['ecd_ppc_experience'] == '1' ? 'checked' : '' }}
-                                name="ecd_ppc_experience">
-                        </div>
-                        <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="new_admission_status" class="form-label col-eForm-label">Is new admission
-                                ?</label>
-                            <input type="checkbox" class="form-check-input mx-3" id="new_admission_status"
-                                {{ $data['student']['new_admission_status'] == '1' ? 'checked' : '' }} value="1"
-                                name="new_admission_status">
+                        <div class="col-md-6 col-sm-12 d-flex align-items-center">
+                            <div>
+                                <label for="ecd_ppc_experience"
+                                    class="form-label col-eForm-label">{{ get_phrase('ECD/PPC Experience') }}</label>
+                                <input type="checkbox" class="form-check-input mx-3" id="ecd_ppc_experience"
+                                    value="1" {{ $data['student']['ecd_ppc_experience'] == '1' ? 'checked' : '' }}
+                                    name="ecd_ppc_experience">
+                            </div>
+                            <div>
+                                <label for="new_admission_status"
+                                    class="form-label col-eForm-label">{{ get_phrase('Is new admission ?') }}</label>
+                                <input type="checkbox" class="form-check-input mx-3" id="new_admission_status"
+                                    {{ $data['student']['new_admission_status'] == '1' ? 'checked' : '' }} value="1"
+                                    name="new_admission_status">
+                            </div>
                         </div>
                     </div>
                     <div class="row">
@@ -218,21 +230,22 @@
                             <label for="photo"
                                 class="form-label col-eForm-label">{{ get_phrase('Student profile image') }}</label>
                             @if ($data['student']['photo'] != null)
-                                <embed src="{{ asset($data['student']['photo']) }}">
-                                <a href="{{ url($data['student']['photo']) }}" target="blank"
-                                    class="btn btn-primary mt-2 mb-2">
-                                    View Image
-                                </a>
+                                <div>
+                                    <a href="{{ url('public/assets/uploads/user-images/' . $data['student']['photo']) }}"
+                                        target="blank">
+                                        <img src="{{ asset('public/assets/uploads/user-images/' . $data['student']['photo']) }}"
+                                            height="80em" class="m-4" />
+                                    </a>
+                                </div>
                             @endif
                             <input type="hidden" name="photo" value=" {{ $data['student']['photo'] }}">
                             <input class="form-control eForm-control-file" type="file" id="photo" name="photo"
                                 accept="image/*">
-
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6 col-sm-12 mt-4">
-                            <button type="submit" class="btn-form">{{ get_phrase('Add Student') }}</button>
+                            <button type="submit" class="btn-form">{{ get_phrase('Edit Student') }}</button>
                         </div>
                     </div>
                 </div>
