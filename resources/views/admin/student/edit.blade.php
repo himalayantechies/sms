@@ -83,7 +83,7 @@
                             <option value="">{{ get_phrase('Select gender') }}</option>
                             @foreach ($data['gender'] as $item)
                                 <option value="{{ $item }}"
-                                    {{ $data['student']['gender'] == $item ? 'selected' : '' }}>{{ $item }}
+                                    {{ $data['student']['gender'] == $item ? 'selected' : '' }}>{{ ucfirst($item) }}
                                 </option>
                             @endforeach
                         </select>
@@ -155,7 +155,7 @@
                             @foreach ($data['disability'] as $item)
                                 <option value="{{ $item }}"
                                     {{ $data['student']['disability'] == $item ? 'selected' : '' }}>
-                                    {{ $item }}</option>
+                                    {{ ucfirst($item) }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -166,7 +166,7 @@
                             <option value="">--Select caste--</option>
                             @foreach ($data['caste'] as $item)
                                 <option value="{{ $item }}"
-                                    {{ $data['student']['caste'] == $item ? 'selected' : '' }}>{{ $item }}
+                                    {{ $data['student']['caste'] == $item ? 'selected' : '' }}>{{ ucfirst($item) }}
                                 </option>
                             @endforeach
                         </select>
@@ -190,7 +190,7 @@
                             <option value="">--Select ecd_type--</option>
                             @foreach ($data['ecd_type'] as $item)
                                 <option value="{{ $item }}"
-                                    {{ $data['student']['ecd_type'] == $item ? 'selected' : '' }}>{{ $item }}
+                                    {{ $data['student']['ecd_type'] == $item ? 'selected' : '' }}>{{ ucfirst($item) }}
                                 </option>
                             @endforeach
                         </select>
