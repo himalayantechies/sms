@@ -891,7 +891,7 @@ class AdminController extends Controller
      */
     public function teacherPermission()
     {
-        $classes = Classes::get()->where('school_id', auth()->user()->school_id);
+        $classes = Classes::all();
         $teachers = User::where('role_id', 3)
             ->where('school_id', auth()->user()->school_id)
             ->get();
