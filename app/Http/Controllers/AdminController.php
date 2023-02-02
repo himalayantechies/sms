@@ -302,7 +302,7 @@ class AdminController extends Controller
     {
         $this->_data['departments'] = Department::get()->where('school_id', auth()->user()->school_id);
         $this->_data['caste'] = ['brahmin/chhetri', 'dalit', 'janjati', 'others'];
-        $this->_data['teacher_username'] = "teacher" . Auth::user()->school_id . (User::max('id') + rand(1, 9999));
+        $this->_data['teacher_username'] = (new User)->createUsername(3);
         $this->_data['disability'] = ['n/a', 'physical', 'mental', 'deaf', 'blind', 'low vision', 'deaf and blind', 'speech impairment', 'multiple disability'];
         return view('admin.teacher.create', $this->_data);
     }
@@ -608,32 +608,34 @@ class AdminController extends Controller
 
     public function createParent()
     {
-        $classes = Classes::all();
-        return view('admin.parent.add_parent', ['classes' => $classes]);
+        $this->_data['classes'] = Classes::all();
+        $this->_data['username'] = (new User)->createUsername(6);
+        return view('admin.parent.add_parent', $this->_data);
     }
 
 
     public function parentCreate(Request $request)
     {
         $data = $request->all();
-
         if (!empty($data['photo'])) {
 
             $imageName = time() . '.' . $data['photo']->extension();
-
             $data['photo']->move(public_path('assets/uploads/user-images/'), $imageName);
-
             $photo  = $imageName;
         } else {
             $photo = '';
         }
         $info = array(
-            'gender' => $data['gender'],
-            'blood_group' => $data['blood_group'],
-            'birthday' => strtotime($data['birthday']),
+            'birthday' => strtotime($data['dob']),
             'phone' => $data['phone'],
             'address' => $data['address'],
-            'photo' => $photo
+            'photo' => $photo,
+            'nationality'=>$data['nationality'],
+            'education'=>$data['education'],
+            'profession'=>$data['profession'],
+            'designation'=>$data['designation'],
+            'office_address'=>$data['office_address'],
+            'dob'=>$data['dob']
         );
 
         $data['user_information'] = json_encode($info);
@@ -643,6 +645,7 @@ class AdminController extends Controller
             'password' => Hash::make($data['password']),
             'role_id' => '6',
             'school_id' => auth()->user()->school_id,
+            'username'=>$data['username'],
             'user_information' => $data['user_information'],
         ]);
 
@@ -964,7 +967,7 @@ class AdminController extends Controller
         $data['ecd_type'] = ['school based', 'community based'];
         $data['disability'] = ['n/a', 'physical', 'mental', 'deaf', 'blind', 'low vision', 'deaf and blind', 'speech impairment', 'multiple disability'];
         $data['classes'] = Classes::get();
-        $data['student_username'] = "student" . Auth::user()->school_id . ($user = User::max('id') + rand(1, 9999));
+        $data['student_username'] = (new User)->createUsername(7);
         $data['departments'] = Department::get()->where('school_id', Auth::user()->school_id);
         $data['parents'] = User::where(['role_id' => 6, 'school_id' => 1])->get();
         return view('admin.offline_admission.offline_admission', ['aria_expand' => $type, 'data' => $data]);
