@@ -44,7 +44,7 @@ class Student extends Model
                 'students.photo'
             ]);
     }
-    public function storeStudent($data, $user_id)
+    public function storeStudent($data, $user_id,$photo)
     {
         Student::create([
             'user_id' => $user_id,
@@ -69,9 +69,9 @@ class Student extends Model
             'previous_school' =>  $data['previous_school'],
             'ecd_type' =>  $data['ecd_type'],
             'ecd_no' =>  $data['ecd_no'],
-            'ecd_ppc_experience' =>  $data['ecd_ppc_experience'],
-            'new_admission_status' =>  $data['new_admission_status'],
-            'photo' =>  $data['photo']
+            'ecd_ppc_experience' =>  $data['ecd_ppc_experience']??'0',
+            'new_admission_status' =>  $data['new_admission_status']??'0',
+            'photo' =>  $photo
         ]);
     }
 }

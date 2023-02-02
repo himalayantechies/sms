@@ -10,7 +10,7 @@
             <div class="col-md-6 col-sm-12 mt-2">
                 <label for="student_type" class="form-label eForm-label">{{ get_phrase('Student Type') }}</label>
                 <select name="student_type" id="student_type"
-                    class="form-control form-select eForm-select eChoice-multiple-with-remove">
+                    class="form-control form-select eForm-select eChoice-multiple-with-remove" required>
                     <option value="" selected="selected">-Select student type-</option>
                     @foreach ($data['student_type'] as $type)
                         <option value="{{ $type }}">{{ ucfirst($type) }}</option>
@@ -60,16 +60,14 @@
             <div class="col-md-6 col-sm-12 mt-2">
                 <label for="admitted_date" class="form-label eForm-label">{{ get_phrase('Admitted Date') }}</label>
                 <input type="date" class="form-control eForm-control" id="admitted_date" name="admitted_date"
-                    required>
+                    >
             </div>
             <div class="col-md-6 col-sm-12 mt-2">
-                <label for="dob_ad" class="form-label eForm-label">{{ get_phrase('Date of Birth(AD)') }}<span
-                        class="required"></span></label>
+                <label for="dob_ad" class="form-label eForm-label">{{ get_phrase('Date of Birth(AD)') }}</label>
                 <input type="date" class="form-control eForm-control" id="dob_ad" name="dob_ad" />
             </div>
             <div class="col-md-6 col-sm-12 mt-2">
-                <label for="dob_bs" class="form-label eForm-label">{{ get_phrase('Date of Birth(BS)') }}<span
-                        class="required"></span></label>
+                <label for="dob_bs" class="form-label eForm-label">{{ get_phrase('Date of Birth(BS)') }}</label>
                 <input type="date" class="form-control eForm-control" id="dob_bs" name="dob_bs" />
             </div>
 
@@ -80,7 +78,7 @@
 
             <div class="col-md-6 col-sm-12 mt-2">
                 <label for="email" class="form-label eForm-label">{{ get_phrase('Email') }}</label>
-                <input type="email" class="form-control eForm-control" id="email" name="email" required>
+                <input type="email" class="form-control eForm-control" id="email" name="email" >
             </div>
             <div class="col-md-6 col-sm-12 mt-2">
                 <label for="password" class="form-label eForm-label">{{ get_phrase('Password') }}</label>
@@ -108,7 +106,7 @@
             </div>
             <div class="col-md-6 col-sm-12 mt-2">
                 <label for="disability" class="form-label eForm-label">{{ get_phrase('Disability') }}</label>
-                <select name="disability" id="disability"
+                <select name="disability" id="disability" required
                     class="form-select eForm-select eChoice-multiple-with-remove">
                     <option value="">{{ get_phrase('Select disability type') }}</option>
                     @foreach ($data['disability'] as $item)
@@ -129,18 +127,18 @@
 
             <div class="col-md-6 col-sm-12 mt-2">
                 <label for="religion" class="form-label eForm-label">{{ get_phrase('Religion') }}</label>
-                <input type="text" class="form-control eForm-control" id="religion" name="religion" required>
+                <input type="text" class="form-control eForm-control" id="religion" name="religion">
             </div>
             <div class="col-md-6 col-sm-12 mt-2">
                 <label for="previous_school"
                     class="form-label eForm-label">{{ get_phrase('Previous School') }}</label>
                 <input type="text" class="form-control eForm-control" id="previous_school" name="previous_school"
-                    required>
+                    >
             </div>
             <div class="col-md-6 col-sm-12 mt-2">
                 <label for="ecd_type" class="form-label eForm-label">{{ get_phrase('ECD Type') }}</label>
                 <select name="ecd_type" id="ecd_type" class="form-select eForm-select eChoice-multiple-with-remove"
-                    required>
+                    >
                     <option value="">--Select ecd_type--</option>
                     @foreach ($data['ecd_type'] as $item)
                         <option value="{{ $item }}">{{ ucfirst($item) }}</option>
@@ -149,7 +147,7 @@
             </div>
             <div class="col-md-6 col-sm-12 mt-2">
                 <label for="ecd_no" class="form-label eForm-label">{{ get_phrase('ECD No') }}</label>
-                <input type="text" class="form-control eForm-control" id="ecd_no" name="ecd_no" required>
+                <input type="text" class="form-control eForm-control" id="ecd_no" name="ecd_no" >
             </div>
 
             <div class="col-md-6 col-sm-12 mt-2 d-flex align-items-center">

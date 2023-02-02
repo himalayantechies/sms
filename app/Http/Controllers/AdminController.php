@@ -1057,7 +1057,7 @@ class AdminController extends Controller
 
         $duplicate_user_check = User::get()->where('email', $data['email']);
         if (count($duplicate_user_check) == 0) {
-            DB::transaction(function () use ($data) {
+            DB::transaction(function () use ($data,$photo) {
                 $active_session = get_school_settings(Auth::user()->school_id)->value('running_session');
                 $user = User::create([
                     'name' => $data['name'],
@@ -1069,7 +1069,7 @@ class AdminController extends Controller
                     'user_information' => $data['user_information']
                 ]);
                 (new Enrollment)->storeEnrollment($data, $user->id, $active_session);
-                (new Student)->storeStudent($data, $user->id);
+                (new Student)->storeStudent($data, $user->id,$photo);
             });
             return redirect()->back()->with('message', 'Admission successfully done.');
         } else {
