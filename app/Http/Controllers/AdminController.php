@@ -626,16 +626,16 @@ class AdminController extends Controller
             $photo = '';
         }
         $info = array(
-            'birthday' => strtotime($data['dob']),
+            'birthday' => $data['dob'],
             'phone' => $data['phone'],
             'address' => $data['address'],
             'photo' => $photo,
-            'nationality'=>$data['nationality'],
-            'education'=>$data['education'],
-            'profession'=>$data['profession'],
-            'designation'=>$data['designation'],
-            'office_address'=>$data['office_address'],
-            'dob'=>$data['dob']
+            'nationality' => $data['nationality'],
+            'education' => $data['education'],
+            'profession' => $data['profession'],
+            'designation' => $data['designation'],
+            'office_address' => $data['office_address'],
+            'birthday' => $data['dob']
         );
 
         $data['user_information'] = json_encode($info);
@@ -645,7 +645,7 @@ class AdminController extends Controller
             'password' => Hash::make($data['password']),
             'role_id' => '6',
             'school_id' => auth()->user()->school_id,
-            'username'=>$data['username'],
+            'username' => $data['username'],
             'user_information' => $data['user_information'],
         ]);
 
@@ -681,71 +681,67 @@ class AdminController extends Controller
 
     public function parentEditModal($id)
     {
-        $user = User::find($id);
-        $classes = Classes::get()->where('school_id', auth()->user()->school_id);
-        return view('admin.parent.edit_parent', ['user' => $user, 'classes' => $classes]);
+        $this->_data['user'] = User::find($id);
+        $this->_data['classes'] = Classes::all();
+        $this->_data['childs'] = DB::table('users')->where('parent_id', $id)->get();
+        $this->_data['info'] = json_decode($this->_data['user']->user_information);
+        $this->_data['nationality'] = ['Nepali', 'Indian', 'Others'];
+        return view('admin.parent.edit_parent', $this->_data);
     }
 
     public function parentUpdate(Request $request, $id)
     {
-        $data = $request->all();
+        DB::transaction(function () use ($request, $id) {
 
-
-        if (!empty($data['photo'])) {
-
-            $imageName = time() . '.' . $data['photo']->extension();
-
-            $data['photo']->move(public_path('assets/uploads/user-images/'), $imageName);
-
-            $photo  = $imageName;
-        } else {
-
-            $user_information = User::where('id', $id)->value('user_information');
-            $file_name = json_decode($user_information)->photo;
-
-            if ($file_name != '') {
-                $photo = $file_name;
+            $data = $request->all();
+            if ($file = $request->file('photo')) {
+                $imageName = time() . '.' . $data['photo']->extension();
+                $file->move(public_path('assets/uploads/user-images/'), $imageName);
+                $photo  = $imageName;
             } else {
-                $photo = '';
+                $photo = isset($data['photo']) ? $data['photo'] : '';
             }
-        }
+            $info = array(
+                'birthday' => $data['birthday'],
+                'phone' => $data['phone'],
+                'address' => $data['address'],
+                'photo' => $photo,
+                'nationality' => $data['nationality'],
+                'education' => $data['education'],
+                'profession' => $data['profession'],
+                'designation' => $data['designation'],
+                'office_address' => $data['office_address'],
+                'birthday' => $data['birthday']
+            );
 
-        $info = array(
-            'gender' => $data['gender'],
-            'blood_group' => $data['blood_group'],
-            'birthday' => strtotime($data['birthday']),
-            'phone' => $data['phone'],
-            'address' => $data['address'],
-            'photo' => $photo
-        );
+            $data['user_information'] = json_encode($info);
 
-        $data['user_information'] = json_encode($info);
-
-        User::where('id', $id)->update([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'user_information' => $data['user_information'],
-        ]);
-
-
-        //Previous parent has been empty
-        User::where('parent_id', $id)->update(['parent_id' => null]);
+            User::where('id', $id)->update([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'user_information' => $data['user_information'],
+            ]);
 
 
-        $students = $data['student_id'];
-        foreach ($students as $student) {
-            if ($student != '') {
-                $user = User::where('id', $student)->first();
+            //Previous parent has been empty
+            User::where('parent_id', $id)->update(['parent_id' => null]);
 
-                if ($user != '') {
-                    User::where('id', $user->id)->update([
-                        'parent_id' => $id,
-                    ]);
+
+            $students = $data['student_id'];
+            foreach ($students as $student) {
+                if ($student != '') {
+                    $user = User::where('id', $student)->first();
+
+                    if ($user != '') {
+                        User::where('id', $user->id)->update([
+                            'parent_id' => $id,
+                        ]);
+                    }
                 }
             }
-        }
+        });
 
-        return redirect()->back()->with('message', 'You have successfully update parent.');
+        return redirect()->back()->with('message', 'You have successfully updated parent.');
     }
 
     public function parentDelete($id)
