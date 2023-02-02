@@ -1376,10 +1376,9 @@ class AdminController extends Controller
 
     public function dailyAttendance()
     {
-        $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+        $classes = Classes::all();
         $attendance_of_students = array();
         $no_of_users = 0;
-
         return view('admin.attendance.daily_attendance', ['classes' => $classes, 'attendance_of_students' => $attendance_of_students, 'no_of_users' => $no_of_users]);
     }
 
@@ -1390,7 +1389,6 @@ class AdminController extends Controller
         $first_date = strtotime($date);
         $last_date = date("Y-m-t", strtotime($date));
         $last_date = strtotime($last_date);
-
         $page_data['attendance_date'] = strtotime($date);
         $page_data['class_id'] = $data['class_id'];
         $page_data['section_id'] = $data['section_id'];
@@ -1410,7 +1408,7 @@ class AdminController extends Controller
 
     public function takeAttendance()
     {
-        $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+        $classes = Classes::all();
         return view('admin.attendance.take_attendance', ['classes' => $classes]);
     }
 

@@ -474,7 +474,6 @@ class TeacherController extends Controller
     {
         $permissions=TeacherPermission::where('teacher_id', auth()->user()->id)->select('class_id')->distinct()->get()->toArray();
         $classes=array();
-
         foreach ($permissions  as  $key => $distinct_class) {
 
             $class_details = Classes::where('id', $distinct_class['class_id'])->first()->toArray();
