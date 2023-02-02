@@ -13,7 +13,7 @@
                     class="form-control form-select eForm-select eChoice-multiple-with-remove">
                     <option value="" selected="selected">-Select student type-</option>
                     @foreach ($data['student_type'] as $type)
-                        <option value="{{ $type }}">{{ $type }}</option>
+                        <option value="{{ $type }}">{{ ucfirst($type) }}</option>
                     @endforeach
                 </select>
             </div>
@@ -52,7 +52,7 @@
                     required>
                     <option value="">{{ get_phrase('Select gender') }}</option>
                     @foreach ($data['gender'] as $item)
-                        <option value="{{ $item }}">{{ $item }}</option>
+                        <option value="{{ $item }}">{{ ucfirst($item) }}</option>
                     @endforeach
                 </select>
             </div>
@@ -94,7 +94,7 @@
                 <label for="blood_group" class="form-label eForm-label">{{ get_phrase('Blood group') }}</label>
 
                 <select name="blood_group" id="blood_group"
-                    class="form-select eForm-select eChoice-multiple-with-remove" required>
+                    class="form-select eForm-select eChoice-multiple-with-remove">
                     <option value="">{{ get_phrase('Select a blood group') }}</option>
                     <option value="a+">{{ get_phrase('A+') }}</option>
                     <option value="a-">{{ get_phrase('A-') }}</option>
@@ -109,10 +109,10 @@
             <div class="col-md-6 col-sm-12 mt-2">
                 <label for="disability" class="form-label eForm-label">{{ get_phrase('Disability') }}</label>
                 <select name="disability" id="disability"
-                    class="form-select eForm-select eChoice-multiple-with-remove" required>
+                    class="form-select eForm-select eChoice-multiple-with-remove">
                     <option value="">{{ get_phrase('Select disability type') }}</option>
                     @foreach ($data['disability'] as $item)
-                        <option value="{{ $item }}">{{ $item }}</option>
+                        <option value="{{ $item }}">{{ ucfirst($item) }}</option>
                     @endforeach
                 </select>
             </div>
@@ -122,7 +122,7 @@
                     required>
                     <option value="">{{ get_phrase('Select caste')}}</option>
                     @foreach ($data['caste'] as $item)
-                        <option value="{{ $item }}">{{ $item }}</option>
+                        <option value="{{ $item }}">{{ ucfirst($item) }}</option>
                     @endforeach
                 </select>
             </div>
@@ -143,7 +143,7 @@
                     required>
                     <option value="">--Select ecd_type--</option>
                     @foreach ($data['ecd_type'] as $item)
-                        <option value="{{ $item }}">{{ $item }}</option>
+                        <option value="{{ $item }}">{{ ucfirst($item) }}</option>
                     @endforeach
                 </select>
             </div>
