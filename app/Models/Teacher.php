@@ -48,6 +48,7 @@ class Teacher extends Model
                 'users.name',
                 'users.email',
                 'users.code',
+                'users.user_information',
                 'teachers.photo',
                 'teachers.user_id',
                 'teachers.gender',

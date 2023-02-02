@@ -24,15 +24,19 @@ use App\Models\Syllabus;
 use App\Models\Noticeboard;
 use App\Models\FrontendEvent;
 use App\Models\Admin;
+use App\Models\Department;
 use App\Models\ExpenseCategory;
 use App\Models\Expense;
 use App\Models\StudentFeeManager;
+use App\Models\Teacher;
 use App\Models\TeacherPermission;
 use Illuminate\Foundation\Auth\User as AuthUser;
+use Illuminate\Support\Facades\Auth;
 use Stripe\Exception\PermissionException;
 
 class TeacherController extends Controller
 {
+    private $_data = [];
     /**
      * Show the teacher dashboard.
      *
@@ -158,7 +162,7 @@ class TeacherController extends Controller
             $class_id = '';
         }
 
-        return view('teacher.subject.subject_list', compact('subjects','classes', 'class_id'));
+        return view('teacher.subject.subject_list', compact('subjects', 'classes', 'class_id'));
     }
 
     /**
@@ -213,15 +217,15 @@ class TeacherController extends Controller
         $active_session = Session::where('status', 1)->first();
 
         $subject_wise_mark_list = Gradebook::where(['class_id' => $data['class_id'], 'section_id' => $data['section_id'], 'exam_category_id' => $data['exam_category_id'], 'student_id' => $student_id, 'school_id' => auth()->user()->school_id, 'session_id' => $active_session->id])->first();
-        
+
         echo view('teacher.gradebook.subject_marks', ['subject_wise_mark_list' => $subject_wise_mark_list]);
     }
 
     public function list_of_syllabus(Request $request)
     {
-        $data=$request->all();
-        $permissions=TeacherPermission::where('teacher_id',auth()->user()->id)->select('class_id')->distinct()->get()->toArray();
-        $permitted_classes=array();
+        $data = $request->all();
+        $permissions = TeacherPermission::where('teacher_id', auth()->user()->id)->select('class_id')->distinct()->get()->toArray();
+        $permitted_classes = array();
 
         foreach ($permissions  as  $key => $distinct_class) {
 
@@ -235,9 +239,9 @@ class TeacherController extends Controller
 
     public function class_wise_section_for_syllabus(Request $request)
     {
-        $data=$request->all();
-        $permissions=TeacherPermission::where('class_id',$data['classId'])->where('teacher_id',auth()->user()->id)->get()->toArray();
-        $permitted_sections=array();
+        $data = $request->all();
+        $permissions = TeacherPermission::where('class_id', $data['classId'])->where('teacher_id', auth()->user()->id)->get()->toArray();
+        $permitted_sections = array();
 
         foreach ($permissions as $key => $distinct_section) {
 
@@ -268,8 +272,8 @@ class TeacherController extends Controller
     {
         $data = $request->all();
 
-        $permissions=TeacherPermission::where('teacher_id',auth()->user()->id)->select('class_id')->distinct()->get()->toArray();
-        $classes=array();
+        $permissions = TeacherPermission::where('teacher_id', auth()->user()->id)->select('class_id')->distinct()->get()->toArray();
+        $classes = array();
 
         foreach ($permissions  as  $key => $distinct_class) {
             $class_details = Classes::where('id', $distinct_class['class_id'])->first()->toArray();
@@ -315,25 +319,37 @@ class TeacherController extends Controller
         return redirect()->back()->with('message', 'You have successfully delete syllabus.');
     }
 
-    function profile(){
-        return view('teacher.profile.view');
+    function profile()
+    {
+        $this->_data['departments'] = Department::get()->where('school_id', auth()->user()->school_id);
+        $this->_data['caste'] = ['brahmin/chhetri', 'dalit', 'janjati', 'others'];
+        $this->_data['disability'] = ['n/a', 'physical', 'mental', 'deaf', 'blind', 'low vision', 'deaf and blind', 'speech impairment', 'multiple disability'];
+        $this->_data['gender'] = ['Male', 'Female', 'Others'];
+        $this->_data['nationality'] = ['Nepali', 'Indian', 'Others'];
+        $this->_data['teacher_type'] = ['Full Time', 'Part Time'];
+        $this->_data['marital_status'] = ['Single', 'Married', 'Divorced'];
+        $this->_data['teaching_medium'] = ['Nepali', 'English', 'Nepal Bhasa', 'Hindi', 'Maithali', 'Bhojpuri', 'Tamang', 'Sanskrit'];
+        $this->_data['mother_tongue'] = ['Nepali', 'English', 'Nepal Bhasa', 'Hindi', 'Maithali', 'Bhojpuri', 'Tamang', 'Sanskrit'];
+        $this->_data['user'] = (new Teacher)->specificTeacherDetail(Auth::id());
+        return view('teacher.profile.view', $this->_data);
     }
 
-    function profile_update(Request $request){
+    function profile_update(Request $request)
+    {
         $data['name'] = $request->name;
         $data['email'] = $request->email;
         $data['designation'] = $request->designation;
-        
+
         $user_info['birthday'] = strtotime($request->eDefaultDateRange);
         $user_info['gender'] = $request->gender;
         $user_info['phone'] = $request->phone;
         $user_info['address'] = $request->address;
 
 
-        if(empty($request->photo)){
+        if (empty($request->photo)) {
             $user_info['photo'] = $request->old_photo;
-        }else{
-            $file_name = random(10).'.png';
+        } else {
+            $file_name = random(10) . '.png';
             $user_info['photo'] = $file_name;
 
             $request->photo->move(public_path('assets/uploads/user-images/'), $file_name);
@@ -342,24 +358,25 @@ class TeacherController extends Controller
         $data['user_information'] = json_encode($user_info);
 
         User::where('id', auth()->user()->id)->update($data);
-        
+
         return redirect(route('teacher.profile'))->with('message', get_phrase('Profile info updated successfully'));
     }
 
-    function password($action_type = null, Request $request){
+    function password($action_type = null, Request $request)
+    {
 
 
 
-        if($action_type == 'update'){
+        if ($action_type == 'update') {
 
-            
 
-            if($request->new_password != $request->confirm_password){
+
+            if ($request->new_password != $request->confirm_password) {
                 return back()->with("error", "Confirm Password Doesn't match!");
             }
 
 
-            if(!Hash::check($request->old_password, auth()->user()->password)){
+            if (!Hash::check($request->old_password, auth()->user()->password)) {
                 return back()->with("error", "Current Password Doesn't match!");
             }
 
@@ -450,12 +467,11 @@ class TeacherController extends Controller
     {
         $search = $request['search'] ?? "";
 
-        if($search != "") {
+        if ($search != "") {
 
-            $events = FrontendEvent::where(function ($query) use($search) {
-                    $query->where('title', 'LIKE', "%{$search}%");
-                })->paginate(10);
-
+            $events = FrontendEvent::where(function ($query) use ($search) {
+                $query->where('title', 'LIKE', "%{$search}%");
+            })->paginate(10);
         } else {
             $events = FrontendEvent::where('school_id', auth()->user()->school_id)->paginate(10);
         }
@@ -472,8 +488,8 @@ class TeacherController extends Controller
 
     public function dailyAttendance()
     {
-        $permissions=TeacherPermission::where('teacher_id', auth()->user()->id)->select('class_id')->distinct()->get()->toArray();
-        $classes=array();
+        $permissions = TeacherPermission::where('teacher_id', auth()->user()->id)->select('class_id')->distinct()->get()->toArray();
+        $classes = array();
         foreach ($permissions  as  $key => $distinct_class) {
 
             $class_details = Classes::where('id', $distinct_class['class_id'])->first()->toArray();
@@ -490,7 +506,7 @@ class TeacherController extends Controller
     {
         $data = $request->all();
 
-        $date = '01 '.$data['month'].' '.$data['year'];
+        $date = '01 ' . $data['month'] . ' ' . $data['year'];
         $first_date = strtotime($date);
         $last_date = date("Y-m-t", strtotime($date));
         $last_date = strtotime($last_date);
@@ -507,8 +523,8 @@ class TeacherController extends Controller
 
         $no_of_users = DailyAttendances::where(['class_id' => $data['class_id'], 'section_id' => $data['section_id'], 'school_id' => auth()->user()->school_id, 'session_id' => $active_session])->distinct()->count('student_id');
 
-        $permissions=TeacherPermission::where('teacher_id', auth()->user()->id)->select('class_id')->distinct()->get()->toArray();
-        $classes=array();
+        $permissions = TeacherPermission::where('teacher_id', auth()->user()->id)->select('class_id')->distinct()->get()->toArray();
+        $classes = array();
 
         foreach ($permissions  as  $key => $distinct_class) {
 
@@ -521,15 +537,15 @@ class TeacherController extends Controller
 
     public function takeAttendance()
     {
-        $permissions=TeacherPermission::where('teacher_id', auth()->user()->id)->select('class_id')->distinct()->get()->toArray();
-        $classes=array();
+        $permissions = TeacherPermission::where('teacher_id', auth()->user()->id)->select('class_id')->distinct()->get()->toArray();
+        $classes = array();
 
         foreach ($permissions  as  $key => $distinct_class) {
 
             $class_details = Classes::where('id', $distinct_class['class_id'])->first()->toArray();
             $classes[$key] = $class_details;
         }
-        
+
         return view('teacher.attendance.take_attendance', ['classes' => $classes]);
     }
 
@@ -558,18 +574,18 @@ class TeacherController extends Controller
         $data['session_id'] = $active_session;
 
         $check_data = DailyAttendances::where(['timestamp' => $data['timestamp'], 'class_id' => $data['class_id'], 'section_id' => $data['section_id'], 'session_id' => $active_session, 'school_id' => auth()->user()->school_id])->get();
-        if(count($check_data) > 0){
-            foreach($students as $key => $student):
-                $data['status'] = $att_data['status-'.$student];
+        if (count($check_data) > 0) {
+            foreach ($students as $key => $student) :
+                $data['status'] = $att_data['status-' . $student];
                 $data['student_id'] = $student;
                 $attendance_id = $att_data['attendance_id'];
 
                 DailyAttendances::where('id', $attendance_id[$key])->update($data);
 
             endforeach;
-        }else{
-            foreach($students as $student):
-                $data['status'] = $att_data['status-'.$student];
+        } else {
+            foreach ($students as $student) :
+                $data['status'] = $att_data['status-' . $student];
                 $data['student_id'] = $student;
 
                 DailyAttendances::create($data);
@@ -577,7 +593,7 @@ class TeacherController extends Controller
             endforeach;
         }
 
-        return redirect()->back()->with('message','Student attendance updated successfully.');
+        return redirect()->back()->with('message', 'Student attendance updated successfully.');
     }
 
     public function dailyAttendanceFilter_csv(Request $request)
@@ -585,16 +601,16 @@ class TeacherController extends Controller
 
         $data = $request->all();
 
-        $store_get_data=array_keys($data);
+        $store_get_data = array_keys($data);
 
 
-        $data['month']= substr($store_get_data[0],0,3);
-        $data['year']= substr($store_get_data[0],4,4);
-        $data['role_id']=substr($store_get_data[0],9,5);
+        $data['month'] = substr($store_get_data[0], 0, 3);
+        $data['year'] = substr($store_get_data[0], 4, 4);
+        $data['role_id'] = substr($store_get_data[0], 9, 5);
 
         $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
 
-      
+
         $date = '01 ' . $data['month'] . ' ' . $data['year'];
 
 
@@ -610,14 +626,12 @@ class TeacherController extends Controller
 
         $no_of_users = DailyAttendances::whereBetween('timestamp', [$first_date, $last_date])->where(['school_id' => auth()->user()->school_id,  'session_id' => $active_session])->distinct()->count('student_id');
         $attendance_of_students = DailyAttendances::whereBetween('timestamp', [$first_date, $last_date])->where(['school_id' => auth()->user()->school_id,  'session_id' => $active_session])->get()->toArray();
-       
 
-        $csv_content ="Student"."/".get_phrase('Date');
+
+        $csv_content = "Student" . "/" . get_phrase('Date');
         $number_of_days = date('m', $page_data['attendance_date']) == 2 ? (date('Y', $page_data['attendance_date']) % 4 ? 28 : (date('m', $page_data['attendance_date']) % 100 ? 29 : (date('m', $page_data['attendance_date']) % 400 ? 28 : 29))) : ((date('m', $page_data['attendance_date']) - 1) % 7 % 2 ? 30 : 31);
-        for ($i = 1; $i <= $number_of_days; $i++)
-        {
-            $csv_content .=','.get_phrase($i);
-
+        for ($i = 1; $i <= $number_of_days; $i++) {
+            $csv_content .= ',' . get_phrase($i);
         }
 
 
@@ -627,40 +641,36 @@ class TeacherController extends Controller
         $student_id_count = 0;
 
 
-        foreach(array_slice($attendance_of_students, 0, $no_of_users) as $attendance_of_student ){
+        foreach (array_slice($attendance_of_students, 0, $no_of_users) as $attendance_of_student) {
             $csv_content .= "\n";
 
             $user_details = (new CommonController)->get_user_by_id_from_user_table($attendance_of_student['student_id']);
-            if(date('m', $page_data['attendance_date']) == date('m', $attendance_of_student['timestamp'])) {
+            if (date('m', $page_data['attendance_date']) == date('m', $attendance_of_student['timestamp'])) {
 
-                if($student_id_count != $attendance_of_student['student_id']) {
+                if ($student_id_count != $attendance_of_student['student_id']) {
 
                     $csv_content .= $user_details['name'] . ',';
 
                     for ($i = 1; $i <= $number_of_days; $i++) {
-                        $page_data['date'] = $i.' '.$page_data['month'].' '.$page_data['year'];
+                        $page_data['date'] = $i . ' ' . $page_data['month'] . ' ' . $page_data['year'];
                         $timestamp = strtotime($page_data['date']);
 
-                        $attendance_by_id = DailyAttendances::where([ 'student_id' => $attendance_of_student['student_id'], 'school_id' => auth()->user()->school_id, 'timestamp' => $timestamp])->first();
-                        if(isset($attendance_by_id->status) && $attendance_by_id->status == 1){
+                        $attendance_by_id = DailyAttendances::where(['student_id' => $attendance_of_student['student_id'], 'school_id' => auth()->user()->school_id, 'timestamp' => $timestamp])->first();
+                        if (isset($attendance_by_id->status) && $attendance_by_id->status == 1) {
                             $csv_content .= "P,";
-                        }elseif(isset($attendance_by_id->status) && $attendance_by_id->status == 0){
+                        } elseif (isset($attendance_by_id->status) && $attendance_by_id->status == 0) {
                             $csv_content .= "A,";
-                        }
-                        else
-                        {
+                        } else {
                             $csv_content .= ",";
-
                         }
 
-                        if($i==$number_of_days)
-                        {
-                            $csv_content= substr_replace($csv_content,"", -1);
+                        if ($i == $number_of_days) {
+                            $csv_content = substr_replace($csv_content, "", -1);
                         }
                     }
                 }
 
-                 $student_id_count = $attendance_of_student['student_id'];
+                $student_id_count = $attendance_of_student['student_id'];
             }
         }
 
