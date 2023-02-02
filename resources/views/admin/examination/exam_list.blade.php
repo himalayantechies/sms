@@ -7,6 +7,7 @@
             <th>{{ get_phrase('Class') }}</th>
             <th>{{ get_phrase('Subjects') }}</th>
             <th>{{ get_phrase('Total marks') }}</th>
+            
             <th class="text-center">{{ get_phrase('Action') }}</th>
         </tr>
     </thead>
@@ -20,6 +21,7 @@
                 {{-- <td>{{ date('d M Y - h:i A', $exam->starting_time) }}</td>
                 <td>{{ date('d M Y - h:i A', $exam->ending_time) }}</td> --}}
                 <td>{{ $exam->total_marks }}</td>
+                
                 <td class="text-start">
                     <div class="adminTable-action">
                         <button

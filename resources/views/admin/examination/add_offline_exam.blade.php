@@ -56,6 +56,12 @@
                     <input class="form-control eForm-control" id="total_marks" type="number" min="1" name="total_marks">
                 </div>
             </div>
+            <div class="fpb-7">
+                <label for="total_marks" class="eForm-label">{{ get_phrase('Pass marks') }}<span class="required">*</span></label>
+                <div>
+                    <input class="form-control eForm-control" id="pass_marks" type="number" min="1" name="pass_marks">
+                </div>
+            </div>
             
             <div class="fpb-7 pt-2">
                 <button class="btn-form" type="submit">{{ get_phrase('Create') }}</button>

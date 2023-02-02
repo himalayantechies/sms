@@ -1221,7 +1221,7 @@ class AdminController extends Controller
             ->where('exams.session_id', $active_session)
             ->select('exams.*', 'subjects.name as subject', 'classes.name as class')->get();
 
-
+        //dd($exams);
         $classes = (new Classes)->getClassBySchool($school_id);
 
         return view('admin.examination.offline_exam_list', ['exams' => $exams, 'classes' => $classes, 'id' => $id]);
@@ -1319,6 +1319,7 @@ class AdminController extends Controller
             'subject_id' => $data['subject_id'],
             'school_id' => auth()->user()->school_id,
             'session_id' => $active_session,
+            'pass_marks' => $data['pass_marks']
         ]);
 
         return redirect()->back()->with('message', 'You have successfully create exam.');
@@ -1352,6 +1353,9 @@ class AdminController extends Controller
             'subject_id' => $data['subject_id'],
             'school_id' => auth()->user()->school_id,
             'session_id' => $active_session,
+            'pass_marks' => $data['pass_marks'],
+            'theory_total_marks' => $data['theory_total_marks'],
+            'theory_pass_marks' => $data['theory_pass_marks']
         ]);
 
         return redirect()->back()->with('message', 'You have successfully update exam.');
