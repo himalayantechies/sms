@@ -51,7 +51,5 @@ class User extends Authenticatable
     //     return $this->checkEnrollment()->class_id;  
     // }
 
-    public function createUser($request){
-        
-    }
+    
 }
