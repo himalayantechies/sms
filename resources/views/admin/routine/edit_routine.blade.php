@@ -3,10 +3,14 @@
 use App\Models\Section;
 use App\Models\Subject;
 use App\Models\Session;
+use App\Models\GradeSubject;
+use Illuminate\Support\Facades\DB;
 
 // $active_session = Session::where('status', 1)->first();
-$active_session = Session::where(['status'=> 1, 'school_id'=>auth()->user()->school_id])->first();
-// $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
+// $active_session = Session::where(['status'=> 1, 'school_id'=>auth()->user()->school_id])->first();
+$active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
+
+$subjects =  (new GradeSubject)->getSubjectByClass($active_session, auth()->user()->school_id, $routine['class_id']);
 
 ?>
 <form method="POST" class="d-block ajaxForm" action="{{ route('admin.routine.update', ['id' => $routine->id ]) }}">
@@ -37,7 +41,7 @@ $active_session = Session::where(['status'=> 1, 'school_id'=>auth()->user()->sch
             <label for="subject_id_on_routine_creation" class="eForm-label">{{ get_phrase('Subject') }}</label>
             <select name="subject_id" id = "subject_id_on_routine_creation" class="form-select eForm-select eChoice-multiple-with-remove"  required>
                 <option value="">{{ get_phrase('Select a subject') }}</option>
-                <?php $subjects = Subject::where(['class_id' => $routine['class_id'], 'session_id' => $active_session->id])->get(); ?>
+                {{-- <?php $subjects = Subject::where(['class_id' => $routine['class_id'], 'session_id' => $active_session->id])->get(); ?> --}}
                 <?php foreach($subjects as $subject): ?>
                     <option value="{{ $subject['id'] }}" {{ $routine->subject_id == $subject['id'] ?  'selected':'' }}>{{ $subject['name'] }}</option>
                 <?php endforeach; ?>
@@ -54,7 +58,7 @@ $active_session = Session::where(['status'=> 1, 'school_id'=>auth()->user()->sch
             </select>
         </div>
 
-        <div class="fpb-7">
+        {{-- <div class="fpb-7">
             <label for="class_room_id" class="eForm-label">{{ get_phrase('Class Room') }}</label>
             <select name="class_room_id" id = "class_room_id_on_routine_creation" class="form-select eForm-select eChoice-multiple-with-remove"  required>
                 <option value="">{{ get_phrase('Select a class room') }}</option>
@@ -62,7 +66,7 @@ $active_session = Session::where(['status'=> 1, 'school_id'=>auth()->user()->sch
                     <option value="{{ $class_room['id'] }}" {{ $routine->room_id == $class_room['id'] ?  'selected':'' }}>{{ $class_room['name'] }}</option>
                 <?php endforeach; ?>
             </select>
-        </div>
+        </div> --}}
 
         <div class="fpb-7">
             <label for="day" class="eForm-label">{{ get_phrase('Day') }}</label>

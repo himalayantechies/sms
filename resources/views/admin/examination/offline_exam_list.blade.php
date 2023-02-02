@@ -73,9 +73,9 @@
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">{{ get_phrase('Exam') }}</th>
-                                <th scope="col">{{ get_phrase('Starting Time') }}</th>
-                                <th scope="col">{{ get_phrase('Ending Time') }}</th>
-                                <th scope="col">{{ get_phrase('Total Marks') }}</th>
+                                <th scope="col">{{ get_phrase('Class') }}</th>
+                                <th scope="col">{{ get_phrase('Subject') }}</th>
+                                <th scope="col">{{ get_phrase('Total marks') }}</th>
                                 <th scope="col" class="text-center">{{ get_phrase('Action') }}</th>
                             </tr>
                         </thead>
@@ -84,8 +84,10 @@
                                 <tr>
                                     <td>{{ $loop->index + 1 }}</td>
                                     <td>{{ $exam->name }}</td>
-                                    <td>{{ date('d M Y - h:i A', $exam->starting_time) }}</td>
-                                    <td>{{ date('d M Y - h:i A', $exam->ending_time) }}</td>
+                                    <td>{{ $exam->class }}</td>
+                                    <td>{{ $exam->subject }}</td>
+                                    {{-- <td>{{ date('d M Y - h:i A', $exam->starting_time) }}</td> --}}
+                                    {{-- <td>{{ date('d M Y - h:i A', $exam->ending_time) }}</td> --}}
                                     <td>{{ $exam->total_marks }}</td>
                                     <td class="text-strat">
                                         <div class="adminTable-action">

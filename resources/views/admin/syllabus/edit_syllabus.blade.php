@@ -3,9 +3,11 @@
 use App\Models\Section;
 use App\Models\Subject;
 use App\Models\Session;
+use App\Models\GradeSubject;
 
-$active_session = Session::where('status', 1)->first();
-
+// $active_session = Session::where('status', 1)->first();
+$active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
+$school_id = auth()->user()->school_id;
 ?>
 
 <form method="POST" class="d-block ajaxForm" enctype="multipart/form-data" action="{{ route('admin.syllabus.update', ['id' => $syllabus->id ]) }}">
@@ -41,7 +43,7 @@ $active_session = Session::where('status', 1)->first();
             <label for="subject_id_on_syllabus_creation" class="eForm-label">{{ get_phrase('Subject') }}</label>
             <select name="subject_id" id = "subject_id_on_syllabus_creation" class="form-select eForm-select eChoice-multiple-with-remove"  required>
                 <option value="">{{ get_phrase('Select a subject') }}</option>
-                <?php $subjects = Subject::where(['class_id' => $syllabus['class_id'], 'session_id' => $active_session->id])->get(); ?>
+                <?php $subjects = (new GradeSubject)->getSubjectByClass($active_session, $school_id, $syllabus['class_id']);?>
                 <?php foreach($subjects as $subject): ?>
                     <option value="{{ $subject['id'] }}" {{ $syllabus['subject_id'] == $subject['id'] ?  'selected':'' }}>{{ $subject['name'] }}</option>
                 <?php endforeach; ?>

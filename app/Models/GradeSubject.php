@@ -21,4 +21,23 @@ class GradeSubject extends Model
     public function subject(){
         return $this->belongsTo(Subject::class,'subject_id','id');
     }
+
+    
+    /**
+     * Returns Subject list taught in selected Class/School in a particular session
+     *
+     * @var array
+     */
+
+    public function getSubjectByClass($session_id, $school_id, $class_id){
+        $subjects = Subject::join ('grade_subjects', 'grade_subjects.subject_id', '=', 'subjects.id')
+            ->where(['grade_subjects.class_id'=> $class_id,
+                    'grade_subjects.session_id'=> $session_id,
+                    'grade_subjects.school_id' => $school_id
+                    ])
+            ->select('subjects.id', 'subjects.name')->get();
+        
+        return $subjects;
+
+    }
 }

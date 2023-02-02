@@ -1394,45 +1394,92 @@ class AdminController extends Controller
     public function offlineExamList()
     {
         $id = "all";
-        $exams = Exam::get()->where('exam_type', 'offline')->where('school_id', auth()->user()->school_id);
-        $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+        $school_id = auth()->user()->school_id;
+        $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
+
+        // $exams = Exam::get()->where('exam_type', 'offline')->where('school_id', auth()->user()->school_id);
+        $exams = Exam::join('subjects', 'subjects.id', '=' ,'exams.subject_id')
+                          ->join('classes', 'classes.id', '=', 'exams.class_id')  
+                            ->where('exams.exam_type', 'offline')
+                            ->where('exams.school_id', $school_id)
+                            ->where('exams.session_id', $active_session)
+                            ->select('exams.*', 'subjects.name as subject', 'classes.name as class')->get();
+                                                           
+
+        $classes = (new Classes)->getClassBySchool($school_id);
+        
         return view('admin.examination.offline_exam_list', ['exams' => $exams, 'classes' => $classes, 'id' => $id]);
     }
 
     public function offlineExamExport($id = "")
     {
+        $school_id = auth()->user()->school_id;
+        $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
+
         if ($id != "all") {
-            $exams = Exam::where([
-                'exam_type' => 'offline',
-                'class_id' => $id
-            ])->get();
+            // $exams = Exam::where([
+            //     'exam_type' => 'offline',
+            //     'class_id' => $id
+            // ])->get();
+
+            $exams = Exam::join('subjects', 'subjects.id', '=' ,'exams.subject_id')
+                ->join('classes', 'classes.id', '=', 'exams.class_id')  
+                ->where('exams.exam_type', 'offline')
+                ->where('exams.school_id', $school_id)
+                ->where('exams.session_id', $active_session)
+                ->where('exams.class_id', $id)
+                ->select('exams.*', 'subjects.name as subject', 'classes.name as class')->get();
+
         } else {
-            $exams = Exam::get()->where('exam_type', 'offline');
+            // $exams = Exam::get()->where('exam_type', 'offline');
+            $exams = Exam::join('subjects', 'subjects.id', '=' ,'exams.subject_id')
+                ->join('classes', 'classes.id', '=', 'exams.class_id')  
+                ->where('exams.exam_type', 'offline')
+                ->where('exams.school_id', $school_id)
+                ->where('exams.session_id', $active_session)
+                ->select('exams.*', 'subjects.name as subject', 'classes.name as class')->get();
         }
-        $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+        echo "<pre>";
+        print_r($exams->toArray());
+        die;   
+
+        $classes = (new Classes)->getClassBySchool($school_id);
         return view('admin.examination.offline_exam_export', ['exams' => $exams, 'classes' => $classes]);
     }
 
     public function classWiseOfflineExam($id)
     {
-        $exams = Exam::where([
-            'exam_type' => 'offline',
-            'class_id' => $id
-        ])->get();
-        $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+        $school_id = auth()->user()->school_id;
+        $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
+        $exams = Exam::join('subjects', 'subjects.id', '=' ,'exams.subject_id')
+                        ->join('classes', 'classes.id', '=', 'exams.class_id')  
+                        ->where(['exams.school_id'=> $school_id, 
+                                'exams.session_id'=> $active_session , 
+                                'exams.class_id'=> $id, 
+                                'exams.exam_type'=> 'offline'])
+                        ->select('exams.*', 'subjects.name as subject', 'classes.name as class')->get();
+
+        $classes = (new Classes)->getClassBySchool($school_id);
+
         return view('admin.examination.exam_list', ['exams' => $exams, 'classes' => $classes, 'id' => $id]);
     }
 
     public function createOfflineExam()
     {
-        $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+        // $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+        $school_id = auth()->user()->school_id;
+        $classes = (new Classes)->getClassBySchool($school_id);
         $exam_categories = ExamCategory::where('school_id', auth()->user()->school_id)->get();
         return view('admin.examination.add_offline_exam', ['classes' => $classes, 'exam_categories' => $exam_categories]);
     }
 
     public function classWiseSubject($id)
     {
-        $subjects = Subject::get()->where('class_id', $id);
+        // $subjects = Subject::get()->where('class_id', $id);
+        // MODIFIED BY RAM 
+        $school_id = auth()->user()->school_id;
+        $active_session = get_school_settings($school_id)->value('running_session');
+        $subjects =  (new GradeSubject)->getSubjectByClass($active_session,$school_id, $id);
         $options = '<option value="">' . 'Select a subject' . '</option>';
         foreach ($subjects as $subject) :
             $options .= '<option value="' . $subject->id . '">' . $subject->name . '</option>';
@@ -1463,8 +1510,12 @@ class AdminController extends Controller
     public function editOfflineExam($id)
     {
         $exam = Exam::find($id);
-        $classes = Classes::where('school_id', auth()->user()->school_id)->get();
-        $subjects = Subject::get()->where('class_id', $exam->class_id);
+        
+        $school_id = auth()->user()->school_id;
+        $class_id = $exam['class_id'];
+        $session_id = $exam['session_id'];
+        $classes = (new Classes)->getClassBySchool($school_id);
+        $subjects = (new GradeSubject)->getSubjectByClass($session_id, $school_id, $class_id);
         $exam_categories = ExamCategory::where('school_id', auth()->user()->school_id)->get();
         return view('admin.examination.edit_offline_exam', ['exam' => $exam, 'classes' => $classes, 'subjects' => $subjects, 'exam_categories' => $exam_categories]);
     }
@@ -1735,7 +1786,7 @@ class AdminController extends Controller
             'section_id' => $data['section_id'],
             'subject_id' => $data['subject_id'],
             'teacher_id' => $data['teacher_id'],
-            'room_id' => $data['class_room_id'],
+            'room_id' => isset($data['class_room_id']) ? $data['class_room_id']: null,
             'day' => $data['day'],
             'starting_hour' => $data['starting_hour'],
             'starting_minute' => $data['starting_minute'],
@@ -1751,7 +1802,6 @@ class AdminController extends Controller
     public function routineEditModal($id)
     {
         $routine = Routine::find($id);
-        // $classes = Classes::get()->where('school_id', auth()->user()->school_id);
         $classes = Classes::select('id', 'name')->whereNull('school_id')->orWhere('school_id', auth()->user()->school_id)->get();
         $teachers = User::where(['role_id' => 3, 'school_id' => auth()->user()->school_id])->get();
         $class_rooms = ClassRoom::get()->where('school_id', auth()->user()->school_id);
@@ -1769,7 +1819,7 @@ class AdminController extends Controller
             'section_id' => $data['section_id'],
             'subject_id' => $data['subject_id'],
             'teacher_id' => $data['teacher_id'],
-            'room_id' => $data['class_room_id'],
+            'room_id' => isset($data['class_room_id'])? $data['class_room_id']: null,
             'day' => $data['day'],
             'starting_hour' => $data['starting_hour'],
             'starting_minute' => $data['starting_minute'],
@@ -1796,7 +1846,10 @@ class AdminController extends Controller
      */
     public function syllabus()
     {
-        $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+        // $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+        $school_id = auth()->user()->school_id;
+        $classes = (new Classes)->getClassBySchool($school_id);
+
         return view('admin.syllabus.syllabus', ['classes' => $classes]);
     }
 
@@ -1807,14 +1860,18 @@ class AdminController extends Controller
 
         $class_id = $data['class_id'];
         $section_id = $data['section_id'];
-        $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+        $school_id = auth()->user()->school_id;
+
+        $classes = (new Classes)->getClassBySchool($school_id);
 
         return view('admin.syllabus.syllabus_list', ['class_id' => $class_id, 'section_id' => $section_id, 'classes' => $classes]);
     }
 
     public function addSyllabus()
     {
-        $classes = Classes::get()->where('school_id', auth()->user()->school_id);
+        $school_id = auth()->user()->school_id;
+        $classes = (new Classes)->getClassBySchool($school_id);
+        
         return view('admin.syllabus.add_syllabus', ['classes' => $classes]);
     }
 
@@ -1851,7 +1908,9 @@ class AdminController extends Controller
     public function syllabusEditModal($id)
     {
         $syllabus = Syllabus::find($id);
-        $classes = Classes::get()->where('school_id', auth()->user()->school_id);
+        // $classes = Classes::get()->where('school_id', auth()->user()->school_id);
+        $school_id = auth()->user()->school_id;
+        $classes = (new Classes)->getClassBySchool($school_id);
         return view('admin.syllabus.edit_syllabus', ['syllabus' => $syllabus, 'classes' => $classes]);
     }
 
@@ -1899,9 +1958,11 @@ class AdminController extends Controller
      */
     public function gradebook(Request $request)
     {
+        $school_id = auth()->user()->school_id;
+        $classes = (new Classes)->getClassBySchool($school_id);
 
-        $classes = Classes::get()->where('school_id', auth()->user()->school_id);
-        $exam_categories = ExamCategory::get()->where('school_id', auth()->user()->school_id);
+        // $classes = Classes::get()->where('school_id', auth()->user()->school_id);
+        $exam_categories = ExamCategory::get()->where('school_id', $school_id);
 
         $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
 
@@ -1993,13 +2054,17 @@ class AdminController extends Controller
     public function marks($value = '')
     {
         $exam_categories = ExamCategory::where('school_id', auth()->user()->school_id)->get();
-        $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+        $school_id = auth()->user()->school_id;
+        $classes = (new Classes)->getClassBySchool($school_id);
+        // $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+
         return view('admin.marks.index', ['exam_categories' => $exam_categories, 'classes' => $classes]);
     }
 
     public function marksFilter(Request $request)
     {
         $data = $request->all();
+        $school_id = auth()->user()->school_id;
 
         $page_data['exam_category_id'] = $data['exam_category_id'];
         $page_data['class_id'] = $data['class_id'];
@@ -2010,13 +2075,12 @@ class AdminController extends Controller
         $page_data['section_name'] = Section::find($data['section_id'])->name;
         $page_data['subject_name'] = Subject::find($data['subject_id'])->name;
 
-
         $enroll_students = Enrollment::where('class_id', $page_data['class_id'])
-            ->where('section_id', $page_data['section_id'])
-            ->get();
+                                        ->where('section_id', $page_data['section_id'])
+                                        ->get();
 
-        $page_data['exam_categories'] = ExamCategory::where('school_id', auth()->user()->school_id)->get();
-        $page_data['classes'] = Classes::where('school_id', auth()->user()->school_id)->get();
+        $page_data['exam_categories'] = ExamCategory::where('school_id', $school_id)->get();
+        $page_data['classes'] = (new Classes)->getClassBySchool($school_id);
 
         return view('admin.marks.marks_list', ['enroll_students' => $enroll_students, 'page_data' => $page_data]);
     }

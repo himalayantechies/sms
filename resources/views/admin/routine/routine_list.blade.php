@@ -194,7 +194,7 @@ $active_session = get_school_settings(auth()->user()->school_id)->value('running
                   <?php $teacher = User::find($perday_routine['teacher_id']); ?>
                   <p class="info">{{ $teacher->name }}</p>
                 </li>
-                <li
+                {{-- <li
                   class="classDetails-info d-flex align-items-center"
                 >
                   <div class="icon">
@@ -212,9 +212,9 @@ $active_session = get_school_settings(auth()->user()->school_id)->value('running
                       />
                     </svg>
                   </div>
-                  <?php $class_room = ClassRoom::find($perday_routine['room_id']); ?>
-                  <p class="info">{{ $class_room->name }}</p>
-                </li>
+                   <?php $class_room = ClassRoom::find($perday_routine['room_id']); ?>
+                  <p class="info">{{ $class_room->name }}</p> 
+                </li> --}}
               </ul>
             </div>
             <?php } ?>
@@ -322,7 +322,7 @@ $active_session = get_school_settings(auth()->user()->school_id)->value('running
                   <?php $teacher = User::find($perday_routine['teacher_id']); ?>
                   <p class="info">{{ $teacher->name }}</p>
                 </li>
-                <li
+                {{-- <li
                   class="classDetails-info d-flex align-items-center"
                 >
                   <div class="icon">
@@ -340,9 +340,9 @@ $active_session = get_school_settings(auth()->user()->school_id)->value('running
                       />
                     </svg>
                   </div>
-                  <?php $class_room = ClassRoom::find($perday_routine['room_id']); ?>
-                  <p class="info">{{ $class_room->name }}</p>
-                </li>
+                 <?php $class_room = ClassRoom::find($perday_routine['room_id']); ?>
+                  <p class="info">{{ $class_room->name }}</p> 
+                </li> --}}
               </ul>
             </div>
             <?php } ?>
@@ -446,7 +446,7 @@ $active_session = get_school_settings(auth()->user()->school_id)->value('running
                   <?php $teacher = User::find($perday_routine['teacher_id']); ?>
                   <p class="info">{{ $teacher->name }}</p>
                 </li>
-                <li
+                {{-- <li
                   class="classDetails-info d-flex align-items-center"
                 >
                   <div class="icon">
@@ -464,9 +464,9 @@ $active_session = get_school_settings(auth()->user()->school_id)->value('running
                       />
                     </svg>
                   </div>
-                  <?php $class_room = ClassRoom::find($perday_routine['room_id']); ?>
-                  <p class="info">{{ $class_room->name }}</p>
-                </li>
+                 <?php $class_room = ClassRoom::find($perday_routine['room_id']); ?>
+                  <p class="info">{{ $class_room->name }}</p> 
+                </li> --}}
               </ul>
             </div>
             <?php } ?>
@@ -570,7 +570,7 @@ $active_session = get_school_settings(auth()->user()->school_id)->value('running
                   <?php $teacher = User::find($perday_routine['teacher_id']); ?>
                   <p class="info">{{ $teacher->name }}</p>
                 </li>
-                <li
+                {{-- <li
                   class="classDetails-info d-flex align-items-center"
                 >
                   <div class="icon">
@@ -589,8 +589,8 @@ $active_session = get_school_settings(auth()->user()->school_id)->value('running
                     </svg>
                   </div>
                   <?php $class_room = ClassRoom::find($perday_routine['room_id']); ?>
-                  <p class="info">{{ $class_room->name }}</p>
-                </li>
+                  <p class="info">{{ $class_room->name }}</p> 
+                </li> --}}
               </ul>
             </div>
             <?php } ?>
@@ -694,7 +694,7 @@ $active_session = get_school_settings(auth()->user()->school_id)->value('running
                   <?php $teacher = User::find($perday_routine['teacher_id']); ?>
                   <p class="info">{{ $teacher->name }}</p>
                 </li>
-                <li
+                {{-- <li
                   class="classDetails-info d-flex align-items-center"
                 >
                   <div class="icon">
@@ -712,9 +712,9 @@ $active_session = get_school_settings(auth()->user()->school_id)->value('running
                       />
                     </svg>
                   </div>
-                  <?php $class_room = ClassRoom::find($perday_routine['room_id']); ?>
-                  <p class="info">{{ $class_room->name }}</p>
-                </li>
+                   <?php $class_room = ClassRoom::find($perday_routine['room_id']); ?>
+                  <p class="info">{{ $class_room->name }}</p> 
+                </li> --}}
               </ul>
             </div>
             <?php } ?>
@@ -822,7 +822,7 @@ $active_session = get_school_settings(auth()->user()->school_id)->value('running
                   <?php $teacher = User::find($perday_routine['teacher_id']); ?>
                   <p class="info">{{ $teacher->name }}</p>
                 </li>
-                <li
+                {{-- <li
                   class="classDetails-info d-flex align-items-center"
                 >
                   <div class="icon">
@@ -840,9 +840,9 @@ $active_session = get_school_settings(auth()->user()->school_id)->value('running
                       />
                     </svg>
                   </div>
-                  <?php $class_room = ClassRoom::find($perday_routine['room_id']); ?>
-                  <p class="info">{{ $class_room->name }}</p>
-                </li>
+                   <?php $class_room = ClassRoom::find($perday_routine['room_id']); ?>
+                  <p class="info">{{ $class_room->name }}</p> 
+                </li> --}}
               </ul>
             </div>
             <?php } ?>
@@ -948,7 +948,7 @@ $active_session = get_school_settings(auth()->user()->school_id)->value('running
                   <?php $teacher = User::find($perday_routine['teacher_id']); ?>
                   <p class="info">{{ $teacher->name }}</p>
                 </li>
-                <li
+                {{-- <li
                   class="classDetails-info d-flex align-items-center"
                 >
                   <div class="icon">
@@ -967,8 +967,8 @@ $active_session = get_school_settings(auth()->user()->school_id)->value('running
                     </svg>
                   </div>
                   <?php $class_room = ClassRoom::find($perday_routine['room_id']); ?>
-                  <p class="info">{{ $class_room->name }}</p>
-                </li>
+                  <p class="info">{{ $class_room->name }}</p> 
+                </li> --}}
               </ul>
             </div>
             <?php } ?>

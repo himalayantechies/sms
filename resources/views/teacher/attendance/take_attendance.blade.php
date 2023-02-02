@@ -81,6 +81,7 @@
                 },
                 data: {date : date, class_id : class_id, section_id : section_id},
                 success : function(response) {
+                    alert(response);
                     $('#student_content').show();
                     $('#student_content').html(response);
                     $('#showStudentDiv').hide();
