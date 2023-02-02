@@ -133,7 +133,7 @@ class Student extends Model
             $user->email = $data['email'];
             $user->user_information = $data['user_information'];
             if (isset($data['password'])) {
-                $user->password = $data['password'];
+                $user->password = Hash::make($data['password']);
             }
             $user->save();
 

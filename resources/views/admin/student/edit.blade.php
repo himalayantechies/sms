@@ -243,7 +243,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-sm-12 mt-4">
-                        <button type="submit" class="btn-form">{{ get_phrase('Edit Student') }}</button>
+                        <button type="submit" class="btn-form">{{ get_phrase('Update') }}</button>
                     </div>
                 </div>
             </div>
