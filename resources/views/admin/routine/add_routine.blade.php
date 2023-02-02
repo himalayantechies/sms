@@ -35,7 +35,7 @@
             </select>
         </div>
 
-        <div class="fpb-7">
+        {{-- <div class="fpb-7">
             <label for="class_room_id" class="eForm-label">{{ get_phrase('Class Room') }}</label>
             <select name="class_room_id" id = "class_room_id_on_routine_creation" class="form-select eForm-select eChoice-multiple-with-remove"  required>
                 <option value="">{{ get_phrase('Select a class room') }}</option>
@@ -43,19 +43,19 @@
                     <option value="{{ $class_room['id'] }}">{{ $class_room['name'] }}</option>
                 <?php endforeach; ?>
             </select>
-        </div>
+        </div> --}}
 
         <div class="fpb-7">
             <label for="day" class="eForm-label">{{ get_phrase('Day') }}</label>
             <select name="day" id = "day_on_routine_creation" class="form-select eForm-select eChoice-multiple-with-remove"  required>
                 <option value="">{{ get_phrase('Select a day') }}</option>
-                <option value="saturday">{{ get_phrase('Saturday') }}</option>
                 <option value="sunday">{{ get_phrase('Sunday') }}</option>
                 <option value="monday">{{ get_phrase('Monday') }}</option>
                 <option value="tuesday">{{ get_phrase('Tuesday') }}</option>
                 <option value="wednesday">{{ get_phrase('Wednesday') }}</option>
                 <option value="thursday">{{ get_phrase('Thursday') }}</option>
                 <option value="friday">{{ get_phrase('Friday') }}</option>
+                <option value="saturday">{{ get_phrase('Saturday') }}</option>
             </select>
         </div>
 

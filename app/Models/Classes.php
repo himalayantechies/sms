@@ -17,4 +17,10 @@ class Classes extends Model
     protected $fillable = [
         'name', 'school_id'
     ];
+
+    public function getClassBySchool($school_id){
+
+        $classes = Classes::select('id', 'name')->whereNull('school_id')->orWhere('school_id', $school_id)->get();
+        return $classes;
+    }
 }

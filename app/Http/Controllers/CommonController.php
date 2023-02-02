@@ -12,6 +12,7 @@ use App\Models\Section;
 use App\Models\Enrollment;
 use Illuminate\Support\Str;
 use App\Models\Gradebook;
+use App\Models\Grade;
 use App\Models\Subject;
 use DB;
 use PDF;
@@ -151,23 +152,23 @@ class CommonController extends Controller
             ->where('class_id', $data['class_id'])
             ->where('section_id', $data['section_id'])
             ->where('student_id', $data['student_id'])
+            ->where('subject_id', $data['subject_id'])
             ->where('school_id', $data['school_id'])
             ->where('session_id', $data['session_id'])
             ->first();
 
         if (!empty($query) && $query->count() > 0) {
-
-            $marks = json_decode($query->marks, true);
-            $marks[$data['subject_id']] = $data['mark'];
-            $query->marks = json_encode($marks);
+            $query->marks = $data['mark'];
             $query->comment = $data['comment'];
             $query->save();
 
-
         } else {
-            $mark[$data['subject_id']] = $data['mark'];
-            $marks = json_encode($mark);
-            $data['marks'] = $marks;
+            // $mark[$data['subject_id']] = $data['mark'];
+            // $marks = json_encode($mark);
+            // $data['marks'] = $marks;
+            $data['subject_id'] =  $data['subject_id'];
+
+            $data['marks'] = $data['mark'];
             $data['timestamp'] = strtotime(date('Y-m-d'));
             Gradebook::create($data);
         }

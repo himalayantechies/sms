@@ -63,15 +63,25 @@ use App\Models\Grade;
                 <?php
 
                 $student_details = User::find($enroll_student->user_id);
-                $filterd_data = Gradebook::where('exam_category_id', $page_data['exam_category_id'])
-                ->where('class_id', $page_data['class_id'])
-                ->where('section_id', $page_data['section_id'])
-                ->where('student_id', $enroll_student->user_id);
 
+                $filterd_data = Gradebook::where('exam_category_id', $page_data['exam_category_id'])
+                                            ->where('class_id', $page_data['class_id'])
+                                            ->where('section_id', $page_data['section_id'])
+                                            ->where('subject_id', $page_data['subject_id'])
+                                            ->where('student_id', $enroll_student->user_id)->get();
+              
                 if($filterd_data->value('marks')){
-                    $subject_mark = json_decode($filterd_data->value('marks'), true);
-                    if(!empty($subject_mark[$page_data['subject_id']])) {
-                        $user_marks = $subject_mark[$page_data['subject_id']];
+                    // $subject_mark = json_decode($filterd_data->value('marks'), true);
+                    // if(!empty($subject_mark[$page_data['subject_id']])) {
+                    //     $user_marks = $subject_mark[$page_data['subject_id']];
+                    // } else {
+                    //     $user_marks = 0;
+                    // }
+
+                    $marks = $filterd_data->value('marks');
+
+                    if(!empty($marks)) {
+                        $user_marks = $marks;
                     } else {
                         $user_marks = 0;
                     }
@@ -97,7 +107,7 @@ use App\Models\Grade;
                         <span id="grade-for-mark-{{ $enroll_student->user_id }}">{{ get_grade($user_marks) }}</span> 
                     </td>
                     <td>
-                        <input class="form-control eForm-control" type="text" id="comment-{{ $enroll_student->user_id }}" name="comment" placeholder="comment" value="{{ $comment }}" required>
+                        <input class="form-control eForm-control" type="text" id="comment-{{ $enroll_student->user_id }}" name="comment" placeholder="comment" value="{{ $comment }}" >
                     </td>
                     <td class="text-center">
                         <button class="btn btn-success" onclick="mark_update('{{ $enroll_student->user_id }}')"><i class="bi bi-check2-circle"></i></button>
@@ -143,7 +153,8 @@ use App\Models\Grade;
     function get_grade(exam_mark, id){
         let url = "{{ route('get.grade', ['exam_mark' => ":exam_mark"]) }}";
         url = url.replace(":exam_mark", exam_mark);
-        console.log(url);
+        // console.log(url);
+        // alert(url);
         $.ajax({
             url : url,
             success : function(response){

@@ -305,7 +305,9 @@ if ( ! function_exists('get_grade'))
     if (empty($acquired_number)) {
       return "N/A";
     }else{
-      $acquired_grade = DB::table('grades')->where('school_id', auth()->user()->school_id)->distinct()->get();
+    //   $acquired_grade = DB::table('grades')->where('school_id', auth()->user()->school_id)->distinct()->get();
+      $acquired_grade = DB::table('grades')->where('grade_type', 'Letter Grading')->distinct()->get();
+
       if ($acquired_grade->count() > 0) {
         $founder = false;
         foreach ($acquired_grade as $grade) {
