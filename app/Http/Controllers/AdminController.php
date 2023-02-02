@@ -1026,6 +1026,7 @@ class AdminController extends Controller
         $data['ecd_type'] = ['school based', 'community based'];
         $data['disability'] = ['n/a', 'physical', 'mental', 'deaf', 'blind', 'low vision', 'deaf and blind', 'speech impairment', 'multiple disability'];
         $data['classes'] = Classes::get();
+        $data['student_username'] = "student" . Auth::user()->school_id . ($user = User::max('id') + rand(1, 9999));
         $data['departments'] = Department::get()->where('school_id', Auth::user()->school_id);
         $data['parents'] = User::where(['role_id' => 6, 'school_id' => 1])->get();
         return view('admin.offline_admission.offline_admission', ['aria_expand' => $type, 'data' => $data]);
@@ -1035,9 +1036,7 @@ class AdminController extends Controller
     {
         $data = $request->all();
         if (!empty($data['photo'])) {
-
             $imageName = time() . '.' . $data['photo']->extension();
-
             $data['photo']->move(public_path('assets/uploads/user-images/'), $imageName);
 
             $photo  = $imageName;
@@ -1055,26 +1054,22 @@ class AdminController extends Controller
         );
         $data['user_information'] = json_encode($info);
 
-        $duplicate_user_check = User::get()->where('email', $data['email']);
-        if (count($duplicate_user_check) == 0) {
-            DB::transaction(function () use ($data,$photo) {
-                $active_session = get_school_settings(Auth::user()->school_id)->value('running_session');
-                $user = User::create([
-                    'name' => $data['name'],
-                    'email' => $data['email'],
-                    'password' => Hash::make($data['password']),
-                    'code' => student_code(),
-                    'role_id' => '7',
-                    'school_id' => Auth::user()->school_id,
-                    'user_information' => $data['user_information']
-                ]);
-                (new Enrollment)->storeEnrollment($data, $user->id, $active_session);
-                (new Student)->storeStudent($data, $user->id,$photo);
-            });
-            return redirect()->back()->with('message', 'Admission successfully done.');
-        } else {
-            return redirect()->back()->with('error', 'Sorry this email has been taken');
-        }
+        DB::transaction(function () use ($data, $photo) {
+            $active_session = get_school_settings(Auth::user()->school_id)->value('running_session');
+            $user = User::create([
+                'username'=>$data['username'],
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+                'code' => student_code(),
+                'role_id' => '7',
+                'school_id' => Auth::user()->school_id,
+                'user_information' => $data['user_information']
+            ]);
+            (new Enrollment)->storeEnrollment($data, $user->id, $active_session);
+            (new Student)->storeStudent($data, $user->id, $photo);
+        });
+        return redirect()->back()->with('message', 'Admission successfully done.');
     }
     public function editStudent(Request $request, $id)
     {
