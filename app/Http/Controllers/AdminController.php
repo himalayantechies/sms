@@ -608,7 +608,7 @@ class AdminController extends Controller
 
     public function createParent()
     {
-        $classes = Classes::get()->where('school_id', auth()->user()->school_id);
+        $classes = Classes::all();
         return view('admin.parent.add_parent', ['classes' => $classes]);
     }
 
