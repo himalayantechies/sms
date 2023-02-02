@@ -44,6 +44,7 @@ class Teacher extends Model
             ->where('users.id', $user_id)
             ->first([
                 'users.id',
+                'users.username',
                 'users.name',
                 'users.email',
                 'users.code',
@@ -78,11 +79,8 @@ class Teacher extends Model
         DB::transaction(function () use ($request) {
             $data = $request->all();
             if (!empty($data['photo'])) {
-
                 $imageName = time() . '.' . $data['photo']->extension();
-
                 $data['photo']->move(public_path('assets/uploads/user-images/'), $imageName);
-
                 $photo  = $imageName;
             } else {
                 $photo = '';
@@ -96,6 +94,7 @@ class Teacher extends Model
             );
             $data['user_information'] = json_encode($info);
             $user = User::create([
+                'username' => $data['username'],
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
@@ -108,28 +107,28 @@ class Teacher extends Model
 
             Teacher::create([
                 'user_id' => $user->id,
-                'gender' => $data['gender'] ?? '',
-                'nationality' => $data['nationality'] ?? '',
-                'teacher_type' => $data['teacher_type'] ?? '',
-                'marital_status' => $data['marital_status'] ?? '',
-                'citizenship_no' => $data['citizenship_no'] ?? '',
-                'issuing_district' => $data['issuing_district'] ?? '',
-                'dob' => $data['dob'] ?? '',
-                'teaching_medium' => $data['teaching_medium'] ?? '',
-                'mother_tongue' => $data['mother_tongue'] ?? '',
-                'caste' => $data['caste'] ?? '',
-                'disability' => $data['disability'] ?? '',
-                'designation' => $data['designation'] ?? '',
-                'responsibility' => $data['responsibility'] ?? '',
-                'join_date' => $data['join_date'] ?? '',
-                'leaving_date' => $data['leaving_date'] ?? '',
-                'father_name' => $data['father_name'] ?? '',
-                'mother_name' => $data['mother_name'] ?? '',
-                'spouse_name' => $data['spouse_name'] ?? '',
-                'will_person' => $data['will_person'] ?? '',
-                'address' => $data['address'] ?? '',
-                'phone_number' => $data['phone_number'] ?? '',
-                'mobile_number' => $data['mobile_number'] ?? '',
+                'gender' => $data['gender'],
+                'nationality' => $data['nationality'],
+                'teacher_type' => $data['teacher_type'],
+                'marital_status' => $data['marital_status'],
+                'citizenship_no' => $data['citizenship_no'],
+                'issuing_district' => $data['issuing_district'],
+                'dob' => $data['dob'],
+                'teaching_medium' => $data['teaching_medium'],
+                'mother_tongue' => $data['mother_tongue'],
+                'caste' => $data['caste'],
+                'disability' => $data['disability'],
+                'designation' => $data['designation'],
+                'responsibility' => $data['responsibility'],
+                'join_date' => $data['join_date'],
+                'leaving_date' => $data['leaving_date'],
+                'father_name' => $data['father_name'],
+                'mother_name' => $data['mother_name'],
+                'spouse_name' => $data['spouse_name'],
+                'will_person' => $data['will_person'],
+                'address' => $data['address'],
+                'phone_number' => $data['phone_number'],
+                'mobile_number' => $data['mobile_number'],
                 'photo' =>  $photo
             ]);
         });
@@ -157,6 +156,7 @@ class Teacher extends Model
             $user = User::where('id', $id)->first();
 
             $user->name = $data['name'];
+            $user->username = $data['username'];
             $user->email = $data['email'];
             $user->user_information = $data['user_information'];
             if (isset($data['password'])) {

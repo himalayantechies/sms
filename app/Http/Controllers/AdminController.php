@@ -302,6 +302,7 @@ class AdminController extends Controller
     {
         $this->_data['departments'] = Department::get()->where('school_id', auth()->user()->school_id);
         $this->_data['caste'] = ['brahmin/chhetri', 'dalit', 'janjati', 'others'];
+        $this->_data['teacher_username'] = "teacher" . Auth::user()->school_id . (User::max('id') + rand(1, 9999));
         $this->_data['disability'] = ['n/a', 'physical', 'mental', 'deaf', 'blind', 'low vision', 'deaf and blind', 'speech impairment', 'multiple disability'];
         return view('admin.teacher.create', $this->_data);
     }
@@ -844,75 +845,12 @@ class AdminController extends Controller
 
     public function studentUpdate(Request $request, $id)
     {
-        // dd($request->all());
-        DB::transaction(function () use ($request, $id) {
-            $data = $request->all();
-            if ($file = $request->file('photo')) {
-                $imageName = time() . '.' . $data['photo']->extension();
-                $file->move(public_path('assets/uploads/user-images/'), $imageName);
-                $photo  = $imageName;
-            } else {
-                $photo = isset($data['photo']) ? $data['photo'] : '';
-            }
-
-            // if (!empty($data['photo'])) {
-            //     $imageName = time() . '.' . $data['photo']->extension();
-            //     $data['photo']->move(public_path('assets/uploads/user-images/'), $imageName);
-            //     $photo  = $imageName;
-            // } else {
-            //     $photo = '';
-            // }
-            $info = array(
-                'gender' => $data['gender'],
-                'blood_group' => $data['blood_group'],
-                'birthday' => $data['dob_ad'],
-                'phone' => $data['phone'],
-                'address' => $data['address'],
-                'photo' => $photo
-            );
-            $data['user_information'] = json_encode($info);
-            $user = User::where('id', $id)->first();
-            $user->name = $data['name'];
-            $user->email = $data['email'];
-            $user->user_information = $data['user_information'];
-            if (isset($data['password'])) {
-                $user->password = $data['password'];
-            }
-            $user->save();
-
-            Enrollment::where('user_id', $id)->update([
-                'class_id' => $data['class_id'],
-                'section_id' => $data['section_id'],
-            ]);
-
-            $student = Student::where('user_id', $id)->first();
-
-            $student->name = $data['name'];
-            $student->student_type = $data['student_type'] ?? '';
-            $student->class_id = $data['class_id'];
-            $student->section_id = $data['section_id'];
-            $student->registration_no = $data['registration_no'];
-            $student->roll_no = $data['roll_no'];
-            $student->gender = $data['gender'];
-            $student->admitted_date = $data['admitted_date'];
-            $student->dob_ad = $data['dob_ad'];
-            $student->dob_bs = $data['dob_bs'];
-            $student->phone = $data['phone'];
-            $student->email = $data['email'];
-            $student->address = $data['address'];
-            $student->blood_group = $data['blood_group'];
-            $student->disability = $data['disability'];
-            $student->caste = $data['caste'];
-            $student->religion = $data['religion'];
-            $student->previous_school = $data['previous_school'];
-            $student->ecd_type = $data['ecd_type'];
-            $student->ecd_no = $data['ecd_no'];
-            $student->ecd_ppc_experience = isset($data['ecd_ppc_experience']) ? $data['ecd_ppc_experience'] : '0';
-            $student->new_admission_status = isset($data['new_admission_status']) ? $data['new_admission_status'] : '0';
-            $student->photo = $photo;
-            $student->save();
-        });
-        return redirect()->back()->with('message', 'You have successfully update student.');
+        try {
+            (new Student)->updateStudent($request, $id);
+            return redirect()->back()->with('message', 'You have successfully update student.');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', "Student couldn't be updated");
+        }
     }
 
     public function studentDelete($id)
@@ -1034,42 +972,13 @@ class AdminController extends Controller
 
     public function offlineAdmissionCreate(Request $request)
     {
-        $data = $request->all();
-        if (!empty($data['photo'])) {
-            $imageName = time() . '.' . $data['photo']->extension();
-            $data['photo']->move(public_path('assets/uploads/user-images/'), $imageName);
+        try {
+            (new Student)->storeStudent($request);
+            return redirect()->back()->with('message', 'Admission successfully done.');
+        } catch (\Throwable $th) {
 
-            $photo  = $imageName;
-        } else {
-            $photo = '';
+            return redirect()->back()->with('error', 'Admission unsuccessful.');
         }
-
-        $info = array(
-            'gender' => $data['gender'],
-            'blood_group' => $data['blood_group'],
-            'birthday' => $data['dob_ad'],
-            'phone' => $data['phone'],
-            'address' => $data['address'],
-            'photo' => $photo
-        );
-        $data['user_information'] = json_encode($info);
-
-        DB::transaction(function () use ($data, $photo) {
-            $active_session = get_school_settings(Auth::user()->school_id)->value('running_session');
-            $user = User::create([
-                'username'=>$data['username'],
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'password' => Hash::make($data['password']),
-                'code' => student_code(),
-                'role_id' => '7',
-                'school_id' => Auth::user()->school_id,
-                'user_information' => $data['user_information']
-            ]);
-            (new Enrollment)->storeEnrollment($data, $user->id, $active_session);
-            (new Student)->storeStudent($data, $user->id, $photo);
-        });
-        return redirect()->back()->with('message', 'Admission successfully done.');
     }
     public function editStudent(Request $request, $id)
     {
