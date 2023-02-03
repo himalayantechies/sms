@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Enrollment extends Model
 {
@@ -18,5 +19,13 @@ class Enrollment extends Model
         'user_id', 'class_id', 'section_id', 'school_id', 'department_id', 'session_id'
     ];
 
-    
+    public function storeEnrollment($data,$user_id,$active_session){
+        Enrollment::create([
+            'user_id' => $user_id,
+            'class_id' => $data['class_id'],
+            'section_id' => $data['section_id'],
+            'school_id' => Auth::user()->school_id,
+            'session_id' => $active_session
+        ]);
+    }
 }

@@ -37,6 +37,17 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('public/assets/calender/main.css') }}" />
 
     <script src="{{ asset('public/assets/vendors/jquery/jquery-3.6.0.min.js') }}"></script>
+    <style>
+        .custom-card {
+            background-color: #fff;
+            box-shadow: 0 6px 15px rgb(0 0 0 / 0%);
+            border-radius: 5px;
+        }
+        .p-30{
+            padding: 30px;
+        }
+        @yield('styles')
+    </style>
 </head>
 
 <body>

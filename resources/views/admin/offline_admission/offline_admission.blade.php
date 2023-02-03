@@ -17,54 +17,56 @@
         </div>
     </div>
 
-    <div class="user-profile-area d-flex flex-wrap">
-        <!-- Right side -->
-        <div class="user-details-info">
-            <!-- Tab label -->
-            <ul class="nav nav-tabs eNav-Tabs-custom" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <a href="{{ route('admin.offline_admission.single', ['type' => 'single']) }}">
-                        <button class="nav-link {{ $aria_expand == 'single' ? 'active' : '' }}" id="basicInfo-tab"
-                            data-bs-toggle="tab" data-bs-target="#basicInfo" type="button" role="tab"
-                            aria-controls="basicInfo" aria-selected="true">
-                            Single student admission
-                            <span></span>
-                        </button>
-                    </a>
-                </li>
-                <li class="nav-item d-none" role="presentation">
-                    <a href="{{ route('admin.offline_admission.single', ['type' => 'bulk']) }}">
-                        <button class="nav-link {{ $aria_expand == 'bulk' ? 'active' : '' }}" id="attendance-tab"
-                            data-bs-toggle="tab" data-bs-target="#attendance" type="button" role="tab"
-                            aria-controls="attendance" aria-selected="false">
-                            {{ get_phrase('Bulk student admission') }}
-                            <span></span>
-                        </button>
-                    </a>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <a href="{{ route('admin.offline_admission.single', ['type' => 'excel']) }}">
-                        <button class="nav-link {{ $aria_expand == 'excel' ? 'active' : '' }}" id="attendance-tab"
-                            data-bs-toggle="tab" data-bs-target="#attendance" type="button" role="tab"
-                            aria-controls="attendance" aria-selected="false">
-                            {{ get_phrase('Excel upload') }}
-                            <span></span>
-                        </button>
-                    </a>
-                </li>
-            </ul>
-            <!-- Tab content -->
-            <div class="tab-content eNav-Tabs-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
-                    @if ($aria_expand == 'single')
-                        @include('admin.offline_admission.single_student_admission')
-                    @elseif($aria_expand == 'bulk')
-                        @include('admin.offline_admission.bulk_student_admission')
-                    @else
-                        @include('admin.offline_admission.excel_student_admission')
-                    @endif
-                </div>
+    <div class="custom-card mb-4">
+        <div class="user-profile-area d-flex flex-wrap">
+            <!-- Right side -->
+            <div class="user-details-info">
+                <!-- Tab label -->
+                <ul class="nav nav-tabs eNav-Tabs-custom" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a href="{{ route('admin.offline_admission.single', ['type' => 'single']) }}">
+                            <button class="nav-link {{ $aria_expand == 'single' ? 'active' : '' }}" id="basicInfo-tab"
+                                data-bs-toggle="tab" data-bs-target="#basicInfo" type="button" role="tab"
+                                aria-controls="basicInfo" aria-selected="true">
+                                Single student admission
+                                <span></span>
+                            </button>
+                        </a>
+                    </li>
+                    <li class="nav-item d-none" role="presentation">
+                        <a href="{{ route('admin.offline_admission.single', ['type' => 'bulk']) }}">
+                            <button class="nav-link {{ $aria_expand == 'bulk' ? 'active' : '' }}" id="attendance-tab"
+                                data-bs-toggle="tab" data-bs-target="#attendance" type="button" role="tab"
+                                aria-controls="attendance" aria-selected="false">
+                                {{ get_phrase('Bulk student admission') }}
+                                <span></span>
+                            </button>
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a href="{{ route('admin.offline_admission.single', ['type' => 'excel']) }}">
+                            <button class="nav-link {{ $aria_expand == 'excel' ? 'active' : '' }}" id="attendance-tab"
+                                data-bs-toggle="tab" data-bs-target="#attendance" type="button" role="tab"
+                                aria-controls="attendance" aria-selected="false">
+                                {{ get_phrase('Excel upload') }}
+                                <span></span>
+                            </button>
+                        </a>
+                    </li>
+                </ul>
             </div>
+        </div>
+    </div>
+    <!-- Tab content -->
+    <div class="tab-content eNav-Tabs-content custom-card p-30" id="myTabContent">
+        <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
+            @if ($aria_expand == 'single')
+                @include('admin.offline_admission.single_student_admission')
+            @elseif($aria_expand == 'bulk')
+                @include('admin.offline_admission.bulk_student_admission')
+            @else
+                @include('admin.offline_admission.excel_student_admission')
+            @endif
         </div>
     </div>
 @endsection
