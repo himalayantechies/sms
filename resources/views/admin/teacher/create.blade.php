@@ -70,6 +70,15 @@
                         <input type="number" class="form-control eForm-control" id="mobile_number" name="mobile_number"
                             placeholder="Enter mobile number" required>
                     </div>
+                    <div class="col-md-6 col-sm-12 mt-2">
+                        <label for="teacher_type" class="eForm-label">{{ get_phrase('Teacher Type') }}</label>
+                        <select name="teacher_type" id="teacher_type"
+                            class="form-select eForm-select eChoice-multiple-with-remove">
+                            <option value="">{{ get_phrase('Select teacher type') }}</option>
+                            <option value="full-time">{{ get_phrase('Full Time') }}</option>
+                            <option value="part-time">{{ get_phrase('Part Time') }}</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="row my-3">
                     <div class="col-md-12 col-sm-12 mainSection-title d-flex">
@@ -80,11 +89,48 @@
                 </div>
                 <div id="additional_details" class="d-none">
                     <div class="row">
-                        <div class="col-md-6 col-sm-12">
+                        <div class="col-md-6 col-sm-12  mt-2">
                             <label for="code" class="eForm-label form-label">{{ get_phrase('Code') }}</label>
                             <input type="code" class="form-control eForm-control" id="code" name="code"
                                 placeholder="Provide teacher code">
                         </div>
+                        <div class="col-md-6 col-sm-12 mt-2">
+                            <label for="teaching_medium" class="eForm-label">{{ get_phrase('Teaching Medium') }}</label>
+                            <select name="teaching_medium" id="teaching_medium"
+                                class="form-select eForm-select eChoice-multiple-with-remove">
+                                <option value="">{{ get_phrase('Select Teaching Medium') }}</option>
+                                <option value="nepali">{{ get_phrase('Nepali') }}</option>
+                                <option value="english">{{ get_phrase('English') }}</option>
+                                <option value="nepal bhasa">{{ get_phrase('Nepal Bhasa') }}</option>
+                                <option value="hindi">{{ get_phrase('Hindi') }}</option>
+                                <option value="maithali">{{ get_phrase('Maithali') }}</option>
+                                <option value="bhojpuri">{{ get_phrase('Bhojpuri') }}</option>
+                                <option value="tamang">{{ get_phrase('Tamang') }}</option>
+                                <option value="sanskrit">{{ get_phrase('Sanskrit') }}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 col-sm-12 mt-2">
+                            <label for="designation" class="eForm-label">{{ get_phrase('Designation') }}</label>
+                            <input type="text" class="form-control eForm-control" id="designation"
+                                name="designation">
+                        </div>
+                        <div class="col-md-6 col-sm-12 mt-2">
+                            <label for="responsibility" class="eForm-label">{{ get_phrase('Responsibility') }}</label>
+                            <input type="text" class="form-control eForm-control" id="responsibility"
+                                name="responsibility">
+                        </div>
+                        <div class="col-md-6 col-sm-12 mt-2">
+                            <label for="join_date" class="eForm-label">{{ get_phrase('Join Date') }}</label>
+                            <input type="text" class="form-control eForm-control" id="join_date" name="join_date">
+                        </div>
+                        <div class="col-md-6 col-sm-12 mt-2">
+                            <label for="leaving_date" class="eForm-label">{{ get_phrase('Leaving Date') }}</label>
+                            <input type="text" class="form-control eForm-control" id="leaving_date"
+                                name="leaving_date">
+                        </div>
+
+                    </div>
+                    <div class="row my-3">
                         <div class="col-md-6 col-sm-12 mt-2">
                             <label for="nationality" class="eForm-label">{{ get_phrase('Nationality') }}</label>
                             <select name="nationality" id="nationality"
@@ -93,25 +139,6 @@
                                 <option value="Nepali">{{ get_phrase('Nepali') }}</option>
                                 <option value="Indian">{{ get_phrase('Indian') }}</option>
                                 <option value="Others">{{ get_phrase('Others') }}</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="teacher_type" class="eForm-label">{{ get_phrase('Teacher Type') }}</label>
-                            <select name="teacher_type" id="teacher_type"
-                                class="form-select eForm-select eChoice-multiple-with-remove">
-                                <option value="">{{ get_phrase('Select teacher type') }}</option>
-                                <option value="full-time">{{ get_phrase('Full Time') }}</option>
-                                <option value="part-time">{{ get_phrase('Part Time') }}</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="marital_status" class="eForm-label">{{ get_phrase('Marital Status') }}</label>
-                            <select name="marital_status" id="marital_status"
-                                class="form-select eForm-select eChoice-multiple-with-remove">
-                                <option value="">{{ get_phrase('Select Marital Status') }}</option>
-                                <option value="single">{{ get_phrase('Single') }}</option>
-                                <option value="married">{{ get_phrase('Married') }}</option>
-                                <option value="divorced">{{ get_phrase('Divorced') }}</option>
                             </select>
                         </div>
                         <div class="col-md-6 col-sm-12 mt-2">
@@ -134,21 +161,53 @@
                             <input type="text" class="form-control eForm-control" id="dob" name="dob"
                                 placeholder="Enter Date of Birth">
                         </div>
+                    </div>
+                    <div class="row my-3">
+
                         <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="teaching_medium" class="eForm-label">{{ get_phrase('Teaching Medium') }}</label>
-                            <select name="teaching_medium" id="teaching_medium"
+                            <label for="father_name" class="eForm-label">{{ get_phrase('Father Name') }}</label>
+                            <input type="text" class="form-control eForm-control" id="father_name"
+                                name="father_name">
+                        </div>
+                        <div class="col-md-6 col-sm-12 mt-2">
+                            <label for="mother_name" class="eForm-label">{{ get_phrase('Mother Name') }}</label>
+                            <input type="text" class="form-control eForm-control" id="mother_name"
+                                name="mother_name">
+                        </div>
+                        <div class="col-md-6 col-sm-12 mt-2">
+                            <label for="marital_status" class="eForm-label">{{ get_phrase('Marital Status') }}</label>
+                            <select name="marital_status" id="marital_status"
                                 class="form-select eForm-select eChoice-multiple-with-remove">
-                                <option value="">{{ get_phrase('Select Teaching Medium') }}</option>
-                                <option value="nepali">{{ get_phrase('Nepali') }}</option>
-                                <option value="english">{{ get_phrase('English') }}</option>
-                                <option value="nepal bhasa">{{ get_phrase('Nepal Bhasa') }}</option>
-                                <option value="hindi">{{ get_phrase('Hindi') }}</option>
-                                <option value="maithali">{{ get_phrase('Maithali') }}</option>
-                                <option value="bhojpuri">{{ get_phrase('Bhojpuri') }}</option>
-                                <option value="tamang">{{ get_phrase('Tamang') }}</option>
-                                <option value="sanskrit">{{ get_phrase('Sanskrit') }}</option>
+                                <option value="">{{ get_phrase('Select Marital Status') }}</option>
+                                <option value="single">{{ get_phrase('Single') }}</option>
+                                <option value="married">{{ get_phrase('Married') }}</option>
+                                <option value="divorced">{{ get_phrase('Divorced') }}</option>
                             </select>
                         </div>
+                        <div class="col-md-6 col-sm-12 mt-2">
+                            <label for="spouse_name" class="eForm-label">{{ get_phrase('Spouse Name') }}</label>
+                            <input type="text" class="form-control eForm-control" id="spouse_name"
+                                name="spouse_name">
+                        </div>
+                        <div class="col-md-6 col-sm-12 mt-2">
+                            <label for="will_person" class="eForm-label">{{ get_phrase('Will Person Name') }}</label>
+                            <input type="text" class="form-control eForm-control" id="will_person"
+                                name="will_person">
+                        </div>
+
+                    </div>
+                    <div class="row my-3">
+                        <div class="col-md-6 col-sm-12 mt-2">
+                            <label for="caste" class="form-label eForm-label">{{ get_phrase('Caste') }}</label>
+                            <select name="caste" id="caste"
+                                class="form-select eForm-select eChoice-multiple-with-remove">
+                                <option value="">{{ get_phrase('Select caste') }}</option>
+                                @foreach ($caste as $item)
+                                    <option value="{{ $item }}">{{ ucfirst($item) }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <div class="col-md-6 col-sm-12 mt-2">
                             <label for="mother_tongue" class="eForm-label">{{ get_phrase('Mother Tongue') }}</label>
                             <select name="mother_tongue" id="mother_tongue"
@@ -164,16 +223,7 @@
                                 <option value="sanskrit">{{ get_phrase('Sanskrit') }}</option>
                             </select>
                         </div>
-                        <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="caste" class="form-label eForm-label">{{ get_phrase('Caste') }}</label>
-                            <select name="caste" id="caste"
-                                class="form-select eForm-select eChoice-multiple-with-remove">
-                                <option value="">{{ get_phrase('Select caste') }}</option>
-                                @foreach ($caste as $item)
-                                    <option value="{{ $item }}">{{ ucfirst($item) }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+
                         <div class="col-md-6 col-sm-12 mt-2">
                             <label for="disability" class="form-label eForm-label">{{ get_phrase('Disability') }}</label>
                             <select name="disability" id="disability"
@@ -184,45 +234,9 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="designation" class="eForm-label">{{ get_phrase('Designation') }}</label>
-                            <input type="text" class="form-control eForm-control" id="designation"
-                                name="designation">
-                        </div>
-                        <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="responsibility" class="eForm-label">{{ get_phrase('Responsibility') }}</label>
-                            <input type="text" class="form-control eForm-control" id="responsibility"
-                                name="responsibility">
-                        </div>
-                        <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="join_date" class="eForm-label">{{ get_phrase('Join Date') }}</label>
-                            <input type="text" class="form-control eForm-control" id="join_date" name="join_date">
-                        </div>
-                        <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="leaving_date" class="eForm-label">{{ get_phrase('Leaving Date') }}</label>
-                            <input type="text" class="form-control eForm-control" id="leaving_date"
-                                name="leaving_date">
-                        </div>
-                        <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="father_name" class="eForm-label">{{ get_phrase('Father Name') }}</label>
-                            <input type="text" class="form-control eForm-control" id="father_name"
-                                name="father_name">
-                        </div>
-                        <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="mother_name" class="eForm-label">{{ get_phrase('Mother Name') }}</label>
-                            <input type="text" class="form-control eForm-control" id="mother_name"
-                                name="mother_name">
-                        </div>
-                        <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="spouse_name" class="eForm-label">{{ get_phrase('Spouse Name') }}</label>
-                            <input type="text" class="form-control eForm-control" id="spouse_name"
-                                name="spouse_name">
-                        </div>
-                        <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="will_person" class="eForm-label">{{ get_phrase('Will Person Name') }}</label>
-                            <input type="text" class="form-control eForm-control" id="will_person"
-                                name="will_person">
-                        </div>
+
+                    </div>
+                    <div class="row my-3">
                         <div class="col-md-6 col-sm-12 mt-2">
                             <label for="address" class="eForm-label">{{ get_phrase('Address') }}</label>
                             <input class="form-control eForm-control" id="address" name="address"
@@ -238,6 +252,7 @@
                             <label for="email" class="eForm-label form-label">{{ get_phrase('Email') }}</label>
                             <input type="email" class="form-control eForm-control" id="email" name="email">
                         </div>
+
                         <div class="col-md-6 col-sm-12 mt-2">
                             <label for="formFile" class="eForm-label">{{ get_phrase('Photo') }}</label>
                             <input class="form-control eForm-control-file" id="photo" name="photo"

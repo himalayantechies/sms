@@ -288,6 +288,19 @@ class AdminController extends Controller
         return view('admin.teacher.teacher_list', compact('teachers', 'search'));
     }
 
+    public function updateLoginCredentials(Request $request, $id)
+    {
+        $user = User::find($id);
+        $data = $request->all();
+        $user->username = $data['username'];
+        if (isset($data['password'])) {
+            $user->password = Hash::make($data['password']);
+        }
+        $user->save();
+        return redirect()->back()->with('message', 'Credentials updated Successfully');
+    }
+
+
     /**
      * Show the teacher add modal.
      *
@@ -894,8 +907,8 @@ class AdminController extends Controller
         $school_id = auth()->user()->school_id;
         $classes = (new Classes)->getClassBySchool($school_id);
         $teachers = User::where('role_id', 3)
-                    ->where('school_id', $school_id)
-                    ->get();
+            ->where('school_id', $school_id)
+            ->get();
         return view('admin.permission.index', ['classes' => $classes, 'teachers' => $teachers]);
     }
 
@@ -973,8 +986,8 @@ class AdminController extends Controller
     public function offlineAdmissionCreate(Request $request)
     {
         // try {
-            (new Student)->storeStudent($request);
-            return redirect()->back()->with('message', 'Admission successfully done.');
+        (new Student)->storeStudent($request);
+        return redirect()->back()->with('message', 'Admission successfully done.');
         // } catch (\Throwable $th) {
 
         //     return redirect()->back()->with('error', 'Admission unsuccessful.');
@@ -1792,20 +1805,19 @@ class AdminController extends Controller
         if (count($request->all()) > 0) {
             $data = $request->all();
 
-            $filter_list = DB::select ("
+            $filter_list = DB::select("
                         select gradebooks.student_id, users.name as student, json_agg(row_to_json(row(gradebooks.subject_id, gradebooks.marks))) as subject_marks
                         from gradebooks
                         inner join subjects on subjects.id = gradebooks.subject_id
                         inner join users on users.id = gradebooks.student_id
                         where gradebooks.class_id = ? and gradebooks.section_id = ? and gradebooks.exam_category_id = ?
                                 and gradebooks.school_id = ? and gradebooks.session_id = ?
-                        group by gradebooks.student_id, users.name", [$data['class_id'], $data['section_id'], $data['exam_category_id'],  $school_id, $active_session ]);
+                        group by gradebooks.student_id, users.name", [$data['class_id'], $data['section_id'], $data['exam_category_id'],  $school_id, $active_session]);
 
             $class_id = $data['class_id'];
             $section_id = $data['section_id'];
             $exam_category_id = $data['exam_category_id'];
-            $subjects =  (new GradeSubject)->getSubjectByClass($active_session,$school_id, $class_id);
-
+            $subjects =  (new GradeSubject)->getSubjectByClass($active_session, $school_id, $class_id);
         } else {
             $filter_list = [];
             $class_id = '';
@@ -2351,7 +2363,7 @@ class AdminController extends Controller
     public function sectionUpdate(Request $request, $id)
     {
         $data = $request->all();
-        // {{DB::table('schools')->where('id', auth()->user()->school_id)->value('title') }}
+        // {{ DB::table('schools')->where('id', auth()->user()->school_id)->value('title') }}
 
         $section_id = $data['section_id'];
         $section_name = $data['name'];

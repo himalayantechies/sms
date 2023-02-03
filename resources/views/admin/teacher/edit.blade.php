@@ -19,17 +19,56 @@
         </div>
     </div>
     <div class="custom-card p-30">
+        <div class="d-flex justify-content-end ">
+            <!-- Button trigger modal -->
+            <a type="button" class="mainSection-title" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                <h4 class="text-info">
+                    {{ get_phrase('Change password') }}
+                </h4>
+            </a>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">{{ get_phrase('Change password') }}</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="POST" enctype="multipart/form-data" class="d-block ajaxForm"
+                        action="{{ route('users.credentials.update', ['id' => $user->id]) }}">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12 mt-2">
+                                    <label for="username"
+                                        class="eForm-label form-label">{{ get_phrase('Username') }}</label>
+                                    <input type="text" class="form-control eForm-control" id="username" name="username"
+                                        readonly required value="{{ $user->username }}">
+                                </div>
+
+                                <div class="col-md-12 mt-2">
+                                    <label for="password"
+                                        class="form-label col-eForm-label">{{ get_phrase('Change password') }}</label>
+                                    <input type="text" class="form-control eForm-control" id="password" name="password"
+                                        placeholder="Enter new password" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary text-white">{{ get_phrase('Update') }}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <form method="POST" enctype="multipart/form-data" class="d-block ajaxForm"
             action="{{ route('admin.teacher.update', ['id' => $user->id]) }}">
             @csrf
             <div class="container">
-                <div class="row">
-                    <div class="col-md-6 col-sm-12 mt-2">
-                        <label for="username" class="eForm-label form-label">{{ get_phrase('Username') }}*</label>
-                        <input type="text" class="form-control eForm-control" id="username" name="username" required
-                            value="{{ $user->username }}">
-                    </div>
-                </div>
                 <div class="row">
                     <div class="col-md-6 col-sm-12 mt-2">
                         <label for="name" class="eForm-label form-label">{{ get_phrase('Name') }}*</label>
@@ -37,14 +76,9 @@
                             value="{{ $user->name }}">
                     </div>
                     <div class="col-md-6 col-sm-12 mt-2">
-                        <label for="code" class="eForm-label form-label">{{ get_phrase('Code') }}</label>
-                        <input type="code" class="form-control eForm-control" id="code" name="code"
-                            placeholder="Provide teacher code"  value="{{ $user->code }}">
-                    </div>
-                    <div class="col-md-6 col-sm-12 mt-2">
-                        <label for="gender" class="eForm-label">{{ get_phrase('Gender') }}</label>
+                        <label for="gender" class="eForm-label">{{ get_phrase('Gender') }}*</label>
                         <select name="gender" id="gender" class="form-select eForm-select eChoice-multiple-with-remove"
-                            >
+                            required>
                             <option value="">{{ get_phrase('Select gender') }}</option>
                             @foreach ($gender as $item)
                                 <option value="{{ $item }}" {{ $user->gender == $item ? 'selected' : '' }}>
@@ -54,9 +88,73 @@
                         </select>
                     </div>
                     <div class="col-md-6 col-sm-12 mt-2">
+                        <label for="mobile_number" class="eForm-label">{{ get_phrase('Mobile Number') }}*</label>
+                        <input type="text" class="form-control eForm-control" id="mobile_number"
+                            value="{{ $user->mobile_number }}" name="mobile_number" required>
+                    </div>
+                    <div class="col-md-6 col-sm-12 mt-2">
+                        <label for="teacher_type" class="eForm-label">{{ get_phrase('Teacher Type') }}</label>
+                        <select name="teacher_type" id="teacher_type"
+                            class="form-select eForm-select eChoice-multiple-with-remove">
+                            <option value="">{{ get_phrase('Select teacher type') }}</option>
+                            @foreach ($teacher_type as $item)
+                                <option value="{{ $item }}" {{ $user->teacher_type == $item ? 'selected' : '' }}>
+                                    {{ get_phrase($item) }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <div class="col-md-6 col-sm-12 mt-2">
+                        <label for="code" class="eForm-label form-label">{{ get_phrase('Code') }}</label>
+                        <input type="code" class="form-control eForm-control" id="code" name="code"
+                            placeholder="Provide teacher code" value="{{ $user->code }}">
+                    </div>
+
+                    <div class="col-md-6 col-sm-12 mt-2">
+                        <label for="teaching_medium" class="eForm-label">{{ get_phrase('Teaching Medium') }}</label>
+                        <select name="teaching_medium" id="teaching_medium"
+                            class="form-select eForm-select eChoice-multiple-with-remove">
+                            <option value="">{{ get_phrase('Select Teaching Medium') }}</option>
+                            @foreach ($teaching_medium as $item)
+                                <option value="{{ $item }}"
+                                    {{ $user->teaching_medium == $item ? 'selected' : '' }}>
+                                    {{ get_phrase($item) }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-6 col-sm-12 mt-2">
+                        <label for="designation" class="eForm-label">{{ get_phrase('Designation') }}</label>
+                        <input type="text" class="form-control eForm-control" id="designation"
+                            value="{{ $user->designation }}" name="designation">
+                    </div>
+                    <div class="col-md-6 col-sm-12 mt-2">
+                        <label for="responsibility" class="eForm-label">{{ get_phrase('Responsibility') }}</label>
+                        <input type="text" class="form-control eForm-control" id="responsibility"
+                            value="{{ $user->responsibility }}" name="responsibility">
+                    </div>
+                    <div class="col-md-6 col-sm-12 mt-2">
+                        <label for="join_date" class="eForm-label">{{ get_phrase('Join Date') }}</label>
+                        <input type="text" class="form-control eForm-control" id="join_date"
+                            value="{{ $user->join_date }}" name="join_date">
+                    </div>
+                    <div class="col-md-6 col-sm-12 mt-2">
+                        <label for="leaving_date" class="eForm-label">{{ get_phrase('Leaving Date') }}</label>
+                        <input type="text" class="form-control eForm-control" id="leaving_date"
+                            value="{{ $user->leaving_date }}" name="leaving_date">
+                    </div>
+
+
+
+
+                </div>
+                <div class="row my-3">
+                    <div class="col-md-6 col-sm-12 mt-2">
                         <label for="nationality" class="eForm-label">{{ get_phrase('Nationality') }}</label>
                         <select name="nationality" id="nationality"
-                            class="form-select eForm-select eChoice-multiple-with-remove" >
+                            class="form-select eForm-select eChoice-multiple-with-remove">
                             <option value="">{{ get_phrase('Select Nationality') }}</option>
 
                             @foreach ($nationality as $item)
@@ -68,35 +166,11 @@
                         </select>
                     </div>
                     <div class="col-md-6 col-sm-12 mt-2">
-                        <label for="teacher_type" class="eForm-label">{{ get_phrase('Teacher Type') }}</label>
-                        <select name="teacher_type" id="teacher_type"
-                            class="form-select eForm-select eChoice-multiple-with-remove" >
-                            <option value="">{{ get_phrase('Select teacher type') }}</option>
-                            @foreach ($teacher_type as $item)
-                                <option value="{{ $item }}" {{ $user->teacher_type == $item ? 'selected' : '' }}>
-                                    {{ get_phrase($item) }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-6 col-sm-12 mt-2">
-                        <label for="marital_status" class="eForm-label">{{ get_phrase('Marital Status') }}</label>
-                        <select name="marital_status" id="marital_status"
-                            class="form-select eForm-select eChoice-multiple-with-remove" >
-                            <option value="">{{ get_phrase('Select Marital Status') }}</option>
-                            @foreach ($marital_status as $item)
-                                <option value="{{ $item }}"
-                                    {{ $user->marital_status == $item ? 'selected' : '' }}>
-                                    {{ get_phrase($item) }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-6 col-sm-12 mt-2">
                         <label for="citizenship_no"
                             class="eForm-label form-label">{{ get_phrase('Citizenship No') }}</label>
-                        <input type="text" class="form-control eForm-control" id="citizenship_no" name="citizenship_no"
-                            placeholder="Enter Citizenship No"  value="{{ $user->citizenship_no }}">
+                        <input type="text" class="form-control eForm-control" id="citizenship_no"
+                            name="citizenship_no" placeholder="Enter Citizenship No"
+                            value="{{ $user->citizenship_no }}">
                     </div>
                     <div class="col-md-6 col-sm-12 mt-2">
                         <label for="issuing_district" class="eForm-label">{{ get_phrase('Issuing District') }}</label>
@@ -108,25 +182,26 @@
                     <div class="col-md-6 col-sm-12 mt-2">
                         <label for="dob" class="eForm-label form-label">{{ get_phrase('Date of Birth') }}</label>
                         <input type="text" class="form-control eForm-control" id="dob" name="dob"
-                            placeholder="Enter Date of Birth"  value="{{ $user->dob }}">
+                            placeholder="Enter Date of Birth" value="{{ $user->dob }}">
                     </div>
+
+                </div>
+                <div class="row my-3">
                     <div class="col-md-6 col-sm-12 mt-2">
-                        <label for="teaching_medium" class="eForm-label">{{ get_phrase('Teaching Medium') }}</label>
-                        <select name="teaching_medium" id="teaching_medium"
-                            class="form-select eForm-select eChoice-multiple-with-remove" >
-                            <option value="">{{ get_phrase('Select Teaching Medium') }}</option>
-                            @foreach ($teaching_medium as $item)
-                                <option value="{{ $item }}"
-                                    {{ $user->teaching_medium == $item ? 'selected' : '' }}>
-                                    {{ get_phrase($item) }}
-                                </option>
+                        <label for="caste" class="form-label eForm-label">{{ get_phrase('Caste') }}</label>
+                        <select name="caste" id="caste"
+                            class="form-select eForm-select eChoice-multiple-with-remove">
+                            <option value="">{{ get_phrase('Select caste') }}</option>
+                            @foreach ($caste as $item)
+                                <option value="{{ $item }}" {{ $user->caste == $item ? 'selected' : '' }}>
+                                    {{ $item }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="col-md-6 col-sm-12 mt-2">
                         <label for="mother_tongue" class="eForm-label">{{ get_phrase('Mother Tongue') }}</label>
                         <select name="mother_tongue" id="mother_tongue"
-                            class="form-select eForm-select eChoice-multiple-with-remove" >
+                            class="form-select eForm-select eChoice-multiple-with-remove">
                             <option value="">{{ get_phrase('Select Mother Tongue') }}</option>
                             @foreach ($mother_tongue as $item)
                                 <option value="{{ $item }}"
@@ -136,21 +211,11 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-6 col-sm-12 mt-2">
-                        <label for="caste" class="form-label eForm-label">{{ get_phrase('Caste') }}</label>
-                        <select name="caste" id="caste"
-                            class="form-select eForm-select eChoice-multiple-with-remove" >
-                            <option value="">{{ get_phrase('Select caste') }}</option>
-                            @foreach ($caste as $item)
-                                <option value="{{ $item }}" {{ $user->caste == $item ? 'selected' : '' }}>
-                                    {{ $item }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+
                     <div class="col-md-6 col-sm-12 mt-2">
                         <label for="disability" class="form-label eForm-label">{{ get_phrase('Disability') }}</label>
                         <select name="disability" id="disability"
-                            class="form-select eForm-select eChoice-multiple-with-remove" >
+                            class="form-select eForm-select eChoice-multiple-with-remove">
                             <option value="">{{ get_phrase('Select disability type') }}</option>
                             @foreach ($disability as $item)
                                 <option value="{{ $item }}" {{ $user->disability == $item ? 'selected' : '' }}>
@@ -158,73 +223,61 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-6 col-sm-12 mt-2">
-                        <label for="designation" class="eForm-label">{{ get_phrase('Designation') }}</label>
-                        <input type="text" class="form-control eForm-control" id="designation"
-                            value="{{ $user->designation }}" name="designation" >
-                    </div>
-                    <div class="col-md-6 col-sm-12 mt-2">
-                        <label for="responsibility" class="eForm-label">{{ get_phrase('Responsibility') }}</label>
-                        <input type="text" class="form-control eForm-control" id="responsibility"
-                            value="{{ $user->responsibility }}" name="responsibility" >
-                    </div>
-                    <div class="col-md-6 col-sm-12 mt-2">
-                        <label for="join_date" class="eForm-label">{{ get_phrase('Join Date') }}</label>
-                        <input type="text" class="form-control eForm-control" id="join_date"
-                            value="{{ $user->join_date }}" name="join_date" >
-                    </div>
-                    <div class="col-md-6 col-sm-12 mt-2">
-                        <label for="leaving_date" class="eForm-label">{{ get_phrase('Leaving Date') }}</label>
-                        <input type="text" class="form-control eForm-control" id="leaving_date"
-                            value="{{ $user->leaving_date }}" name="leaving_date" >
-                    </div>
+                </div>
+                <div class="row my-3">
+
                     <div class="col-md-6 col-sm-12 mt-2">
                         <label for="father_name" class="eForm-label">{{ get_phrase('Father Name') }}</label>
                         <input type="text" class="form-control eForm-control" id="father_name"
-                            value="{{ $user->father_name }}" name="father_name" >
+                            value="{{ $user->father_name }}" name="father_name">
                     </div>
                     <div class="col-md-6 col-sm-12 mt-2">
                         <label for="mother_name" class="eForm-label">{{ get_phrase('Mother Name') }}</label>
                         <input type="text" class="form-control eForm-control" id="mother_name"
-                            value="{{ $user->mother_name }}" name="mother_name" >
+                            value="{{ $user->mother_name }}" name="mother_name">
                     </div>
                     <div class="col-md-6 col-sm-12 mt-2">
                         <label for="spouse_name" class="eForm-label">{{ get_phrase('Spouse Name') }}</label>
                         <input type="text" class="form-control eForm-control" id="spouse_name"
-                            value="{{ $user->spouse_name }}" name="spouse_name" >
+                            value="{{ $user->spouse_name }}" name="spouse_name">
+
+
+                        <div class="col-md-6 col-sm-12 mt-2">
+                            <label for="marital_status" class="eForm-label">{{ get_phrase('Marital Status') }}</label>
+                            <select name="marital_status" id="marital_status"
+                                class="form-select eForm-select eChoice-multiple-with-remove">
+                                <option value="">{{ get_phrase('Select Marital Status') }}</option>
+                                @foreach ($marital_status as $item)
+                                    <option value="{{ $item }}"
+                                        {{ $user->marital_status == $item ? 'selected' : '' }}>
+                                        {{ get_phrase($item) }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                     <div class="col-md-6 col-sm-12 mt-2">
                         <label for="will_person" class="eForm-label">{{ get_phrase('Will Person Name') }}</label>
                         <input type="text" class="form-control eForm-control" id="will_person"
-                            value="{{ $user->will_person }}" name="will_person" >
+                            value="{{ $user->will_person }}" name="will_person">
                     </div>
+                </div>
+                <div class="row my-3">
                     <div class="col-md-6 col-sm-12 mt-2">
                         <label for="address" class="eForm-label">{{ get_phrase('Address') }}</label>
                         <input class="form-control eForm-control" id="address" name="address"
-                            value="{{ $user->address }}" placeholder="Provide teacher address" >
+                            value="{{ $user->address }}" placeholder="Provide teacher address">
                     </div>
                     <div class="col-md-6 col-sm-12 mt-2">
                         <label for="phone_number" class="eForm-label">{{ get_phrase('Phone Number') }}</label>
                         <input type="text" class="form-control eForm-control" id="phone_number"
-                            value="{{ $user->phone_number }}" name="phone_number" >
+                            value="{{ $user->phone_number }}" name="phone_number">
                     </div>
-                    <div class="col-md-6 col-sm-12 mt-2">
-                        <label for="mobile_number" class="eForm-label">{{ get_phrase('Mobile Number') }}*</label>
-                        <input type="text" class="form-control eForm-control" id="mobile_number"
-                            value="{{ $user->mobile_number }}" name="mobile_number" required >
-                    </div>
+
                     <div class="col-md-6 col-sm-12 mt-2">
                         <label for="email" class="eForm-label form-label">{{ get_phrase('Email') }}</label>
                         <input type="email" class="form-control eForm-control" id="email"
-                            value="{{ $user->email }}" name="email" >
-                    </div>
-                    <div class="col-md-6 col-sm-12 mt-2">
-                        <label for="password"
-                            class="form-label col-eForm-label">{{ get_phrase('Change password') }}</label>
-                        <input type="checkbox" class="form-check-input mx-3" id="change_password"
-                            name="change_password">
-                        <span id="enable_change_password">
-                        </span>
+                            value="{{ $user->email }}" name="email">
                     </div>
                     <div class="col-md-6 col-sm-12 mt-2">
                         <label for="formFile" class="eForm-label">{{ get_phrase('Photo') }}</label>
@@ -256,16 +309,6 @@
         "use strict";
         $(document).ready(function() {
             $(".eChoice-multiple-with-remove").select2();
-            var html_pw =
-                '<input type="text" class="form-control eForm-control" id="password" name="password" placeholder="Enter new password" required>';
-
-            $('#change_password').click(function() {
-                if ($(this).is(':checked')) {
-                    $('#enable_change_password').html(html_pw);
-                } else {
-                    $('#enable_change_password').html('');
-                }
-            });
         });
 
         $(function() {
