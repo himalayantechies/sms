@@ -99,7 +99,7 @@ class Teacher extends Model
                 'username' => $data['username'],
                 'name' => $data['name'],
                 'email' => $data['email'],
-                'password' => Hash::make($data['password']),
+                'password' => Hash::make('123456'),
                 'role_id' => '3',
                 'school_id' => auth()->user()->school_id,
                 'user_information' => $data['user_information'],

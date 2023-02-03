@@ -239,11 +239,6 @@
                             <input type="email" class="form-control eForm-control" id="email" name="email">
                         </div>
                         <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="password" class="eForm-label form-label">{{ get_phrase('Password') }}</label>
-                            <input type="password" class="form-control eForm-control" id="password" name="password"
-                                placeholder="Provide teacher password">
-                        </div>
-                        <div class="col-md-6 col-sm-12 mt-2">
                             <label for="formFile" class="eForm-label">{{ get_phrase('Photo') }}</label>
                             <input class="form-control eForm-control-file" id="photo" name="photo"
                                 accept="image/*" type="file" />

@@ -309,12 +309,12 @@ class AdminController extends Controller
 
     public function adminTeacherCreate(Request $request)
     {
-        // try {
+        try {
             (new Teacher)->storeTeacher($request);
             return redirect()->back()->with('message', 'Teacher Created Successfully');
-        // } catch (\Throwable $th) {
-        //     return redirect()->back()->with('error', "Teacher couldn't be created");
-        // }
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', "Teacher couldn't be created");
+        }
     }
     public function editTeacher(Request $request, $id)
     {
@@ -972,13 +972,13 @@ class AdminController extends Controller
 
     public function offlineAdmissionCreate(Request $request)
     {
-        try {
+        // try {
             (new Student)->storeStudent($request);
             return redirect()->back()->with('message', 'Admission successfully done.');
-        } catch (\Throwable $th) {
+        // } catch (\Throwable $th) {
 
-            return redirect()->back()->with('error', 'Admission unsuccessful.');
-        }
+        //     return redirect()->back()->with('error', 'Admission unsuccessful.');
+        // }
     }
     public function editStudent(Request $request, $id)
     {

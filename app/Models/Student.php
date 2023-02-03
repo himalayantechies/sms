@@ -53,6 +53,7 @@ class Student extends Model
     {
         DB::transaction(function () use ($request) {
             $data = $request->all();
+            $data['username']=(new User)->createUsername(7);
             if (!empty($data['photo'])) {
                 $imageName = time() . '.' . $data['photo']->extension();
                 $data['photo']->move(public_path('assets/uploads/user-images/'), $imageName);
@@ -75,7 +76,7 @@ class Student extends Model
                 'username' => $data['username'],
                 'name' => $data['name'],
                 'email' => $data['email'],
-                'password' => Hash::make($data['password']),
+                'password' => Hash::make('123456'),
                 'code' => student_code(),
                 'role_id' => '7',
                 'school_id' => Auth::user()->school_id,

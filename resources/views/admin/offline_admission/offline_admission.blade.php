@@ -85,3 +85,17 @@
         });
     }
 </script>
+
+@section('scripts')
+    <script>
+        $(document).ready(function() {
+            $('#additional_details_checkbox').click(function() {
+                if ($(this).is(':checked')) {
+                    $('#additional_details').removeClass('d-none');
+                } else {
+                    $('#additional_details').addClass('d-none');
+                }
+            });
+        });
+    </script>
+@endsection
