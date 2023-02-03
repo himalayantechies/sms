@@ -51,7 +51,7 @@
               id="search"
               name="search"
               value="{{ $search }}"
-              placeholder="Search user"
+              placeholder="Search event"
               class="form-control"
             />
           </div>
@@ -102,26 +102,28 @@
       	<table id="basic-datatable" class="table eTable">
       		<thead>
       			<tr>
-      				<th scope="col">#</th>
-  					<th>{{ get_phrase('Event title') }}</th>
-  					<th>{{ get_phrase('Date') }}</th>
-  					<th>{{ get_phrase('Status') }}</th>
-  					<th class="text-center">{{ get_phrase('Options') }}</th>
+      		    <th scope="col">#</th>
+  					  <th>{{ get_phrase('Event title') }}</th>
+              <th>{{ get_phrase('Event detail') }}</th>
+  					  <th>{{ get_phrase('Date') }}</th>
+  					  <th>{{ get_phrase('Status') }}</th>
+  					  <th class="text-center">{{ get_phrase('Options') }}</th>
   				</tr>
       		</thead>
       		<tbody>
       			@foreach($events as $event)
       				<tr>
       					<td>{{ $loop->index + 1 }}</td>
-  						<td>{{ $event['title'] }}</td>
-  						<td>{{ date('D, d M Y', $event['timestamp']) }}</td>
-  						<td>
-  							<?php if ($event['status']): ?>
-  								<span class="eBadge ebg-success">{{ get_phrase('Active') }}</span>
-  							<?php else: ?>
-  								<span class="eBadge ebg-danger">{{ get_phrase('Inactive') }}</span>
-  							<?php endif; ?>
-  						</td>
+  						  <td>{{ $event['title'] }}</td>
+                <td>{{ $event['description'] }}</td>
+  						  <td>{{ date('D, d M Y', $event['timestamp']) }}</td>
+  						  <td>
+                  <?php if ($event['status']): ?>
+                    <span class="eBadge ebg-success">{{ get_phrase('Active') }}</span>
+                  <?php else: ?>
+                    <span class="eBadge ebg-danger">{{ get_phrase('Inactive') }}</span>
+                  <?php endif; ?>
+  						  </td>
   						<td class="text-start">
   							<div class="adminTable-action">
                   <button

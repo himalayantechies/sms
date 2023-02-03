@@ -48,7 +48,7 @@
 		              id="search"
 		              name="search"
 		              value="{{ $search }}"
-		              placeholder="Search user"
+		              placeholder="Search event"
 		              class="form-control"
 		            />
 		          </div>
@@ -100,6 +100,7 @@
 		    			<tr>
 		    				<th scope="col">#</th>
 							<th>{{ get_phrase('Event title') }}</th>
+							<th>{{ get_phrase('Event detail') }}</th>
 							<th>{{ get_phrase('Date') }}</th>
 							<th>{{ get_phrase('Status') }}</th>
 						</tr>
@@ -109,6 +110,7 @@
 		    				<tr>
 		    					<td>{{ $loop->index + 1 }}</td>
 								<td>{{ $event['title'] }}</td>
+								<td>{{ $event['description'] }}</td>
 								<td>{{ date('D, d M Y', $event['timestamp']) }}</td>
 								<td>
 									<?php if ($event['status']): ?>
@@ -140,6 +142,7 @@
 			<tr>
 				<th scope="col">#</th>
 				<th>{{ get_phrase('Event title') }}</th>
+				<th>{{ get_phrase('Event detail') }}</th>
 				<th>{{ get_phrase('Date') }}</th>
 				<th>{{ get_phrase('Status') }}</th>
 			</tr>
@@ -149,6 +152,7 @@
 				<tr>
 					<td>{{ $loop->index + 1 }}</td>
 					<td>{{ $event['title'] }}</td>
+					<td>{{ $event['description'] }}</td>
 					<td>{{ date('D, d M Y', $event['timestamp']) }}</td>
 					<td>
 						<?php if ($event['status']): ?>

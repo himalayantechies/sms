@@ -1,8 +1,13 @@
 <form method="POST" enctype="multipart/form-data" class="d-block ajaxForm" action="{{ route('admin.create.event') }}">
     @csrf 
-	<div class="fpb-7">
+	  <div class="fpb-7">
         <label for="title" class="eForm-label">{{ get_phrase('Event title') }}</label>
         <input type="text" class="form-control eForm-control" id="title" name = "title" required>
+    </div>
+
+    <div class="fpb-7">
+      <label for="description" class="eForm-label">{{ get_phrase('Event detail') }}</label>
+      <textarea class="form-control eForm-control" id="description" name = "description"> </textarea>
     </div>
 
     <div class="fpb-7">

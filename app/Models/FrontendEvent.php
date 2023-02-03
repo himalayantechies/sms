@@ -15,6 +15,6 @@ class FrontendEvent extends Model
      * @var array
      */
     protected $fillable = [
-        'title', 'timestamp', 'status', 'school_id', 'session_id', 'created_by'
+        'title', 'description', 'timestamp', 'status', 'school_id', 'session_id', 'created_by'
     ];
 }

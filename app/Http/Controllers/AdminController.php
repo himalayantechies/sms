@@ -957,10 +957,12 @@ class AdminController extends Controller
      */
     public function teacherPermission()
     {
-        $classes = Classes::get()->where('school_id', auth()->user()->school_id);
+        // $classes = Classes::get()->where('school_id', auth()->user()->school_id);
+        $school_id = auth()->user()->school_id;
+        $classes = (new Classes)->getClassBySchool($school_id);
         $teachers = User::where('role_id', 3)
-            ->where('school_id', auth()->user()->school_id)
-            ->get();
+                    ->where('school_id', $school_id)
+                    ->get();
         return view('admin.permission.index', ['classes' => $classes, 'teachers' => $teachers]);
     }
 
@@ -1530,7 +1532,10 @@ class AdminController extends Controller
 
     public function dailyAttendance()
     {
-        $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+        // $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+        $school_id = auth()->user()->school_id;
+        $classes = (new Classes)->getClassBySchool($school_id);
+
         $attendance_of_students = array();
         $no_of_users = 0;
 
@@ -1539,6 +1544,8 @@ class AdminController extends Controller
 
     public function dailyAttendanceFilter(Request $request)
     {
+        $school_id = auth()->user()->school_id;
+        
         $data = $request->all();
         $date = '01 ' . $data['month'] . ' ' . $data['year'];
         $first_date = strtotime($date);
@@ -1557,14 +1564,17 @@ class AdminController extends Controller
 
         $no_of_users = DailyAttendances::where(['class_id' => $data['class_id'], 'section_id' => $data['section_id'], 'school_id' => auth()->user()->school_id, 'session_id' => $active_session])->distinct()->count('student_id');
 
-        $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+        $classes = (new Classes)->getClassBySchool($school_id);
 
         return view('admin.attendance.attendance_list', ['page_data' => $page_data, 'classes' => $classes, 'attendance_of_students' => $attendance_of_students, 'no_of_users' => $no_of_users]);
     }
 
     public function takeAttendance()
     {
-        $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+
+        // $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+        $school_id = auth()->user()->school_id;
+        $classes = (new Classes)->getClassBySchool($school_id);
         return view('admin.attendance.take_attendance', ['classes' => $classes]);
     }
 
@@ -1935,40 +1945,44 @@ class AdminController extends Controller
         $school_id = auth()->user()->school_id;
         $classes = (new Classes)->getClassBySchool($school_id);
 
-        // $classes = Classes::get()->where('school_id', auth()->user()->school_id);
         $exam_categories = ExamCategory::get()->where('school_id', $school_id);
-
         $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
 
         if (count($request->all()) > 0) {
-
             $data = $request->all();
 
-            $filter_list = Gradebook::where(['class_id' => $data['class_id'], 'section_id' => $data['section_id'], 'exam_category_id' => $data['exam_category_id'], 'school_id' => auth()->user()->school_id, 'session_id' => $active_session])->get();
+            $filter_list = DB::select ("
+                        select gradebooks.student_id, users.name as student, json_agg(row_to_json(row(gradebooks.subject_id, gradebooks.marks))) as subject_marks
+                        from gradebooks 
+                        inner join subjects on subjects.id = gradebooks.subject_id 
+                        inner join users on users.id = gradebooks.student_id 
+                        where gradebooks.class_id = ? and gradebooks.section_id = ? and gradebooks.exam_category_id = ? 
+                                and gradebooks.school_id = ? and gradebooks.session_id = ?
+                        group by gradebooks.student_id, users.name", [$data['class_id'], $data['section_id'], $data['exam_category_id'],  $school_id, $active_session ]);
 
             $class_id = $data['class_id'];
             $section_id = $data['section_id'];
             $exam_category_id = $data['exam_category_id'];
-            $subjects = Subject::where(['class_id' => $class_id, 'school_id' => auth()->user()->school_id])->get();
+            $subjects =  (new GradeSubject)->getSubjectByClass($active_session,$school_id, $class_id);
+
         } else {
             $filter_list = [];
-
             $class_id = '';
             $section_id = '';
             $exam_category_id = '';
             $subjects = '';
         }
-
+        
         return view('admin.gradebook.gradebook', ['filter_list' => $filter_list, 'class_id' => $class_id, 'section_id' => $section_id, 'exam_category_id' => $exam_category_id, 'classes' => $classes, 'exam_categories' => $exam_categories, 'subjects' => $subjects]);
     }
 
     public function gradebookList(Request $request)
     {
         $data = $request->all();
-
         $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
 
         $exam_wise_student_list = Gradebook::where(['class_id' => $data['class_id'], 'section_id' => $data['section_id'], 'exam_category_id' => $data['exam_category_id'], 'school_id' => auth()->user()->school_id, 'session_id' => $active_session])->get();
+        
         echo view('admin.gradebook.list', ['exam_wise_student_list' => $exam_wise_student_list, 'class_id' => $data['class_id'], 'section_id' => $data['section_id'], 'exam_category_id' => $data['exam_category_id'], 'school_id' => auth()->user()->school_id, 'session_id' => $active_session]);
     }
 
@@ -3371,7 +3385,7 @@ class AdminController extends Controller
                 $query->where('title', 'LIKE', "%{$search}%");
             })->paginate(10);
         } else {
-            $events = FrontendEvent::where('school_id', auth()->user()->school_id)->paginate(10);
+            $events = FrontendEvent::where('school_id', auth()->user()->school_id)->orderBy('timestamp', 'desc')->paginate(10);
         }
 
         return view('admin.events.events', compact('events', 'search'));
@@ -3392,6 +3406,11 @@ class AdminController extends Controller
         $data['school_id'] = auth()->user()->school_id;
         $data['session_id'] = $active_session;
         $data['created_by'] = auth()->user()->id;
+
+        // echo "<pre>";
+        // print_r($data);
+        // die;			
+
 
         FrontendEvent::create($data);
 

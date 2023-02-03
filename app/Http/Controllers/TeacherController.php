@@ -15,6 +15,7 @@ use App\Models\Classes;
 use App\Models\Subject;
 use App\Models\Gradebook;
 use App\Models\Grade;
+use App\Models\GradeSubject;
 use App\Models\ClassList;
 use App\Models\Section;
 use App\Models\Enrollment;
@@ -123,7 +124,9 @@ class TeacherController extends Controller
      */
     public function routine()
     {
-        $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+        $school_id = auth()->user()->school_id;
+        $classes = (new Classes)->getClassBySchool($school_id);
+        // $classes = Classes::where('school_id', auth()->user()->school_id)->get();
         return view('teacher.routine.routine', ['classes' => $classes]);
     }
 
@@ -133,7 +136,10 @@ class TeacherController extends Controller
 
         $class_id = $data['class_id'];
         $section_id = $data['section_id'];
-        $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+        $school_id = auth()->user()->school_id;
+        $classes = (new Classes)->getClassBySchool($school_id);
+
+        // $classes = Classes::where('school_id', auth()->user()->school_id)->get();
 
         return view('teacher.routine.routine_list', ['class_id' => $class_id, 'section_id' => $section_id, 'classes' => $classes]);
     }
@@ -168,25 +174,32 @@ class TeacherController extends Controller
      */
     public function gradebook(Request $request)
     {
+        $school_id = auth()->user()->school_id;
+        $classes = (new Classes)->getClassBySchool($school_id);
 
-        $classes = Classes::get()->where('school_id', auth()->user()->school_id);
-        $exam_categories = ExamCategory::get()->where('school_id', auth()->user()->school_id);
+        $exam_categories = ExamCategory::get()->where('school_id', $school_id);
+        $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
 
-        $active_session = Session::where('status', 1)->first();
 
         if (count($request->all()) > 0) {
 
             $data = $request->all();
 
-            $filter_list = Gradebook::where(['class_id' => $data['class_id'], 'section_id' => $data['section_id'], 'exam_category_id' => $data['exam_category_id'], 'school_id' => auth()->user()->school_id, 'session_id' => $active_session->id])->get();
+            $filter_list = DB::select ("
+                        select gradebooks.student_id, users.name as student, json_agg(row_to_json(row(gradebooks.subject_id, gradebooks.marks))) as subject_marks
+                        from gradebooks 
+                        inner join subjects on subjects.id = gradebooks.subject_id 
+                        inner join users on users.id = gradebooks.student_id 
+                        where gradebooks.class_id = ? and gradebooks.section_id = ? and gradebooks.exam_category_id = ? 
+                                and gradebooks.school_id = ? and gradebooks.session_id = ?
+                        group by gradebooks.student_id, users.name", [$data['class_id'], $data['section_id'], $data['exam_category_id'],  $school_id, $active_session ]);
 
             $class_id = $data['class_id'];
             $section_id = $data['section_id'];
             $exam_category_id = $data['exam_category_id'];
-            $subjects = Subject::where(['class_id' => $class_id, 'school_id' => auth()->user()->school_id])->get();
+            $subjects =  (new GradeSubject)->getSubjectByClass($active_session,$school_id, $class_id);
         } else {
             $filter_list = [];
-
             $class_id = '';
             $section_id = '';
             $exam_category_id = '';
@@ -199,8 +212,7 @@ class TeacherController extends Controller
     public function gradebookList(Request $request)
     {
         $data = $request->all();
-
-        $active_session = Session::where('status', 1)->first();
+        $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
 
         $exam_wise_student_list = Gradebook::where(['class_id' => $data['class_id'], 'section_id' => $data['section_id'], 'exam_category_id' => $data['exam_category_id'], 'school_id' => auth()->user()->school_id, 'session_id' => $active_session->id])->get();
         echo view('teacher.gradebook.list', ['exam_wise_student_list' => $exam_wise_student_list, 'class_id' => $data['class_id'], 'section_id' => $data['section_id'], 'exam_category_id' => $data['exam_category_id'], 'school_id' => auth()->user()->school_id, 'session_id' => $active_session->id]);
@@ -457,7 +469,7 @@ class TeacherController extends Controller
                 })->paginate(10);
 
         } else {
-            $events = FrontendEvent::where('school_id', auth()->user()->school_id)->paginate(10);
+            $events = FrontendEvent::where('school_id', auth()->user()->school_id)->orderBy('timestamp', 'desc')->paginate(10);
         }
 
         return view('teacher.events.events', compact('events', 'search'));

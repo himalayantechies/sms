@@ -7,6 +7,11 @@
 			<input type="text" class="form-control eForm-control" id="title" name = "title" value="{{ $event['title'] }}" required>
 		</div>
 
+    <div class="fpb-7">
+      <label for="description" class="eForm-label">{{ get_phrase('Event detail') }}</label>
+      <textarea class="form-control eForm-control" id="description" name = "description">{{ $event['description'] }} </textarea>
+    </div>
+    
 		<div class="fpb-7">
             <label for="timestamp" class="eForm-label">{{ get_phrase('Date') }}</label>
             <input type="text" class="form-control eForm-control inputDate" id="timestamp" name = "timestamp" value="{{ date('m/d/Y', $event['timestamp']) }}" required>

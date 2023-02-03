@@ -115,24 +115,25 @@ $index = 0;
                             <table class="table eTable" id="gradebook_report">
                                 <thead>
                                     <th>#</th>
-                                    <th>{{ get_phrase('Student Name') }}</th>
+                                    <th>{{ get_phrase('Student name') }}</th>
                                     @foreach($subjects as $subject)
                                        <th>{{ $subject->name }}</th>
                                     @endforeach
                                 </thead>
                                 <tbody>
                                     @foreach($filter_list as $student)
-                                    <?php $subject_list = json_decode($student->marks, true); ?>
+                                    <?php $subject_mark_list = json_decode($student->subject_marks, true); ?>
                                     <tr>
                                         <td>{{ $index = $index+1 }}</td>
-                                        <?php 
-                                        $student_details = User::find($student->student_id);
-                                        $info = json_decode($student_details->user_information);
-                                        ?>
-                                        <td>{{ $student_details->name }}</td>
-                                        @foreach($subject_list as $key => $mark)
-                                            <?php $subject_details = json_decode(Subject::find($key), true); ?>
-                                           <td>{{ $mark }}</td>
+                                        <td>{{ $student->student }}</td> 
+                                        @foreach ($subjects as $subject)
+                                            @foreach($subject_mark_list as $subject_marks)
+                                                <?php 
+                                                    if($subject['id'] == $subject_marks['f1']){
+                                                        $marks = $subject_marks['f2'];?>
+                                                        <td>{{$marks}}</td>
+                                                <?php }?>
+                                            @endforeach
                                         @endforeach
                                     <tr>
                                     @endforeach

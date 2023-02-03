@@ -88,7 +88,7 @@
 	        </li>
 			<!-- Sidebar menu -->
 
-			<li class="nav-links-li {{ request()->is('teacher/attendance*') || request()->is('teacher/routine') || request()->is('teacher/subject') || request()->is('teacher/gradebook') || request()->is('teacher/syllabus') ? 'showMenu':'' }}">
+			<li class="nav-links-li {{ request()->is('teacher/attendance*') || request()->is('teacher/routine*') || request()->is('teacher/subject*') || request()->is('teacher/gradebook*') || request()->is('teacher/syllabus*') ? 'showMenu':'' }}">
 				<div class="iocn-link">
 					<a href="#">
 						<div class="sidebar_icon">
@@ -114,11 +114,11 @@
 				</div>
 				<ul class="sub-menu">
 					<li><a class="{{ (request()->is('teacher/attendance*')) ? 'active' : '' }}" href="{{ route('teacher.daily_attendance') }}"><span>{{ get_phrase('Daily Attendance') }}</span></a></li>
-					<li><a class="{{ (request()->is('teacher/routine')) ? 'active' : '' }}" href="{{ route('teacher.routine') }}"><span>{{ get_phrase('Class Routine') }}</span></a></li>
-                    <li><a class="{{ (request()->is('teacher/subject')) ? 'active' : '' }}" href="{{ route('teacher.subject_list') }}"><span>{{ get_phrase('Subjects') }}</span></a></li>
-                    <li><a class="{{ (request()->is('teacher/gradebook')) ? 'active' : '' }}" href="{{ route('teacher.gradebook') }}"><span>{{ get_phrase('Gradebooks') }}</span></a></li>
+					<li><a class="{{ (request()->is('teacher/routine*')) ? 'active' : '' }}" href="{{ route('teacher.routine') }}"><span>{{ get_phrase('Class Routine') }}</span></a></li>
+                    <li><a class="{{ (request()->is('teacher/subject*')) ? 'active' : '' }}" href="{{ route('teacher.subject_list') }}"><span>{{ get_phrase('Subjects') }}</span></a></li>
+                    <li><a class="{{ (request()->is('teacher/gradebook*')) ? 'active' : '' }}" href="{{ route('teacher.gradebook') }}"><span>{{ get_phrase('Gradebooks') }}</span></a></li>
                     <li>
-                        <a class="{{ (request()->is('teacher/syllabus')) ? 'active' : '' }}" href="{{ route('teacher.list_of_syllabus') }}"><span>{{ get_phrase('Syllabus') }}</span></a>
+                        <a class="{{ (request()->is('teacher/syllabus*')) ? 'active' : '' }}" href="{{ route('teacher.list_of_syllabus') }}"><span>{{ get_phrase('Syllabus') }}</span></a>
                     </li>
 				</ul>
 			</li>
