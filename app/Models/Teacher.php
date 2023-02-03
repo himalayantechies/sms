@@ -79,6 +79,7 @@ class Teacher extends Model
     {
         DB::transaction(function () use ($request) {
             $data = $request->all();
+            $data['username']=(new User)->createUsername(3);
             if (!empty($data['photo'])) {
                 $imageName = time() . '.' . $data['photo']->extension();
                 $data['photo']->move(public_path('assets/uploads/user-images/'), $imageName);
