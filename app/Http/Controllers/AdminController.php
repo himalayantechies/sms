@@ -630,6 +630,7 @@ class AdminController extends Controller
     public function parentCreate(Request $request)
     {
         $data = $request->all();
+        $data['username']=(new User)->createUsername(6);
         if (!empty($data['photo'])) {
 
             $imageName = time() . '.' . $data['photo']->extension();
@@ -655,7 +656,7 @@ class AdminController extends Controller
         $parent = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'password' => Hash::make('123456'),
             'role_id' => '6',
             'school_id' => auth()->user()->school_id,
             'username' => $data['username'],
