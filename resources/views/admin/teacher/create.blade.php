@@ -152,7 +152,7 @@
                             class="form-select eForm-select eChoice-multiple-with-remove">
                             <option value="">{{ get_phrase('Select caste') }}</option>
                             @foreach ($caste as $item)
-                                <option value="{{ $item }}">{{ $item }}</option>
+                                <option value="{{ $item }}">{{ ucfirst($item) }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -162,7 +162,7 @@
                             class="form-select eForm-select eChoice-multiple-with-remove">
                             <option value="">{{ get_phrase('Select disability type') }}</option>
                             @foreach ($disability as $item)
-                                <option value="{{ $item }}">{{ $item }}</option>
+                                <option value="{{ $item }}">{{ ucfirst($item) }}</option>
                             @endforeach
                         </select>
                     </div>
