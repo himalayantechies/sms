@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 use App\Models\Gradebook;
 use App\Models\Grade;
 use App\Models\Subject;
+use App\Models\GradeSubject;
 use DB;
 use PDF;
 
@@ -114,7 +115,10 @@ class CommonController extends Controller
 
     public function classWiseSubject($id)
     {
-        $subjects = Subject::get()->where('class_id', $id);
+        $school_id = auth()->user()->school_id;
+        $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
+        $subjects = (new GradeSubject)->getSubjectByClass($session_id, $school_id, $id);
+        
         $options = '<option value="">' . 'Select a subject' . '</option>';
         foreach ($subjects as $subject) :
             $options .= '<option value="' . $subject->id . '">' . $subject->name . '</option>';

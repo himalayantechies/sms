@@ -16,7 +16,7 @@
                     </ul>
                 </div>
                 <div class="export-btn-area">
-                    <a href="javascript:;" class="export_btn" onclick="rightModal('{{ route('librarian.book_issue.open_modal') }}', '{{ get_phrase('Issue Book') }}')"><i class="bi bi-plus"></i>{{ get_phrase('Issue book') }}</a>
+                    <a href="javascript:;" class="export_btn" onclick="rightModal('{{ route('librarian.book_issue.open_modal') }}', '{{ get_phrase('Issue Book') }}')"><i class="bi bi-plus"></i>{{ get_phrase('Issue Book') }}</a>
                 </div>
             </div>
         </div>

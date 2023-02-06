@@ -65,9 +65,9 @@
                         <tr>
                             <th>#</th>
                             <th>{{ get_phrase('Exam') }}</th>
-                            <th>{{ get_phrase('Starting Time') }}</th>
-                            <th>{{ get_phrase('Ending Time') }}</th>
-                            <th>{{ get_phrase('Total Marks') }}</th>
+                            <th>{{ get_phrase('Starting time') }}</th>
+                            <th>{{ get_phrase('Ending time') }}</th>
+                            <th>{{ get_phrase('Total marks') }}</th>
                         </tr>
                     </thead>
                     <tbody>

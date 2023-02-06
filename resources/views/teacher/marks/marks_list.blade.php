@@ -11,7 +11,7 @@ use App\Models\Grade;
   class="att-report-banner d-flex justify-content-center justify-content-md-between align-items-center flex-wrap"
 >
   <div class="att-report-summary order-1">
-    <h4 class="title">{{ get_phrase('Manage marks') }}</h4>
+    <h4 class="title">{{ get_phrase('Manage Marks') }}</h4>
     <p class="summary-item">{{ get_phrase('Class') }} : <span>{{ $page_data['class_name'] }}</span></p>
     <p class="summary-item">{{ get_phrase('Section') }} : <span>{{ $page_data['section_name'] }}</span></p>
     <p class="summary-item">{{ get_phrase('Subject') }} : <span>{{ $page_data['subject_name'] }}</span>
@@ -53,7 +53,7 @@ use App\Models\Grade;
             <tr>
                 <th>{{ get_phrase('Student name') }}</td>
                 <th>{{ get_phrase('Mark') }}</td>
-                <th>{{ get_phrase('Grade point') }}</td>
+                <th>{{ get_phrase('Grade Point') }}</td>
                 <th>{{ get_phrase('Comment') }}</td>
                 <th>{{ get_phrase('Action') }}</td>
             </tr>   
@@ -61,33 +61,22 @@ use App\Models\Grade;
         <tbody>
             @foreach($enroll_students as $enroll_student)
                 <?php
-
                 $student_details = User::find($enroll_student->user_id);
+
                 $filterd_data = Gradebook::where('exam_category_id', $page_data['exam_category_id'])
-                ->where('class_id', $page_data['class_id'])
-                ->where('section_id', $page_data['section_id'])
-                ->where('student_id', $enroll_student->user_id);
+                                            ->where('class_id', $page_data['class_id'])
+                                            ->where('section_id', $page_data['section_id'])
+                                            ->where('subject_id', $page_data['subject_id'])
+                                            ->where('student_id', $enroll_student->user_id)->get();                                            
 
                 if($filterd_data->value('marks')){
-                    $subject_mark = json_decode($filterd_data->value('marks'), true);
-                    if(!empty($subject_mark[$page_data['subject_id']])) {
-                        $user_marks = $subject_mark[$page_data['subject_id']];
-                    } else {
-                        $user_marks = 0;
-                    }
-
-
+                    $marks = $filterd_data->value('marks');
+                    $user_marks = (!empty($marks))?  $marks : 0;
                 } else {
                     $user_marks = 0;
                 }
 
-                if($filterd_data->value('comment')){
-                    $comment = $filterd_data->value('comment');
-                } else {
-                    $comment = '';
-                }
-
-                ?>
+                $comment = ($filterd_data->value('comment'))? $filterd_data->value('comment'):''; ?>
                 <tr>
                     <td>{{ $student_details->name }}</td>
                     <td>

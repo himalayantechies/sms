@@ -86,7 +86,7 @@ class LibrarianController extends Controller
 
         $duplicate_book_check = Book::get()->where('name', $data['name']);
 
-        if(count($duplicate_book_check) == 0) {
+        if(count($duplicate_book_check) > 0) {
             Book::where('id', $id)->update([
                 'name' => $data['name'],
                 'author' => $data['author'],
@@ -149,7 +149,9 @@ class LibrarianController extends Controller
 
     public function createBookIssue()
     {
-        $classes = Classes::get()->where('school_id', auth()->user()->school_id);
+        // $classes = Classes::get()->where('school_id', auth()->user()->school_id);
+        $school_id = auth()->user()->school_id;
+        $classes = (new Classes)->getClassBySchool($school_id);
         $books = Book::get()->where('school_id', auth()->user()->school_id);
         return view('librarian.book_issue.create', ['classes' => $classes, 'books' => $books]);
     }
@@ -158,12 +160,13 @@ class LibrarianController extends Controller
     {
         $data = $request->all();
 
-        $active_session = Session::where('status', 1)->first();
+        // $active_session = Session::where('status', 1)->first();
+        $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
 
         $data['status'] = 0;
         $data['issue_date'] = strtotime($data['issue_date']);
         $data['school_id'] = auth()->user()->school_id;
-        $data['session_id'] = $active_session->id;
+        $data['session_id'] = $active_session;
         $data['timestamp'] = strtotime(date('d-M-Y'));
 
         BookIssue::create($data);

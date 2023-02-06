@@ -13,7 +13,8 @@ use App\Models\Session;
 
 $class_name = Classes::find($page_data['class_id'])->name;
 $section_name = Section::find($page_data['section_id'])->name;
-$active_session = Session::where('status', 1)->where('school_id', auth()->user()->school_id)->first();
+// $active_session = Session::where('status', 1)->where('school_id', auth()->user()->school_id)->first();
+$active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
 $student_id_count = 0;
 
 ?>

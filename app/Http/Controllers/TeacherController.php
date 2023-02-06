@@ -56,8 +56,13 @@ class TeacherController extends Controller
      */
     public function marks($value = '')
     {
-        $exam_categories = ExamCategory::where('school_id', auth()->user()->school_id)->get();
-        $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+        $school_id = auth()->user()->school_id;
+        $classes = (new Classes)->getClassBySchool($school_id);
+
+        $exam_categories = ExamCategory::where('school_id', $school_id)->get();
+        
+        // $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+
         return view('teacher.marks.index', ['exam_categories' => $exam_categories, 'classes' => $classes]);
     }
 
@@ -156,15 +161,21 @@ class TeacherController extends Controller
      */
     public function subjectList(Request $request)
     {
-        $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+        
+        $school_id = auth()->user()->school_id;
+        $classes = (new Classes)->getClassBySchool($school_id); 
 
         if (count($request->all()) > 0 && $request->class_id != '') {
 
             $data = $request->all();
             $class_id = $data['class_id'];
-            $subjects = Subject::where('class_id', $class_id)->paginate(10);
+            $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
+            // $subjects = Subject::where('class_id', $class_id)->paginate(10);
+            // $subjects = (new GradeSubject)->getSubjectByClass($session_id, $school_id, $class_id);
+            $subjects = GradeSubject::with('subject')->where('class_id', $class_id)->paginate(10);
         } else {
-            $subjects = Subject::where('school_id', auth()->user()->school_id)->paginate(10);
+            // $subjects = Subject::where('school_id', auth()->user()->school_id)->paginate(10);
+            $subjects = GradeSubject::with('subject')->where('school_id', auth()->user()->school_id)->paginate(10);
             $class_id = '';
         }
 
@@ -255,13 +266,18 @@ class TeacherController extends Controller
         $permissions = TeacherPermission::where('class_id', $data['classId'])->where('teacher_id', auth()->user()->id)->get()->toArray();
         $permitted_sections = array();
 
-        foreach ($permissions as $key => $distinct_section) {
+        echo "<pre>";
+        print_r($permissions);
 
+        foreach ($permissions as $key => $distinct_section) {
 
             $section_details = Section::where('id', $distinct_section['section_id'])->first()->toArray();
             $permitted_sections[$key] = $section_details;
         }
-
+        echo "<pre>";
+        print_r($section_details);
+        print_r($permitted_sections);
+        
         $options = '<option value="">' . 'Select a section' . '</option>';
         foreach ($permitted_sections as $section) :
             $options .= '<option value="' . $section['id'] . '">' . $section['name'] . '</option>';

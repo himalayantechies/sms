@@ -16,7 +16,7 @@
             </ul>
           </div>
           <div class="export-btn-area">
-            <a href="javascript:;" class="export_btn" onclick="rightModal('{{ route('teacher.show_syllabus_modal') }}', '{{ get_phrase('Create Syllabus') }}')"><i class="bi bi-plus"></i>{{ get_phrase('Add syllabus') }}</a>
+            <a href="javascript:;" class="export_btn" onclick="rightModal('{{ route('teacher.show_syllabus_modal') }}', '{{ get_phrase('Create syllabus') }}')"><i class="bi bi-plus"></i>{{ get_phrase('Add syllabus') }}</a>
           </div>
         </div>
       </div>
@@ -64,8 +64,6 @@
     "use strict";
 
     function classWiseSection(classId) {
-
-
         $.ajax({
 
             url: '{{ route('teacher.class_wise_section_for_syllabus') }}',

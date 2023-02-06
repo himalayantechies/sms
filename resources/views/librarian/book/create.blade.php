@@ -12,7 +12,7 @@
         </div>
 
         <div class="fpb-7">
-            <label for="copies" class="eForm-label">{{ get_phrase('Number of scopy') }}</label>
+            <label for="copies" class="eForm-label">{{ get_phrase('Number of copy') }}</label>
             <input type="number" class="form-control eForm-control" id="copies" name = "copies" min="0" required>
         </div>
 

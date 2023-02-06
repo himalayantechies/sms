@@ -2870,8 +2870,9 @@ class AdminController extends Controller
     public function bookCreate(Request $request)
     {
         $data = $request->all();
-
-        $duplicate_book_check = Book::get()->where('name', $data['name']);
+        $book_title = $request->string('name')->trim();
+        
+        $duplicate_book_check = Book::get()->where('name', $book_title);
 
         if (count($duplicate_book_check) == 0) {
 
@@ -2902,7 +2903,7 @@ class AdminController extends Controller
 
         $duplicate_book_check = Book::get()->where('name', $data['name']);
 
-        if (count($duplicate_book_check) == 0) {
+        if (count($duplicate_book_check) > 0) {
             Book::where('id', $id)->update([
                 'name' => $data['name'],
                 'author' => $data['author'],
