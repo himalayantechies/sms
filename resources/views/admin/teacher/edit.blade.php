@@ -172,11 +172,19 @@
                             name="citizenship_no" placeholder="Enter Citizenship No"
                             value="{{ $user->citizenship_no }}">
                     </div>
+                     @php $districts = district_list(); @endphp
                     <div class="col-md-6 col-sm-12 mt-2">
                         <label for="issuing_district" class="eForm-label">{{ get_phrase('Issuing District') }}</label>
                         <select name="issuing_district" id="issuing_district"
                             class="form-select eForm-select eChoice-multiple-with-remove">
                             <option value="">{{ get_phrase('Select Issuing District') }}</option>
+                            @php
+                            foreach($districts as $key=>$value){
+                            @endphp
+                                <option value="{{$key}}" {{ ($user->issuing_district == $key)? 'selected': '' }}>{{ $value }}</option>
+                            @php
+                            }
+                            @endphp
                         </select>
                     </div>
                     <div class="col-md-6 col-sm-12 mt-2">
