@@ -72,10 +72,10 @@ if ( ! function_exists('get_phrase'))
                 foreach($all_language as $language){
 
                     if(DB::table('language')->where('name', $language->name)->where('phrase', $phrase)->get()->count() == 0){
-                        echo $phrase . ' Not found<br/>';
-                        print_r($phrase);
-                        echo "stopped in helper file";
-                        die;
+                        // echo $phrase . ' Not found<br/>';
+                        // print_r($phrase);
+                        // echo "stopped in helper file";
+                        // die;
                         DB::table('language')->insert(array('name' => $language->name, 'phrase' => $phrase, 'translated' => $translated));
 
                     }

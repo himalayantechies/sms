@@ -865,9 +865,17 @@ class AdminController extends Controller
     public function studentUpdate(Request $request, $id)
     {
         try {
+
+            // echo "<pre>";
+            // print_r($request);
+            // die;
+
             (new Student)->updateStudent($request, $id);
             return redirect()->back()->with('message', 'You have successfully update student.');
-        } catch (\Throwable $th) {
+        } catch (Exception $e) {
+            // echo "<pre>";
+            // print_r($e->getMessage());
+            // die;
             return redirect()->back()->with('error', "Student couldn't be updated");
         }
     }
