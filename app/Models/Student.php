@@ -145,7 +145,7 @@ class Student extends Model
 
             $student = Student::where('user_id', $user_id)->first();
 
-            $student->name = $data['name'];
+            // $student->name = $data['name'];
             $student->student_type = $data['student_type'] ?? '';
             $student->class_id = $data['class_id'];
             $student->section_id = $data['section_id'];
@@ -156,7 +156,7 @@ class Student extends Model
             $student->dob_ad = $data['dob_ad'];
             $student->dob_bs = $data['dob_bs'];
             $student->phone = $data['phone'];
-            $student->email = $data['email'];
+            // $student->email = $data['email'];
             $student->address = $data['address'];
             $student->blood_group = $data['blood_group'];
             $student->disability = $data['disability'];
