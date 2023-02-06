@@ -158,12 +158,12 @@ class Teacher extends Model
             $user = User::where('id', $id)->first();
 
             $user->name = $data['name'];
-            $user->username = $data['username'];
+            // $user->username = $data['username'];
             $user->email = $data['email'];
             $user->user_information = $data['user_information'];
-            if (isset($data['password'])) {
-                $user->password = Hash::make($data['password']);
-            }
+            // if (isset($data['password'])) {
+            //     $user->password = Hash::make($data['password']);
+            // }
             $user->code = $data['code'];
             $user->save();
 

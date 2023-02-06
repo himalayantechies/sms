@@ -355,8 +355,14 @@ class AdminController extends Controller
     {
         try {
             (new Teacher)->updateTeacher($request, $id);
+
+
             return redirect()->back()->with('message', 'You have successfully updated teacher.');
-        } catch (\Throwable $th) {
+        } catch (Exception  $e) {
+            echo "<pre>";
+            print_r($e->geMessage());
+            die;			
+
             return redirect()->back()->with('error', "Teacher couldn't be updated");
         }
     }
