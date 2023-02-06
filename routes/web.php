@@ -203,7 +203,7 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
 
     Route::get('admin/dashboard', 'adminDashboard')->name('admin.dashboard')->middleware('role_id');
 
-
+    Route::post('/admin/credentials/update/{id}', 'updateLoginCredentials')->name('users.credentials.update');
     //Common routes
     Route::get('admin/section/{id}', 'classWiseSections')->name('admin.class_wise_sections');
     Route::get('admin/subjects/{id}', 'classWiseSubject')->name('admin.class_wise_subject');
@@ -222,7 +222,7 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
     //Teacher users route
     Route::get('admin/teacher', 'teacherList')->name('admin.teacher');
     // Route::get('admin/teacher/create_modal', 'createTeacherModal')->name('admin.teacher.open_modal');
-    Route::get('/admin/teacher/create','createTeacher')->name('admin.teacher.form.create');
+    Route::get('/admin/teacher/create', 'createTeacher')->name('admin.teacher.form.create');
     Route::post('admin/teacher', 'adminTeacherCreate')->name('admin.teacher.create');
     // Route::get('admin/teacher/edit/{id}', 'teacherEditModal')->name('admin.teacher_edit_modal');
     Route::get('admin/teacher/edit/{id}', 'editTeacher')->name('admin.teacher.edit');

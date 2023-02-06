@@ -21,17 +21,54 @@
     </div>
     <div class="custom-card p-30">
 
+        <div class="d-flex justify-content-end ">
+            <!-- Button trigger modal -->
+            <a type="button" class="mainSection-title" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                <h4 class="text-info">
+                    {{ get_phrase('Change password') }}
+                </h4>
+            </a>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">{{ get_phrase('Change password') }}</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="POST" enctype="multipart/form-data" class="d-block ajaxForm"
+                        action="{{ route('users.credentials.update', ['id' => $user->id]) }}">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12 mt-2">
+                                    <label for="username"
+                                        class="eForm-label form-label">{{ get_phrase('Username') }}</label>
+                                    <input type="text" class="form-control eForm-control" id="username" name="username"
+                                        readonly required value="{{ $user->username }}">
+                                </div>
+
+                                <div class="col-md-12 mt-2">
+                                    <label for="password"
+                                        class="form-label col-eForm-label">{{ get_phrase('Change password') }}</label>
+                                    <input type="text" class="form-control eForm-control" id="password" name="password"
+                                        placeholder="Enter new password" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary text-white">{{ get_phrase('Update') }}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         <form method="POST" enctype="multipart/form-data" class="d-block ajaxForm"
             action="{{ route('admin.parent.update', ['id' => $user->id]) }}">
             @csrf
-
-            <div class="row">
-                <div class="col-md-6 col-sm-12 mt-2">
-                    <label for="username" class="eForm-label">{{ get_phrase('Username') }}*</label>
-                    <input type="text" class="form-control eForm-control" id="username" name="username" required
-                        value="{{ $user->username }}">
-                </div>
-            </div>
             <div class="row">
                 <div class="col-md-6 col-sm-12 mt-2">
                     <label for="name" class="eForm-label">{{ get_phrase('Name') }}*</label>
@@ -39,75 +76,92 @@
                         name="name" required>
                 </div>
                 <div class="col-md-6 col-sm-12 mt-2">
-                    <label for="nationality" class="eForm-label">{{ get_phrase('Nationality') }}</label>
-                    <select name="nationality" id="nationality"
-                        class="form-select eForm-select eChoice-multiple-with-remove">
-                        <option value="">{{ get_phrase('Select Nationality') }}</option>
-                        @foreach ($nationality as $item)
-                            <option value="{{ $item }}" {{ $info->nationality == $item ? 'selected' : '' }}>
-                                {{ get_phrase($item) }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-6 col-sm-12 mt-2">
-                    <label for="education" class="eForm-label">{{ get_phrase('Education') }}</label>
-                    <input type="text" class="form-control eForm-control" id="education" name="education"
-                        value="{{ $info->education }}">
-                </div>
-                <div class="col-md-6 col-sm-12 mt-2">
-                    <label for="profession" class="eForm-label">{{ get_phrase('Profession') }}</label>
-                    <input type="text" class="form-control eForm-control" id="profession" name="profession"
-                        value="{{ $info->profession }}">
-                </div>
-                <div class="col-md-6 col-sm-12 mt-2">
-                    <label for="designation" class="eForm-label">{{ get_phrase('Designation') }}</label>
-                    <input type="text" class="form-control eForm-control" id="designation" name="designation"
-                        value="{{ $info->designation }}">
-                </div>
-                <div class="col-md-6 col-sm-12 mt-2">
-                    <label for="office_address" class="eForm-label">{{ get_phrase('Office Address') }}</label>
-                    <input type="text" class="form-control eForm-control" id="office_address" name="office_address"
-                        value="{{ $info->office_address }}">
-                </div>
-                <div class="col-md-6 col-sm-12 mt-2">
                     <label for="phone" class="eForm-label">{{ get_phrase('Phone') }}*</label>
                     <input type="text" class="form-control eForm-control" value="{{ $info->phone }}" id="phone"
                         value="{{ $info->phone }}" name="phone" required>
                 </div>
-                <div class="col-md-6 col-sm-12 mt-2">
-                    <label for="email" class="eForm-label">{{ get_phrase('Email') }}</label>
-                    <input type="email" class="form-control eForm-control" value="{{ $user->email }}" id="email"
-                        value="{{ $user->email }}" name="email">
-                </div>
-                <div class="col-md-6 col-sm-12 mt-2">
-                    <label for="password" class="eForm-label">{{ get_phrase('Password') }}</label>
-                    <input type="password" class="form-control eForm-control" id="password" name="password">
-                </div>
-                <div class="col-md-6 col-sm-12 mt-2">
-                    <label for="birthdatepicker" class="eForm-label">{{ get_phrase('Date of Birth') }}</label>
-                    <input type="date" class="form-control eForm-control" id="birthday" name="birthday"
-                        value="{{ $info->birthday }}" />
-                </div>
-                <div class="col-md-6 col-sm-12 mt-2">
-                    <label for="address" class="eForm-label">{{ get_phrase('Address') }}</label>
-                    <input class="form-control eForm-control" id="address" name="address" type="text"
-                        value="{{ $info->address }}" spellcheck="false">
+            </div>
+
+            <div class="row my-3">
+                <div class="col-md-12 col-sm-12 mainSection-title d-flex">
+                    <h4>{{ get_phrase('Additional Details') }}</h4>
+                    <input type="checkbox" class="form-check-input mx-3" id="additional_details_checkbox"
+                        name="additional_details_checkbox">
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-6 col-sm-12 mt-2">
-                    <label for="photo" class="form-label col-eForm-label">{{ get_phrase('Photo') }}</label>
-                    @if ($info->photo != null)
-                        <div>
-                            <a href="{{ url('public/assets/uploads/user-images/' . $info->photo) }}" target="blank">
-                                <img src="{{ asset('public/assets/uploads/user-images/' . $info->photo) }}"
-                                    height="80em" class="m-4" />
-                            </a>
-                        </div>
-                    @endif
-                    <input type="hidden" name="photo" value=" {{ $info->photo }}">
-                    <input class="form-control eForm-control-file" type="file" id="photo" name="photo"
-                        accept="image/*">
+
+            <div id="additional_details" class="d-none">
+                <div class="row my-3">
+                    <div class="col-md-6 col-sm-12 mt-2">
+                        <label for="email" class="eForm-label">{{ get_phrase('Email') }}</label>
+                        <input type="email" class="form-control eForm-control" value="{{ $user->email }}" id="email"
+                            value="{{ $user->email }}" name="email">
+                    </div>
+                    <div class="col-md-6 col-sm-12 mt-2">
+                        <label for="address" class="eForm-label">{{ get_phrase('Address') }}</label>
+                        <input class="form-control eForm-control" id="address" name="address" type="text"
+                            value="{{ $info->address }}" spellcheck="false">
+                    </div>
+
+                </div>
+                <div class="row my-3">
+                    <div class="col-md-6 col-sm-12 mt-2">
+                        <label for="nationality" class="eForm-label">{{ get_phrase('Nationality') }}</label>
+                        <select name="nationality" id="nationality"
+                            class="form-select eForm-select eChoice-multiple-with-remove">
+                            <option value="">{{ get_phrase('Select Nationality') }}</option>
+                            @foreach ($nationality as $item)
+                                <option value="{{ $item }}" {{ $info->nationality == $item ? 'selected' : '' }}>
+                                    {{ get_phrase($item) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 col-sm-12 mt-2">
+                        <label for="birthdatepicker" class="eForm-label">{{ get_phrase('Date of Birth') }}</label>
+                        <input type="date" class="form-control eForm-control" id="birthday" name="birthday"
+                            value="{{ $info->birthday }}" />
+                    </div>
+                </div>
+
+                <div class="row my-3">
+
+                    <div class="col-md-6 col-sm-12 mt-2">
+                        <label for="education" class="eForm-label">{{ get_phrase('Education') }}</label>
+                        <input type="text" class="form-control eForm-control" id="education" name="education"
+                            value="{{ $info->education }}">
+                    </div>
+                    <div class="col-md-6 col-sm-12 mt-2">
+                        <label for="profession" class="eForm-label">{{ get_phrase('Profession') }}</label>
+                        <input type="text" class="form-control eForm-control" id="profession" name="profession"
+                            value="{{ $info->profession }}">
+                    </div>
+                    <div class="col-md-6 col-sm-12 mt-2">
+                        <label for="designation" class="eForm-label">{{ get_phrase('Designation') }}</label>
+                        <input type="text" class="form-control eForm-control" id="designation" name="designation"
+                            value="{{ $info->designation }}">
+                    </div>
+                    <div class="col-md-6 col-sm-12 mt-2">
+                        <label for="office_address" class="eForm-label">{{ get_phrase('Office Address') }}</label>
+                        <input type="text" class="form-control eForm-control" id="office_address"
+                            name="office_address" value="{{ $info->office_address }}">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-sm-12 mt-2">
+                        <label for="photo" class="form-label col-eForm-label">{{ get_phrase('Photo') }}</label>
+                        @if ($info->photo != null)
+                            <div>
+                                <a href="{{ url('public/assets/uploads/user-images/' . $info->photo) }}" target="blank">
+                                    <img src="{{ asset('public/assets/uploads/user-images/' . $info->photo) }}"
+                                        height="80em" class="m-4" />
+                                </a>
+                            </div>
+                        @endif
+                        <input type="hidden" name="photo" value=" {{ $info->photo }}">
+                        <input class="form-control eForm-control-file" type="file" id="photo" name="photo"
+                            accept="image/*">
+                    </div>
                 </div>
             </div>
             <div class="row">
@@ -211,6 +265,13 @@
         $(document).ready(function() {
             $('#blank_row').hide();
             blank_field = $('#blank_row').html();
+            $('#additional_details_checkbox').click(function() {
+                if ($(this).is(':checked')) {
+                    $('#additional_details').removeClass('d-none');
+                } else {
+                    $('#additional_details').addClass('d-none');
+                }
+            });
         });
 
         $(function() {

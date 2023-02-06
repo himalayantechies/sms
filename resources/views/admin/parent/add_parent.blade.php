@@ -20,74 +20,78 @@
     </div>
 
     <div class="custom-card p-30">
-
         <form method="POST" enctype="multipart/form-data" class="d-block ajaxForm"
             action="{{ route('admin.parent.create') }}">
             @csrf
-            <div class="row">
-                <div class="col-md-6 col-sm-12 mt-2">
-                    <label for="username" class="eForm-label">{{ get_phrase('Username') }}*</label>
-                    <input type="text" class="form-control eForm-control" id="username" name="username" required
-                        value="{{ $username }}">
-                </div>
-            </div>
-            <div class="row">
+            <div class="row my-3">
                 <div class="col-md-6 col-sm-12 mt-2">
                     <label for="name" class="eForm-label">{{ get_phrase('Name') }}*</label>
                     <input type="text" class="form-control eForm-control" id="name" name="name" required>
                 </div>
                 <div class="col-md-6 col-sm-12 mt-2">
-                    <label for="nationality" class="eForm-label">{{ get_phrase('Nationality') }}</label>
-                    <select name="nationality" id="nationality"
-                        class="form-select eForm-select eChoice-multiple-with-remove">
-                        <option value="">{{ get_phrase('Select Nationality') }}</option>
-                        <option value="Nepali">{{ get_phrase('Nepali') }}</option>
-                        <option value="Indian">{{ get_phrase('Indian') }}</option>
-                        <option value="Others">{{ get_phrase('Others') }}</option>
-                    </select>
-                </div>
-                <div class="col-md-6 col-sm-12 mt-2">
-                    <label for="education" class="eForm-label">{{ get_phrase('Education') }}</label>
-                    <input type="text" class="form-control eForm-control" id="education" name="education">
-                </div>
-                <div class="col-md-6 col-sm-12 mt-2">
-                    <label for="profession" class="eForm-label">{{ get_phrase('Profession') }}</label>
-                    <input type="text" class="form-control eForm-control" id="profession" name="profession">
-                </div>
-                <div class="col-md-6 col-sm-12 mt-2">
-                    <label for="designation" class="eForm-label">{{ get_phrase('Designation') }}</label>
-                    <input type="text" class="form-control eForm-control" id="designation" name="designation">
-                </div>
-                <div class="col-md-6 col-sm-12 mt-2">
-                    <label for="office_address" class="eForm-label">{{ get_phrase('Office Address') }}</label>
-                    <input type="text" class="form-control eForm-control" id="office_address" name="office_address">
-                </div>
-                <div class="col-md-6 col-sm-12 mt-2">
                     <label for="phone" class="eForm-label">{{ get_phrase('Phone') }}*</label>
                     <input type="text" class="form-control eForm-control" id="phone" name="phone" required />
                 </div>
-                <div class="col-md-6 col-sm-12 mt-2">
-                    <label for="email" class="eForm-label">{{ get_phrase('Email') }}</label>
-                    <input type="email" class="form-control eForm-control" id="email" name="email">
+            </div>
+            <div class="row my-3">
+                <div class="col-md-12 col-sm-12 mainSection-title d-flex">
+                    <h4>{{ get_phrase('Additional Details') }}</h4>
+                    <input type="checkbox" class="form-check-input mx-3" id="additional_details_checkbox"
+                        name="additional_details_checkbox">
                 </div>
-                <div class="col-md-6 col-sm-12 mt-2">
-                    <label for="password" class="eForm-label">{{ get_phrase('Password') }}</label>
-                    <input type="password" class="form-control eForm-control" id="password" name="password">
+            </div>
+            <div id="additional_details" class="d-none">
+                <div class="row my-3">
+                    <div class="col-md-6 col-sm-12 mt-2">
+                        <label for="email" class="eForm-label">{{ get_phrase('Email') }}</label>
+                        <input type="email" class="form-control eForm-control" id="email" name="email">
+                    </div>
+                    <div class="col-md-6 col-sm-12 mt-2">
+                        <label for="address" class="eForm-label">{{ get_phrase('Address') }}</label>
+                        <input class="form-control eForm-control" id="address" name="address" type="text"
+                            spellcheck="false">
+                    </div>
                 </div>
-                <div class="col-md-6 col-sm-12 mt-2">
-                    <label for="birthdatepicker" class="eForm-label">{{ get_phrase('Date of Birth') }}</label>
-                    <input type="date" class="form-control eForm-control" id="birthday" name="dob" />
+                <div class="row my-3">
+                    <div class="col-md-6 col-sm-12 mt-2">
+                        <label for="nationality" class="eForm-label">{{ get_phrase('Nationality') }}</label>
+                        <select name="nationality" id="nationality"
+                            class="form-select eForm-select eChoice-multiple-with-remove">
+                            <option value="">{{ get_phrase('Select Nationality') }}</option>
+                            <option value="Nepali">{{ get_phrase('Nepali') }}</option>
+                            <option value="Indian">{{ get_phrase('Indian') }}</option>
+                            <option value="Others">{{ get_phrase('Others') }}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 col-sm-12 mt-2">
+                        <label for="birthdatepicker" class="eForm-label">{{ get_phrase('Date of Birth') }}</label>
+                        <input type="date" class="form-control eForm-control" id="birthday" name="dob" />
+                    </div>
                 </div>
-                <div class="col-md-6 col-sm-12 mt-2">
-                    <label for="address" class="eForm-label">{{ get_phrase('Address') }}</label>
-                    <input class="form-control eForm-control" id="address" name="address" type="text"
-                        spellcheck="false">
-                </div>
+                <div class="row my-3">
 
-                <div class="col-md-6 col-sm-12 mt-2">
-                    <label for="formFile" class="eForm-label">{{ get_phrase('Photo') }}</label>
-                    <input class="form-control eForm-control-file" id="photo" name="photo" accept="image/*"
-                        type="file" />
+                    <div class="col-md-6 col-sm-12 mt-2">
+                        <label for="education" class="eForm-label">{{ get_phrase('Education') }}</label>
+                        <input type="text" class="form-control eForm-control" id="education" name="education">
+                    </div>
+                    <div class="col-md-6 col-sm-12 mt-2">
+                        <label for="profession" class="eForm-label">{{ get_phrase('Profession') }}</label>
+                        <input type="text" class="form-control eForm-control" id="profession" name="profession">
+                    </div>
+                    <div class="col-md-6 col-sm-12 mt-2">
+                        <label for="designation" class="eForm-label">{{ get_phrase('Designation') }}</label>
+                        <input type="text" class="form-control eForm-control" id="designation" name="designation">
+                    </div>
+                    <div class="col-md-6 col-sm-12 mt-2">
+                        <label for="office_address" class="eForm-label">{{ get_phrase('Office Address') }}</label>
+                        <input type="text" class="form-control eForm-control" id="office_address" name="office_address">
+                    </div>
+
+                    <div class="col-md-6 col-sm-12 mt-2">
+                        <label for="formFile" class="eForm-label">{{ get_phrase('Photo') }}</label>
+                        <input class="form-control eForm-control-file" id="photo" name="photo" accept="image/*"
+                            type="file" />
+                    </div>
                 </div>
             </div>
             <div class="card p-3 my-3">
@@ -164,6 +168,13 @@
             $('#blank_row').hide();
             $(".eChoice-multiple-with-remove").select2();
             blank_field = $('#blank_row').html();
+            $('#additional_details_checkbox').click(function() {
+                if ($(this).is(':checked')) {
+                    $('#additional_details').removeClass('d-none');
+                } else {
+                    $('#additional_details').addClass('d-none');
+                }
+            });
         });
 
         $(function() {

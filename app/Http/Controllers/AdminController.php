@@ -288,6 +288,19 @@ class AdminController extends Controller
         return view('admin.teacher.teacher_list', compact('teachers', 'search'));
     }
 
+    public function updateLoginCredentials(Request $request, $id)
+    {
+        $user = User::find($id);
+        $data = $request->all();
+        $user->username = $data['username'];
+        if (isset($data['password'])) {
+            $user->password = Hash::make($data['password']);
+        }
+        $user->save();
+        return redirect()->back()->with('message', 'Credentials updated Successfully');
+    }
+
+
     /**
      * Show the teacher add modal.
      *
@@ -302,7 +315,7 @@ class AdminController extends Controller
     {
         $this->_data['departments'] = Department::get()->where('school_id', auth()->user()->school_id);
         $this->_data['caste'] = ['brahmin/chhetri', 'dalit', 'janjati', 'others'];
-        $this->_data['teacher_username'] = (new User)->createUsername(3);
+        // $this->_data['teacher_username'] = (new User)->createUsername(3);
         $this->_data['disability'] = ['n/a', 'physical', 'mental', 'deaf', 'blind', 'low vision', 'deaf and blind', 'speech impairment', 'multiple disability'];
         return view('admin.teacher.create', $this->_data);
     }
@@ -617,6 +630,7 @@ class AdminController extends Controller
     public function parentCreate(Request $request)
     {
         $data = $request->all();
+        $data['username']=(new User)->createUsername(6);
         if (!empty($data['photo'])) {
 
             $imageName = time() . '.' . $data['photo']->extension();
@@ -642,7 +656,7 @@ class AdminController extends Controller
         $parent = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'password' => Hash::make('123456'),
             'role_id' => '6',
             'school_id' => auth()->user()->school_id,
             'username' => $data['username'],
@@ -894,8 +908,8 @@ class AdminController extends Controller
         $school_id = auth()->user()->school_id;
         $classes = (new Classes)->getClassBySchool($school_id);
         $teachers = User::where('role_id', 3)
-                    ->where('school_id', $school_id)
-                    ->get();
+            ->where('school_id', $school_id)
+            ->get();
         return view('admin.permission.index', ['classes' => $classes, 'teachers' => $teachers]);
     }
 
@@ -972,13 +986,13 @@ class AdminController extends Controller
 
     public function offlineAdmissionCreate(Request $request)
     {
-        try {
-            (new Student)->storeStudent($request);
-            return redirect()->back()->with('message', 'Admission successfully done.');
-        } catch (\Throwable $th) {
+        // try {
+        (new Student)->storeStudent($request);
+        return redirect()->back()->with('message', 'Admission successfully done.');
+        // } catch (\Throwable $th) {
 
-            return redirect()->back()->with('error', 'Admission unsuccessful.');
-        }
+        //     return redirect()->back()->with('error', 'Admission unsuccessful.');
+        // }
     }
     public function editStudent(Request $request, $id)
     {
@@ -1293,7 +1307,7 @@ class AdminController extends Controller
     public function classWiseSubject($id)
     {
         // $subjects = Subject::get()->where('class_id', $id);
-        // MODIFIED BY RAM 
+        // MODIFIED BY RAM
         $school_id = auth()->user()->school_id;
         $active_session = get_school_settings($school_id)->value('running_session');
         $subjects =  (new GradeSubject)->getSubjectByClass($active_session, $school_id, $id);
@@ -1388,7 +1402,7 @@ class AdminController extends Controller
     public function dailyAttendanceFilter(Request $request)
     {
         $school_id = auth()->user()->school_id;
-        
+
         $data = $request->all();
         $date = '01 ' . $data['month'] . ' ' . $data['year'];
         $first_date = strtotime($date);
@@ -1792,20 +1806,19 @@ class AdminController extends Controller
         if (count($request->all()) > 0) {
             $data = $request->all();
 
-            $filter_list = DB::select ("
+            $filter_list = DB::select("
                         select gradebooks.student_id, users.name as student, json_agg(row_to_json(row(gradebooks.subject_id, gradebooks.marks))) as subject_marks
-                        from gradebooks 
-                        inner join subjects on subjects.id = gradebooks.subject_id 
-                        inner join users on users.id = gradebooks.student_id 
-                        where gradebooks.class_id = ? and gradebooks.section_id = ? and gradebooks.exam_category_id = ? 
+                        from gradebooks
+                        inner join subjects on subjects.id = gradebooks.subject_id
+                        inner join users on users.id = gradebooks.student_id
+                        where gradebooks.class_id = ? and gradebooks.section_id = ? and gradebooks.exam_category_id = ?
                                 and gradebooks.school_id = ? and gradebooks.session_id = ?
-                        group by gradebooks.student_id, users.name", [$data['class_id'], $data['section_id'], $data['exam_category_id'],  $school_id, $active_session ]);
+                        group by gradebooks.student_id, users.name", [$data['class_id'], $data['section_id'], $data['exam_category_id'],  $school_id, $active_session]);
 
             $class_id = $data['class_id'];
             $section_id = $data['section_id'];
             $exam_category_id = $data['exam_category_id'];
-            $subjects =  (new GradeSubject)->getSubjectByClass($active_session,$school_id, $class_id);
-
+            $subjects =  (new GradeSubject)->getSubjectByClass($active_session, $school_id, $class_id);
         } else {
             $filter_list = [];
             $class_id = '';
@@ -1813,7 +1826,7 @@ class AdminController extends Controller
             $exam_category_id = '';
             $subjects = '';
         }
-        
+
         return view('admin.gradebook.gradebook', ['filter_list' => $filter_list, 'class_id' => $class_id, 'section_id' => $section_id, 'exam_category_id' => $exam_category_id, 'classes' => $classes, 'exam_categories' => $exam_categories, 'subjects' => $subjects]);
     }
 
@@ -1823,7 +1836,7 @@ class AdminController extends Controller
         $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
 
         $exam_wise_student_list = Gradebook::where(['class_id' => $data['class_id'], 'section_id' => $data['section_id'], 'exam_category_id' => $data['exam_category_id'], 'school_id' => auth()->user()->school_id, 'session_id' => $active_session])->get();
-        
+
         echo view('admin.gradebook.list', ['exam_wise_student_list' => $exam_wise_student_list, 'class_id' => $data['class_id'], 'section_id' => $data['section_id'], 'exam_category_id' => $data['exam_category_id'], 'school_id' => auth()->user()->school_id, 'session_id' => $active_session]);
     }
 
@@ -2351,7 +2364,7 @@ class AdminController extends Controller
     public function sectionUpdate(Request $request, $id)
     {
         $data = $request->all();
-        // {{DB::table('schools')->where('id', auth()->user()->school_id)->value('title') }}
+        // {{ DB::table('schools')->where('id', auth()->user()->school_id)->value('title') }}
 
         $section_id = $data['section_id'];
         $section_name = $data['name'];
@@ -3251,7 +3264,7 @@ class AdminController extends Controller
 
         // echo "<pre>";
         // print_r($data);
-        // die;			
+        // die;
 
 
         FrontendEvent::create($data);
