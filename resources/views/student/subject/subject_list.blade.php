@@ -38,14 +38,14 @@
 						<tr>
 							<td>{{ $subject['name'] }}</td>
                             <td>
-                                <?php $class_details = Classes::find($subject['class_id']); ?>
+                                <?php $class_details = Classes::find($class_id); ?>
                                 {{ $class_details['name'] }}
                             </td>
 						</tr>
 						@endforeach
 					</tbody>
         		</table>
-                {!! $subjects->links() !!}
+                {{-- {!! $subjects->links() !!} --}}
         	@else
         		<div class="empty_box center">
                     <img class="mb-3" width="150px" src="{{ asset('public/assets/images/empty_box.png') }}" />

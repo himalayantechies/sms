@@ -52,7 +52,7 @@ use App\Models\Department;;
               id="search"
               name="search"
               value="{{ $search }}"
-              placeholder="Search user"
+              placeholder="Search teacher"
               class="form-control"
             />
           </div>
@@ -114,7 +114,7 @@ use App\Models\Department;;
 		            <tr>
 		            	<td scope="row"><p class="row-number">{{ $loop->index + 1 }}</p></td>
 		                <td><strong>{{ $teacher['name'] }}</strong></td>
-		                <td>{{ $department['name'] }}</td>
+		                <td>{{(isset($department['name'])? $department['name'] : '')}}</td>
 		                <td>{{ $teacher['designation'] }}</td>
 		            </tr>
 		        @endforeach
@@ -148,7 +148,7 @@ use App\Models\Department;;
 	            <tr>
 	            	<td scope="row"><p class="row-number">{{ $loop->index + 1 }}</p></td>
 	                <td><strong>{{ $teacher['name'] }}</strong></td>
-	                <td>{{ $department['name'] }}</td>
+                  <td>{{(isset($department['name'])? $department['name'] : '')}}</td>
 	                <td>{{ $teacher['designation'] }}</td>
 	            </tr>
 	        @endforeach

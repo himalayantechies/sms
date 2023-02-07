@@ -15,6 +15,7 @@ use App\Models\Classes;
 use App\Models\Subject;
 use App\Models\Gradebook;
 use App\Models\Grade;
+use App\Models\GradeSubject;
 use App\Models\ClassList;
 use App\Models\Section;
 use App\Models\Enrollment;
@@ -60,15 +61,14 @@ class StudentController extends Controller
         $search = $request['search'] ?? "";
 
         if($search != "") {
-
             $teachers = User::where(function ($query) use($search) {
                     $query->where('name', 'LIKE', "%{$search}%")
                         ->where('school_id', auth()->user()->school_id)
                         ->where('role_id', 3);
-                })->paginate(10);
+                })->paginate(50);
 
         } else {
-            $teachers = User::where('role_id', 3)->where('school_id', auth()->user()->school_id)->paginate(10);
+            $teachers = User::where('role_id', 3)->where('school_id', auth()->user()->school_id)->paginate(50);
         }
 
         return view('student.teacher.teacher_list', compact('teachers', 'search'));
@@ -89,7 +89,8 @@ class StudentController extends Controller
             $page_data['year'] = $data['year'];
 
             $student_data = (new CommonController)->get_student_details_by_id(auth()->user()->id);
-            $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+            // $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+            $classes = Classes::all();
             $sections = Section::where(['class_id' => $student_data['class_id']])->get();
 
             return view('student.attendance.daily_attendance', ['student_data' => $student_data, 'classes' => $classes, 'sections' => $sections, 'page_data' => $page_data]);
@@ -101,7 +102,7 @@ class StudentController extends Controller
             $page_data['year'] = date('Y');
 
             $student_data = (new CommonController)->get_student_details_by_id(auth()->user()->id);
-            $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+            $classes = Classes::all();
             $sections = Section::where(['class_id' => $student_data['class_id']])->get();
             return view('student.attendance.daily_attendance', ['student_data' => $student_data, 'classes' => $classes, 'sections' => $sections, 'page_data' => $page_data]);
         }
@@ -231,14 +232,17 @@ class StudentController extends Controller
     public function subjectList()
     {
         $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
-
+        $school_id = auth()->user()->school_id;
+        
         $student_data = (new CommonController)->get_student_details_by_id(auth()->user()->id);
-        $subjects = Subject::where('class_id', $student_data['class_id'])
-            ->where('school_id', auth()->user()->school_id)
-            ->where('session_id', $active_session)
-            ->paginate(10);
+        $class_id = $student_data['class_id'];
+        // $subjects = Subject::where('class_id', $student_data['class_id'])
+        //     ->where('school_id', auth()->user()->school_id)
+        //     ->where('session_id', $active_session)
+        //     ->paginate(10);
+        $subjects = (new GradeSubject)->getSubjectByClass($active_session, $school_id, $class_id);
 
-        return view('student.subject.subject_list', compact('subjects'));
+        return view('student.subject.subject_list', compact('subjects' ,'class_id'));
     }
 
     /**
@@ -273,13 +277,13 @@ class StudentController extends Controller
 
         $subjects = Subject::where(['class_id' => $student_details['class_id'], 'school_id' => auth()->user()->school_id])->get();
 
-
         return view('student.marks.index', ['exam_categories' => $exam_categories, 'student_details' => $student_details, 'subjects' => $subjects]);
     }
 
     public function gradeList()
     {
-        $grades = Grade::where('school_id', auth()->user()->school_id)->paginate(10);
+        // $grades = Grade::where('school_id', auth()->user()->school_id)->paginate(10);
+        $grades = Grade::where('grade_type', 'Letter Grading')->paginate(20);
         return view('student.grade.grade_list', compact('grades'));
     }
 
@@ -536,10 +540,6 @@ class StudentController extends Controller
                 'payment_method' => 'offline'
             ]);
 
-
-
-
-
             return redirect()->route('student.fee_manager.list')->with('message', 'offline payment requested successfully');
         } else {
             return redirect()->route('student.fee_manager.list')->with('message', 'offline payment requested fail');
@@ -578,16 +578,10 @@ class StudentController extends Controller
 
     function password($action_type = null, Request $request){
 
-
-
         if($action_type == 'update'){
-
-            
-
             if($request->new_password != $request->confirm_password){
                 return back()->with("error", "Confirm Password Doesn't match!");
             }
-
 
             if(!Hash::check($request->old_password, auth()->user()->password)){
                 return back()->with("error", "Current Password Doesn't match!");
@@ -612,11 +606,9 @@ class StudentController extends Controller
         $search = $request['search'] ?? "";
 
         if($search != "") {
-
             $events = FrontendEvent::where(function ($query) use($search) {
                     $query->where('title', 'LIKE', "%{$search}%");
                 })->paginate(10);
-
         } else {
             $events = FrontendEvent::where('school_id', auth()->user()->school_id)->paginate(10);
         }

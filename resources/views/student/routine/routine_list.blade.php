@@ -114,7 +114,7 @@ $routines = Routine::where(['class_id' => $class_id, 'section_id' => $section_id
             <?php $teacher = User::find($perday_routine['teacher_id']); ?>
             <p class="info">{{ $teacher->name }}</p>
           </li>
-          <li
+          {{-- <li
             class="classDetails-info d-flex align-items-center"
           >
             <div class="icon">
@@ -134,7 +134,7 @@ $routines = Routine::where(['class_id' => $class_id, 'section_id' => $section_id
             </div>
             <?php $class_room = ClassRoom::find($perday_routine['room_id']); ?>
             <p class="info">{{ $class_room->name }}</p>
-          </li>
+          </li> --}}
         </ul>
       </div>
       <?php } ?>
@@ -222,7 +222,7 @@ $routines = Routine::where(['class_id' => $class_id, 'section_id' => $section_id
             <?php $teacher = User::find($perday_routine['teacher_id']); ?>
             <p class="info">{{ $teacher->name }}</p>
           </li>
-          <li
+          {{-- <li
             class="classDetails-info d-flex align-items-center"
           >
             <div class="icon">
@@ -241,8 +241,8 @@ $routines = Routine::where(['class_id' => $class_id, 'section_id' => $section_id
               </svg>
             </div>
             <?php $class_room = ClassRoom::find($perday_routine['room_id']); ?>
-            <p class="info">{{ $class_room->name }}</p>
-          </li>
+            <p class="info">{{ (isset($class_room->name))? $class_room->name:'' }}</p>
+          </li> --}}
         </ul>
       </div>
       <?php } ?>
@@ -330,7 +330,7 @@ $routines = Routine::where(['class_id' => $class_id, 'section_id' => $section_id
             <?php $teacher = User::find($perday_routine['teacher_id']); ?>
             <p class="info">{{ $teacher->name }}</p>
           </li>
-          <li
+          {{-- <li
             class="classDetails-info d-flex align-items-center"
           >
             <div class="icon">
@@ -350,7 +350,7 @@ $routines = Routine::where(['class_id' => $class_id, 'section_id' => $section_id
             </div>
             <?php $class_room = ClassRoom::find($perday_routine['room_id']); ?>
             <p class="info">{{ $class_room->name }}</p>
-          </li>
+          </li> --}}
         </ul>
       </div>
     <?php } ?>
@@ -438,7 +438,7 @@ $routines = Routine::where(['class_id' => $class_id, 'section_id' => $section_id
             <?php $teacher = User::find($perday_routine['teacher_id']); ?>
             <p class="info">{{ $teacher->name }}</p>
           </li>
-          <li
+          {{-- <li
             class="classDetails-info d-flex align-items-center"
           >
             <div class="icon">
@@ -458,7 +458,7 @@ $routines = Routine::where(['class_id' => $class_id, 'section_id' => $section_id
             </div>
             <?php $class_room = ClassRoom::find($perday_routine['room_id']); ?>
             <p class="info">{{ $class_room->name }}</p>
-          </li>
+          </li> --}}
         </ul>
       </div>
       <?php } ?>
@@ -546,7 +546,7 @@ $routines = Routine::where(['class_id' => $class_id, 'section_id' => $section_id
             <?php $teacher = User::find($perday_routine['teacher_id']); ?>
             <p class="info">{{ $teacher->name }}</p>
           </li>
-          <li
+          {{-- <li
             class="classDetails-info d-flex align-items-center"
           >
             <div class="icon">
@@ -566,7 +566,7 @@ $routines = Routine::where(['class_id' => $class_id, 'section_id' => $section_id
             </div>
             <?php $class_room = ClassRoom::find($perday_routine['room_id']); ?>
             <p class="info">{{ $class_room->name }}</p>
-          </li>
+          </li> --}}
         </ul>
       </div>
       <?php } ?>
@@ -654,7 +654,7 @@ $routines = Routine::where(['class_id' => $class_id, 'section_id' => $section_id
             <?php $teacher = User::find($perday_routine['teacher_id']); ?>
             <p class="info">{{ $teacher->name }}</p>
           </li>
-          <li
+          {{-- <li
             class="classDetails-info d-flex align-items-center"
           >
             <div class="icon">
@@ -674,7 +674,7 @@ $routines = Routine::where(['class_id' => $class_id, 'section_id' => $section_id
             </div>
             <?php $class_room = ClassRoom::find($perday_routine['room_id']); ?>
             <p class="info">{{ $class_room->name }}</p>
-          </li>
+          </li> --}}
         </ul>
       </div>
       <?php } ?>
@@ -762,7 +762,7 @@ $routines = Routine::where(['class_id' => $class_id, 'section_id' => $section_id
             <?php $teacher = User::find($perday_routine['teacher_id']); ?>
             <p class="info">{{ $teacher->name }}</p>
           </li>
-          <li
+          {{-- <li
             class="classDetails-info d-flex align-items-center"
           >
             <div class="icon">
@@ -782,7 +782,7 @@ $routines = Routine::where(['class_id' => $class_id, 'section_id' => $section_id
             </div>
             <?php $class_room = ClassRoom::find($perday_routine['room_id']); ?>
             <p class="info">{{ $class_room->name }}</p>
-          </li>
+          </li> --}}
         </ul>
       </div>
       <?php } ?>
