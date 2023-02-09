@@ -26,14 +26,6 @@
              <div class="row">
                 <div class="row justify-content-md-center">
                     <div class="col-md-2">
-                        <select class="form-select eForm-select eChoice-multiple-with-remove" id = "exam_category_id" name="exam_category_id">
-                            <option value="">{{ get_phrase('Select category') }}</option>
-                            @foreach ($exam_categories as $exam_category)
-                                <option value="{{ $exam_category->id }}">{{ $exam_category->name }}</option>
-                            @endforeach
-                      </select>
-                    </div>
-                    <div class="col-md-2">
                         <select name="class_id" id="class_id" class="form-select eForm-select eChoice-multiple-with-remove" required onchange="classWiseSection(this.value)">
                             <option value="">{{ get_phrase('Select class') }}</option>
                             @foreach ($classes as $class)
@@ -41,7 +33,6 @@
                             @endforeach
                         </select>
                     </div>
-
                     <div class="col-md-3">
                         <select name="section_id" id="section_id" class="form-select eForm-select eChoice-multiple-with-remove" required >
                             <option value="">{{ get_phrase('First select a class') }}</option>
@@ -52,6 +43,20 @@
                             <option value="">{{ get_phrase('First select a class') }}</option>
                         </select>
                     </div>
+                    <div class="col-md-2">
+                        <select class="form-select eForm-select eChoice-multiple-with-remove" id = "exam_id" name="exam_id">
+                            <option value="">{{ get_phrase('First select a class') }}</option>
+                      </select>
+                    </div>
+                    {{-- <div class="col-md-2">
+                        <select class="form-select eForm-select eChoice-multiple-with-remove" id = "exam_category_id" name="exam_category_id">
+                            <option value="">{{ get_phrase('Select category') }}</option>
+                            @foreach ($exam_categories as $exam_category)
+                                <option value="{{ $exam_category->id }}">{{ $exam_category->name }}</option>
+                            @endforeach
+                      </select>
+                    </div> --}}
+
                     <div class="col-xl-2 mb-3">
                         <button type="button" class="eBtn eBtn btn-secondary form-control" onclick="filter_marks()">{{ get_phrase('Filter') }}</button>
                     </div>
@@ -81,6 +86,7 @@
             success: function(response){
                 $('#section_id').html(response);
                 classWiseSubect(classId);
+                classWiseExam(classId);
             }
         });
     }
@@ -92,8 +98,21 @@
             url: url,
             success: function(response){
                 $('#subject_id').html(response);
+
             }
         });
+    }
+
+    function classWiseExam(classId){
+        let url = "{{route('admin.class_wise_exams',['class_id'=> ":classId" ]) }}";
+        url = url.replace(":classId", classId);
+        $.ajax({
+            url: url,
+            success: function(response){
+                $('#exam_category_id').html(response);
+            }
+        });
+
     }
 
     function filter_marks(){

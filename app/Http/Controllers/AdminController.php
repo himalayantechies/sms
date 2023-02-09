@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\CommonController;
+use App\Http\Controllers\ExamController;
 
 use App\Models\Admin;
 use Illuminate\Http\Request;
@@ -1343,6 +1344,21 @@ class AdminController extends Controller
         echo $options;
     }
 
+    
+    public function classWiseExams($class_id){
+        $exams = (new ExamController)->classWiseExams($class_id);
+        
+        $options = '<option value="">' . 'Select exam' . '</option>';
+        foreach ($exams as $exam) :
+            $options .= '<option value="' . $exam['id'] . '">' . $exam['name'] . '</option>';
+        endforeach;
+        echo $options;
+        
+    }
+
+
+
+
     public function offlineExamCreate(Request $request)
     {
         $data = $request->all();
@@ -1920,8 +1936,10 @@ class AdminController extends Controller
      */
     public function marks($value = '')
     {
-        $exam_categories = ExamCategory::where('school_id', auth()->user()->school_id)->get();
         $school_id = auth()->user()->school_id;
+        $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
+        $exam_categories = ExamCategory::where('school_id', auth()->user()->school_id)->get();
+        // $exam = Exam::where(['school_id'=>$school_id , 'session_id'=> $session]);
         $classes = (new Classes)->getClassBySchool($school_id);
         // $classes = Classes::where('school_id', auth()->user()->school_id)->get();
 
@@ -1944,9 +1962,9 @@ class AdminController extends Controller
         $page_data['subject_name'] = Subject::find($data['subject_id'])->name;
 
         $enroll_students = Enrollment::where('class_id', $page_data['class_id'])
-            ->where('section_id', $page_data['section_id'])
-            ->where('session_id', $session_id)
-            ->get();
+                            ->where('section_id', $page_data['section_id'])
+                            ->where('session_id', $session_id)
+                            ->get();
 
         $page_data['exam_categories'] = ExamCategory::where('school_id', $school_id)->get();
         $page_data['classes'] = (new Classes)->getClassBySchool($school_id);
