@@ -20,6 +20,7 @@ class Student extends Model
     {
 
         return User::leftjoin('students', 'students.user_id', 'users.id')
+            ->leftjoin('enrollments', 'enrollments.user_id', 'users.id')
             ->where('users.id', $user_id)
             ->first([
                 'users.username',
@@ -27,10 +28,10 @@ class Student extends Model
                 'users.email',
                 'students.user_id',
                 'students.student_type',
-                'students.class_id',
-                'students.section_id',
+                'enrollments.class_id',
+                'enrollments.section_id',
                 'students.registration_no',
-                'students.roll_no',
+                'enrollments.roll_no',
                 'students.gender',
                 'students.admitted_date',
                 'students.dob_ad',
@@ -53,7 +54,7 @@ class Student extends Model
     {
         DB::transaction(function () use ($request) {
             $data = $request->all();
-            $data['username']=(new User)->createUsername(7);
+            $data['username'] = (new User)->createUsername(7);
             if (!empty($data['photo'])) {
                 $imageName = time() . '.' . $data['photo']->extension();
                 $data['photo']->move(public_path('assets/uploads/user-images/'), $imageName);
@@ -85,10 +86,7 @@ class Student extends Model
             Student::create([
                 'user_id' => $user->id,
                 'student_type' =>  $data['student_type'],
-                'class_id' =>  $data['class_id'],
-                'section_id' =>  $data['section_id'],
                 'registration_no' =>  $data['registration_no'],
-                'roll_no' =>  $data['roll_no'],
                 'gender' =>  $data['gender'],
                 'admitted_date' =>  $data['admitted_date'],
                 'dob_ad' =>  $data['dob_ad'],
@@ -141,22 +139,17 @@ class Student extends Model
             Enrollment::where('user_id', $user_id)->update([
                 'class_id' => $data['class_id'],
                 'section_id' => $data['section_id'],
+                'roll_no' => $data['roll_no']
             ]);
 
             $student = Student::where('user_id', $user_id)->first();
-
-            // $student->name = $data['name'];
             $student->student_type = $data['student_type'] ?? '';
-            $student->class_id = $data['class_id'];
-            $student->section_id = $data['section_id'];
             $student->registration_no = $data['registration_no'];
-            $student->roll_no = $data['roll_no'];
             $student->gender = $data['gender'];
             $student->admitted_date = $data['admitted_date'];
             $student->dob_ad = $data['dob_ad'];
             $student->dob_bs = $data['dob_bs'];
             $student->phone = $data['phone'];
-            // $student->email = $data['email'];
             $student->address = $data['address'];
             $student->blood_group = $data['blood_group'];
             $student->disability = $data['disability'];
