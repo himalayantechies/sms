@@ -2,13 +2,16 @@
     <form method="POST" enctype="multipart/form-data" class="d-block ajaxForm" action="{{ route('admin.create.offline_exam') }}">
         @csrf 
         <div class="form-row">
-
             <div class="fpb-7">
-                <label for="exam_name" class="eForm-label">{{ get_phrase('Exam Name') }}</label>
-                <select name="exam_name" id="exam_name" class="form-select eForm-select eChoice-multiple-with-remove" required>
+                <label for="name" class="eForm-label">{{ get_phrase('Exam Name') }}<span class="required">*</span></label>
+                <input type="text" class="form-control eForm-control " id="name" name="name"  />
+            </div>
+            <div class="fpb-7">
+                <label for="exam_category_id" class="eForm-label">{{ get_phrase('Exam') }}</label>
+                <select name="exam_category_id" id="exam_category_id" class="form-select eForm-select eChoice-multiple-with-remove" required>
                     <option value="">{{ get_phrase('Select exam category name') }}</option>
                     @foreach($exam_categories as $exam_category)
-                        <option value="{{ $exam_category->name }}">{{ $exam_category->name }}</option>
+                        <option value="{{ $exam_category->id }}">{{ $exam_category->name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -60,6 +63,12 @@
                 <label for="total_marks" class="eForm-label">{{ get_phrase('Pass marks') }}<span class="required">*</span></label>
                 <div>
                     <input class="form-control eForm-control" id="pass_marks" type="number" min="1" name="pass_marks">
+                </div>
+            </div>
+            <div class="fpb-7">
+                <label for="total_marks" class="eForm-label">{{ get_phrase('Weightage') }}<span class="required">*</span></label>
+                <div>
+                    <input class="form-control eForm-control" id="weightage" type="number" min="1" max ="100" name="weightage">
                 </div>
             </div>
             

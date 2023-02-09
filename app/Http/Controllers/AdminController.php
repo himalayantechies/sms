@@ -1253,12 +1253,11 @@ class AdminController extends Controller
         $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
 
         // $exams = Exam::get()->where('exam_type', 'offline')->where('school_id', auth()->user()->school_id);
-        $exams = Exam::join('subjects', 'subjects.id', '=', 'exams.subject_id')
-            ->join('classes', 'classes.id', '=', 'exams.class_id')
-            ->where('exams.exam_type', 'offline')
+        $exams = Exam::join('classes', 'classes.id', '=', 'exams.class_id')
+            
             ->where('exams.school_id', $school_id)
             ->where('exams.session_id', $active_session)
-            ->select('exams.*', 'subjects.name as subject', 'classes.name as class')->get();
+            ->select('exams.*',  'classes.name as class')->get();
 
         //dd($exams);
         $classes = (new Classes)->getClassBySchool($school_id);
@@ -1348,8 +1347,7 @@ class AdminController extends Controller
         $data = $request->all();
         $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
         Exam::create([
-            'name' => $data['exam_name'],
-            'exam_type' => 'offline',
+            'name' => $data['name'],
             'starting_time' => strtotime($data['starting_date'] . '' . $data['starting_time']),
             'ending_time' => strtotime($data['ending_date'] . '' . $data['ending_time']),
             'total_marks' => $data['total_marks'],
@@ -1358,7 +1356,9 @@ class AdminController extends Controller
             'subject_id' => $data['subject_id'],
             'school_id' => auth()->user()->school_id,
             'session_id' => $active_session,
-            'pass_marks' => $data['pass_marks']
+            'pass_marks' => $data['pass_marks'],
+            'weightage' => $data['weightage'],
+            'exam_category_id' => $data['exam_category_id']
         ]);
 
         return redirect()->back()->with('message', 'You have successfully create exam.');
