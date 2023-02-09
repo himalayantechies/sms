@@ -29,7 +29,7 @@ class FrontendEvent extends Model
         $this->_data['events'] = FrontendEvent::where('frontend_events.session_id', $active_session)
             ->where('frontend_events.school_id', $school_id)
             ->where('status', 1)
-            ->select(DB::raw("id,title,to_char(to_timestamp(timestamp),'yyyy/mm/dd') as date,description"))
+            ->select(DB::raw("id,title,to_char(to_timestamp(timestamp),'yyyy/mm/dd') as timestamp,description"))
             ->get();
         return $this->_data;
     }
@@ -38,7 +38,7 @@ class FrontendEvent extends Model
         DB::transaction(function () use ($data) {
             $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
             $data['created_by'] = auth()->user()->id;
-            $data['timestamp'] = strtotime($data['date']);
+            $data['timestamp'] = strtotime($data['timestamp']);
             $data['school_id'] = auth()->user()->school_id;
             $data['session_id'] = $active_session;
             FrontendEvent::create($data);
@@ -53,14 +53,14 @@ class FrontendEvent extends Model
             ->where('frontend_events.school_id', $school_id)
             ->where('status', 1)
             ->where('frontend_events.id', $id)
-            ->select(DB::raw("id,title,to_char(to_timestamp(timestamp),'yyyy/mm/dd') as date,description"))
+            ->select(DB::raw("id,title,to_char(to_timestamp(timestamp),'yyyy/mm/dd') as timestamp,description"))
             ->get();
         return $this->_data;
     }
     public function update_event($data, $id)
     {
         $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
-        $data['timestamp'] = strtotime($data['date']);
+        $data['timestamp'] = strtotime($data['timestamp']);
         $data['school_id'] = auth()->user()->school_id;
         $data['session_id'] = $active_session;
         $data['created_by'] = auth()->user()->id;

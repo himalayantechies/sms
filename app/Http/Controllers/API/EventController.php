@@ -32,7 +32,7 @@ class EventController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required',
             'description' => 'required',
-            'date' => 'required',
+            'timestamp' => 'required',
             'status' => 'required'
         ]);
 
@@ -70,7 +70,7 @@ class EventController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required',
             'description' => 'required',
-            'date' => 'required',
+            'timestamp' => 'required',
             'status' => 'required'
         ]);
 
