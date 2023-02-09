@@ -9,23 +9,25 @@ use Illuminate\Support\Facades\Auth;
 class Enrollment extends Model
 {
     use HasFactory;
-    protected $table ='enrollments';
+    protected $table = 'enrollments';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'user_id', 'class_id', 'section_id', 'school_id', 'department_id', 'session_id'
+        'user_id', 'class_id', 'section_id', 'school_id', 'department_id', 'session_id', 'roll_no'
     ];
 
-    public function storeEnrollment($data,$user_id,$active_session){
+    public function storeEnrollment($data, $user_id, $active_session)
+    {
         Enrollment::create([
             'user_id' => $user_id,
             'class_id' => $data['class_id'],
             'section_id' => $data['section_id'],
             'school_id' => Auth::user()->school_id,
-            'session_id' => $active_session
+            'session_id' => $active_session,
+            'roll_no' => $data['roll_no']
         ]);
     }
 }
