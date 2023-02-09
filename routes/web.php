@@ -208,6 +208,7 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
     Route::get('admin/section/{id}', 'classWiseSections')->name('admin.class_wise_sections');
     Route::get('admin/subjects/{id}', 'classWiseSubject')->name('admin.class_wise_subject');
     Route::get('admin/students/{id}', 'classWiseStudents')->name('admin.class_wise_student');
+    Route::get('admin/exams/{class_id}', 'classWiseExams')->name('admin.class_wise_exams');
 
 
     //Admin users route
@@ -835,3 +836,5 @@ Route::controller(Updater::class)->middleware('superAdmin', 'auth')->group(funct
     Route::post('superadmin/product/update', 'update')->name('superadmin.product.update');
 });
 //Updater routes end here
+
+

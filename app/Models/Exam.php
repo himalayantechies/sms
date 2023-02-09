@@ -18,4 +18,10 @@ class Exam extends Model
     protected $fillable = [
         'school_id', 'session_id','class_id', 'name', 'parent', 'lft', 'rght', 'weightage', 'is_end_leaf', 'exam_category_id', 'starting_time', 'ending_time', 'status'
     ];
+
+    public function getExamsByClass($school_id, $session_id, $class_id ){
+
+        return Exam::where(['school_id'=>$school_id, 'session_id'=>$session_id, 'class_id'=>$class_id])->get();
+
+    }
 }
