@@ -99,14 +99,14 @@ use App\Models\Grade;
                     @if ($pr_fm <= 0)
                         <td>
                             {{-- <input class="form-control eForm-control" type="number" id="mark-{{ $enroll_student->user_id }}" name="th_marks" placeholder="th_marks" min="0" value="{{ $th_marks }}" required onchange="get_grade(this.value, this.id)"> --}}
-                            <input class="form-control eForm-control" type="number" id="th_marks-{{ $enroll_student->user_id }}" name="th_marks" placeholder="th_marks" min="0" value="{{ $th_marks }}" required onchange="get_total(this.id)">
+                            <input class="form-control eForm-control" type="number" id="th_marks-{{ $enroll_student->user_id }}" name="th_marks" min="0" value="{{ $th_marks }}" required onchange="get_total(this.id)">
                         </td>
                     @else
                         <td>
-                            <input class="form-control eForm-control" type="number" id="th_marks-{{ $enroll_student->user_id }}" name="th_marks" placeholder="th_marks" min="0" value="{{ $th_marks }}" required onchange="get_total(this.id)">
+                            <input class="form-control eForm-control" type="number" id="th_marks-{{ $enroll_student->user_id }}" name="th_marks" min="0" value="{{ $th_marks }}" required onchange="get_total(this.id)">
                         </td>
                         <td>
-                            <input class="form-control eForm-control" type="number" id="pr_marks-{{ $enroll_student->user_id }}" name="pr_marks" placeholder="pr_marks" min="0" value="{{ $pr_marks }}" required onchange="get_total(this.id)">
+                            <input class="form-control eForm-control" type="number" id="pr_marks-{{ $enroll_student->user_id }}" name="pr_marks" min="0" value="{{ $pr_marks }}" required onchange="get_total(this.id)">
                         </td>
                         <td>
                             <span id="total-marks-{{ $enroll_student->user_id }}" ></span> 
@@ -146,10 +146,8 @@ use App\Models\Grade;
         var exam_id = '{{ $page_data['exam_id'] }}';
         var pr_marks = (!isNaN($('#pr_marks-' + student_id).val()))?  $('#pr_marks-' + student_id).val() : null;
         var th_marks = (!isNaN($('#th_marks-' + student_id).val()))?  $('#th_marks-' + student_id).val() : null;
-        // var th_marks = $('#th_marks-' + student_id).val();
-        // var pr_marks = $('#pr_marks-' + student_id).val();
-        
         var comment = $('#comment-' + student_id).val();
+
         if(subject_id != ""){
             $.ajax({
                 type : 'GET',
@@ -167,7 +165,6 @@ use App\Models\Grade;
     function get_grade(exam_mark, id){
 
         let url = "{{ route('get.grade', ['exam_mark' => ":exam_mark"]) }}";
-        // alert(url);
         url = url.replace(":exam_mark", exam_mark);
         $.ajax({
             url : url,
