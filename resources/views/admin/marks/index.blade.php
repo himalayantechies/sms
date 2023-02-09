@@ -109,18 +109,18 @@
         $.ajax({
             url: url,
             success: function(response){
-                $('#exam_category_id').html(response);
+                $('#exam_id').html(response);
             }
         });
 
     }
 
     function filter_marks(){
-        var exam_category_id = $('#exam_category_id').val();
+        var exam_id = $('#exam_id').val();
         var class_id = $('#class_id').val();
         var section_id = $('#section_id').val();
         var subject_id = $('#subject_id').val();
-        if(exam_category_id != "" &&  class_id != "" && section_id!= "" && subject_id!= ""){
+        if(exam_id != "" &&  class_id != "" && section_id!= "" && subject_id!= ""){
             getFilteredMarks();
         }else{
             toastr.error('{{ get_phrase('Please select all the fields') }}');
@@ -128,18 +128,18 @@
     }
 
     var getFilteredMarks = function() {
-        var exam_category_id = $('#exam_category_id').val();
+        var exam_id = $('#exam_id').val();
         var class_id = $('#class_id').val();
         var section_id = $('#section_id').val();
         var subject_id = $('#subject_id').val();
-        if(exam_category_id != "" &&  class_id != "" && section_id!= "" && subject_id!= ""){
+        if(exam_id != "" &&  class_id != "" && section_id!= "" && subject_id!= ""){
             let url = "{{ route('admin.marks.list') }}";
             $.ajax({
                 url: url,
                 headers: {
                     'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
                 },
-                data: {exam_category_id: exam_category_id, class_id : class_id, section_id : section_id, subject_id: subject_id},
+                data: {exam_id: exam_id, class_id : class_id, section_id : section_id, subject_id: subject_id},
                 success: function(response){
                     $('.marks_content').html(response);
                 }

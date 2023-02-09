@@ -1956,6 +1956,7 @@ class AdminController extends Controller
         $page_data['class_id'] = $data['class_id'];
         $page_data['section_id'] = $data['section_id'];
         $page_data['subject_id'] = $data['subject_id'];
+        $page_data['session_id'] = $session_id;
 
         $page_data['class_name'] = Classes::find($data['class_id'])->name;
         $page_data['section_name'] = Section::find($data['section_id'])->name;
@@ -1964,7 +1965,19 @@ class AdminController extends Controller
         $enroll_students = Enrollment::where('class_id', $page_data['class_id'])
                             ->where('section_id', $page_data['section_id'])
                             ->where('session_id', $session_id)
+                            ->where('school_id', $school_id)
                             ->get();
+
+        // $exam_mark_setups = ExamMarkSetup::where('class_id', $page_data['class_id'])
+        //                                 ->where('section_id', $page_data['section_id'])
+        //                                 ->where('session_id', $session_id)
+        //                                 ->where('school_id', $school_id)
+        //                                 ->where('subject_id', $page_data['subject_id'])
+        //                                 ->get(); 
+
+        // echo "<pre>";
+        // print_r($exam_mark_setups->toArray());
+        // die;
 
         $page_data['exam_categories'] = ExamCategory::where('school_id', $school_id)->get();
         $page_data['classes'] = (new Classes)->getClassBySchool($school_id);
