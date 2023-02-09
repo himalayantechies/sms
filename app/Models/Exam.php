@@ -16,7 +16,6 @@ class Exam extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'exam_type', 'starting_time', 'ending_time', 'total_marks', 'status', 'class_id', 
-        'subject_id', 'school_id', 'session_id','pass_marks','theory_total_marks','theory_pass_marks'
+        'school_id', 'session_id','class_id', 'name', 'parent', 'lft', 'rght', 'weightage', 'is_end_leaf', 'exam_category_id', 'starting_time', 'ending_time', 'status'
     ];
 }

@@ -1932,8 +1932,9 @@ class AdminController extends Controller
     {
         $data = $request->all();
         $school_id = auth()->user()->school_id;
+        $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
 
-        $page_data['exam_category_id'] = $data['exam_category_id'];
+        $page_data['exam_id'] = $data['exam_id'];
         $page_data['class_id'] = $data['class_id'];
         $page_data['section_id'] = $data['section_id'];
         $page_data['subject_id'] = $data['subject_id'];
@@ -1944,6 +1945,7 @@ class AdminController extends Controller
 
         $enroll_students = Enrollment::where('class_id', $page_data['class_id'])
             ->where('section_id', $page_data['section_id'])
+            ->where('session_id', $session_id)
             ->get();
 
         $page_data['exam_categories'] = ExamCategory::where('school_id', $school_id)->get();
