@@ -22,6 +22,36 @@
                 </select>
             </div>
 
+            <div class="fpb-7">
+                <label for="sequence_on_create" class="eForm-label">Seqeunce order</label>
+                <select name="sequence" id="sequence" class="form-select eForm-select eChoice-multiple-with-remove" required>
+                    <option value="">Select a Sequence order</option>
+                     @for($i = 1; $i <=15; $i++ )
+                    <option value="{{ $i }}">{{ $i }}</option>
+                    @endfor
+                </select>
+            </div>
+            
+
+            <div class="fpb-7">
+                <label for="conduct_exam_on_create" class="eForm-label">Conduct Exam</label>
+                <input type="checkbox" name="conduct_exam" id="conduct_exam" value="1" checked> Yes
+            </div>
+
+            <div class="fpb-7">
+                <label for="elective_group_on_create" class="eForm-label">Elective Group</label>
+                <select name="elective_name_id" id="elective_name_id" class="form-select eForm-select eChoice-multiple-with-remove" required>
+                    <option value="0">Select </option>
+                    <option value="1">Elective I</option> 
+                    <option value="2">Elective II</option>
+                    <option value="3">Elective III</option>
+                    <option value="4">Elective IV</option>
+                    <option value="5">Elective V</option>
+
+                    
+                </select>
+            </div>
+
             <!-- <div class="fpb-7">
                 <label for="no_exam_on_create" class="eForm-label">{{ get_phrase('Grading required') }}</label>
                 <select name="no_exam" id="no_exam" class="form-select eForm-select eChoice-multiple-with-remove" required>

@@ -15,7 +15,7 @@ class GradeSubject extends Model
      * @var array
      */
     protected $fillable = [
-         'class_id', 'school_id', 'session_id','subject_id','grade_id','modified_by'
+         'class_id', 'school_id', 'session_id','subject_id','grade_id', 'conduct_exam', 'elective_name_id', 'sequence',  'modified_by'
     ];
 
     public function subject(){

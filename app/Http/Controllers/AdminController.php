@@ -986,11 +986,22 @@ class AdminController extends Controller
      */
     public function offlineAdmissionForm($type = '')
     {
-        $data['student_type'] = ['Day Scholar'];
-        $data['gender'] = ['male', 'female'];
-        $data['caste'] = ['brahmin/chhetri', 'dalit', 'janjati', 'others'];
-        $data['ecd_type'] = ['school based', 'community based'];
-        $data['disability'] = ['n/a', 'physical', 'mental', 'deaf', 'blind', 'low vision', 'deaf and blind', 'speech impairment', 'multiple disability'];
+
+        $data['blood_group'] = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+        $data['student_type'] = ['Day Scholar', 'Boarders'];
+        $data['gender'] = ['Male', 'Female'];
+        $data['caste'] = ['Brahmin/Chhetri', 'Dalit', 'Janjati', 'Others'];
+        $data['ecd_type'] = ['School based', 'Community based'];
+        $data['disability'] = ['N/A', 'Physical', 'Mental', 'Deaf', 'Blind', 'Low vision', 'Deaf and blind', 'Speech impairment', 'Multiple disability'];
+
+
+
+        // $data['student_type'] = ['Day Scholar'];
+        // $data['gender'] = ['male', 'female'];
+        // $data['caste'] = ['brahmin/chhetri', 'dalit', 'janjati', 'others'];
+        // $data['ecd_type'] = ['school based', 'community based'];
+        // $data['disability'] = ['n/a', 'physical', 'mental', 'deaf', 'blind', 'low vision', 'deaf and blind', 'speech impairment', 'multiple disability'];
+
         $data['classes'] = Classes::get();
         $data['student_username'] = (new User)->createUsername(7);
         $data['departments'] = Department::get()->where('school_id', Auth::user()->school_id);
@@ -1011,12 +1022,12 @@ class AdminController extends Controller
     public function editStudent(Request $request, $id)
     {
         $data['student'] = (new Student)->getSpecificStudent($id);
-        $data['blood_group'] = ['a+', 'a-', 'b+', 'b-', 'ab+', 'ab-', 'o+', 'o-'];
-        $data['student_type'] = ['Day Scholar'];
-        $data['gender'] = ['male', 'female'];
-        $data['caste'] = ['brahmin/chhetri', 'dalit', 'janjati', 'others'];
-        $data['ecd_type'] = ['school based', 'community based'];
-        $data['disability'] = ['n/a', 'physical', 'mental', 'deaf', 'blind', 'low vision', 'deaf and blind', 'speech impairment', 'multiple disability'];
+        $data['blood_group'] = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+        $data['student_type'] = ['Day Scholar', 'Boarders'];
+        $data['gender'] = ['Male', 'Female'];
+        $data['caste'] = ['Brahmin/Chhetri', 'Dalit', 'Janjati', 'Others'];
+        $data['ecd_type'] = ['School based', 'Community based'];
+        $data['disability'] = ['N/A', 'Physical', 'Mental', 'Deaf', 'Blind', 'Low vision', 'Deaf and blind', 'Speech impairment', 'Multiple disability'];
         // $data['parents'] = User::where(['role_id' => 6, 'school_id' => 1])->get();
         $data['departments'] = Department::get()->where('school_id', auth()->user()->school_id);
         $data['classes'] = Classes::get();
@@ -2071,7 +2082,7 @@ class AdminController extends Controller
             $data = $request->all();
             $class_id = $data['class_id'] ?? '';
             //$subjects = GradeSubject::where('class_id', $class_id)->paginate(10);
-            $subjects = GradeSubject::with('subject')->where('class_id', $class_id)->paginate(10);
+            $subjects = GradeSubject::with('subject')->where('class_id', $class_id)->orderBy('sequence')->paginate(10);
         } else {
             $subjects = GradeSubject::with('subject')->where('school_id', auth()->user()->school_id)->paginate(10);
             $class_id = '';
@@ -2111,6 +2122,9 @@ class AdminController extends Controller
             'school_id' => auth()->user()->school_id,
             'session_id' => $active_session,
             'subject_id' => $data['subject_id'],
+            'sequence' => $data['sequence'],
+            'conduct_exam' => isset($data['conduct_exam'])? $data['conduct_exam'] : 0,
+            'elective_name_id'=> $data['elective_name_id'],
             'modified_by' => $user_id
         ]);
 
@@ -2132,6 +2146,9 @@ class AdminController extends Controller
         GradeSubject::where('id', $id)->update([
             'class_id' => $data['class_id'],
             'subject_id' => $data['subject_id'],
+            'sequence' => $data['sequence'],
+            'conduct_exam' => isset($data['conduct_exam'])? $data['conduct_exam'] : 0,
+            'elective_name_id'=> $data['elective_name_id'],
             'modified_by' => $user_id
         ]);
 
