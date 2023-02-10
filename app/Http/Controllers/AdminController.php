@@ -1344,16 +1344,16 @@ class AdminController extends Controller
     }
 
     
-    public function classWiseExams($class_id){
-        $exams = (new ExamController)->classWiseExams($class_id);
+    // public function classWiseExams($class_id){
+    //     $exams = (new ExamController)->classWiseExams($class_id);
         
-        $options = '<option value="">' . 'Select exam' . '</option>';
-        foreach ($exams as $exam) :
-            $options .= '<option value="' . $exam['id'] . '">' . $exam['name'] . '</option>';
-        endforeach;
-        echo $options;
+    //     $options = '<option value="">' . 'Select exam' . '</option>';
+    //     foreach ($exams as $exam) :
+    //         $options .= '<option value="' . $exam['id'] . '">' . $exam['name'] . '</option>';
+    //     endforeach;
+    //     echo $options;
         
-    }
+    // }
 
 
 

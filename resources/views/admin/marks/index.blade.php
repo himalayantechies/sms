@@ -79,7 +79,7 @@
   "use strict";
 
     function classWiseSection(classId) {
-        let url = "{{ route('admin.class_wise_sections', ['id' => ":classId"]) }}";
+        let url = "{{ route('class_wise_sections', ['id' => ":classId"]) }}";
         url = url.replace(":classId", classId);
         $.ajax({
             url: url,
@@ -92,7 +92,7 @@
     }
 
     function classWiseSubect(classId) {
-        let url = "{{ route('admin.class_wise_subject', ['id' => ":classId"]) }}";
+        let url = "{{ route('class_wise_subject', ['id' => ":classId"]) }}";
         url = url.replace(":classId", classId);
         $.ajax({
             url: url,
@@ -104,7 +104,7 @@
     }
 
     function classWiseExam(classId){
-        let url = "{{route('admin.class_wise_exams',['class_id'=> ":classId" ]) }}";
+        let url = "{{route('class_wise_exams',['class_id'=> ":classId" ]) }}";
         url = url.replace(":classId", classId);
         $.ajax({
             url: url,

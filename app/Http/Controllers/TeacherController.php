@@ -58,33 +58,39 @@ class TeacherController extends Controller
     {
         $school_id = auth()->user()->school_id;
         $classes = (new Classes)->getClassBySchool($school_id);
-
         $exam_categories = ExamCategory::where('school_id', $school_id)->get();
         
-        // $classes = Classes::where('school_id', auth()->user()->school_id)->get();
-
         return view('teacher.marks.index', ['exam_categories' => $exam_categories, 'classes' => $classes]);
     }
 
     public function marksFilter(Request $request)
     {
         $data = $request->all();
-
-        $page_data['exam_category_id'] = $data['exam_category_id'];
-        $page_data['class_id'] = $data['class_id'];
-        $page_data['section_id'] = $data['section_id'];
-        $page_data['subject_id'] = $data['subject_id'];
+        $school_id = auth()->user()->school_id;
+        $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
+        
+        $page_data['exam_id']       = $data['exam_id'];
+        $page_data['class_id']      = $data['class_id'];
+        $page_data['section_id']    = $data['section_id'];
+        $page_data['subject_id']    = $data['subject_id'];
+        $page_data['session_id']    = $session_id;
 
         $page_data['class_name'] = Classes::find($data['class_id'])->name;
         $page_data['section_name'] = Section::find($data['section_id'])->name;
         $page_data['subject_name'] = Subject::find($data['subject_id'])->name;
 
+        // $enroll_students = Enrollment::where('class_id', $page_data['class_id'])
+        //     ->where('section_id', $page_data['section_id'])
+        //     ->get();
+
         $enroll_students = Enrollment::where('class_id', $page_data['class_id'])
-            ->where('section_id', $page_data['section_id'])
-            ->get();
+                                ->where('section_id', $page_data['section_id'])
+                                ->where('session_id', $session_id)
+                                ->where('school_id', $school_id)
+                                ->get();    
 
         $page_data['exam_categories'] = ExamCategory::where('school_id', auth()->user()->school_id)->get();
-        $page_data['classes'] = Classes::where('school_id', auth()->user()->school_id)->get();
+        $page_data['classes'] = (new Classes)->getClassBySchool($school_id);
 
         return view('teacher.marks.marks_list', ['enroll_students' => $enroll_students, 'page_data' => $page_data]);
     }

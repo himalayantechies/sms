@@ -163,7 +163,6 @@ use App\Models\Grade;
     }
 
     function get_grade(exam_mark, id){
-
         let url = "{{ route('get.grade', ['exam_mark' => ":exam_mark"]) }}";
         url = url.replace(":exam_mark", exam_mark);
         $.ajax({

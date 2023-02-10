@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\ExamController;
+
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\Role;
@@ -13,6 +15,7 @@ use App\Models\Enrollment;
 use Illuminate\Support\Str;
 use App\Models\Gradebook;
 use App\Models\Grade;
+use App\Models\Exam;
 use App\Models\Subject;
 use App\Models\GradeSubject;
 use DB;
@@ -135,6 +138,17 @@ class CommonController extends Controller
             $options .= '<option value="' . $section->id . '">' . $section->name . '</option>';
         endforeach;
         echo $options;
+    }
+
+    public function classWiseExams($class_id){
+        $exams = (new ExamController)->classWiseExams($class_id);
+        
+        $options = '<option value="">' . 'Select exam' . '</option>';
+        foreach ($exams as $exam) :
+            $options .= '<option value="' . $exam['id'] . '">' . $exam['name'] . '</option>';
+        endforeach;
+        echo $options;
+        
     }
 
 

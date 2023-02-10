@@ -25,14 +25,7 @@
         <div class="eSection-wrap">
              <div class="row">
                 <div class="row justify-content-md-center">
-                    <div class="col-md-2">
-                        <select class="form-select eForm-select eChoice-multiple-with-remove" id = "exam_category_id" name="exam_category_id">
-                            <option value="">{{ get_phrase('Select category') }}</option>
-                            @foreach ($exam_categories as $exam_category)
-                                <option value="{{ $exam_category->id }}">{{ $exam_category->name }}</option>
-                            @endforeach
-                      </select>
-                    </div>
+                    
                     <div class="col-md-2">
                         <select name="class_id" id="class_id" class="form-select eForm-select eChoice-multiple-with-remove" required onchange="classWiseSection(this.value)">
                             <option value="">{{ get_phrase('Select class') }}</option>
@@ -51,6 +44,14 @@
                         <select name="subject_id" id="subject_id" class="form-select eForm-select eChoice-multiple-with-remove" required >
                             <option value="">{{ get_phrase('First select a class') }}</option>
                         </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select eForm-select eChoice-multiple-with-remove" id = "exam_id" name="exam_id">
+                            <option value="">{{ get_phrase('First select a class') }}</option>
+                            @foreach ($exam_categories as $exam_category)
+                                <option value="{{ $exam_category->id }}">{{ $exam_category->name }}</option>
+                            @endforeach
+                      </select>
                     </div>
                     <div class="col-xl-2 mb-3">
                         <button type="button" class="btn btn-icon btn-secondary form-control" onclick="filter_marks()">{{ get_phrase('Filter') }}</button>
@@ -83,6 +84,7 @@
             success: function(response){
                 $('#section_id').html(response);
                 classWiseSubect(classId);
+                classWiseExam(classId);
             }
         });
     }
@@ -98,12 +100,24 @@
         });
     }
 
+    function classWiseExam(classId){
+        let url = "{{route('class_wise_exams',['class_id'=> ":classId" ]) }}";
+        url = url.replace(":classId", classId);
+        $.ajax({
+            url: url,
+            success: function(response){
+                $('#exam_id').html(response);
+            }
+        });
+
+    }
+
     function filter_marks(){
-        var exam_category_id = $('#exam_category_id').val();
+        var exam_id = $('#exam_id').val();
         var class_id = $('#class_id').val();
         var section_id = $('#section_id').val();
         var subject_id = $('#subject_id').val();
-        if(exam_category_id != "" &&  class_id != "" && section_id!= "" && subject_id!= ""){
+        if(exam_id != "" &&  class_id != "" && section_id!= "" && subject_id!= ""){
             getFilteredMarks();
         }else{
             toastr.error('{{ get_phrase('Please select all the fields') }}');
@@ -111,18 +125,18 @@
     }
 
     var getFilteredMarks = function() {
-        var exam_category_id = $('#exam_category_id').val();
+        var exam_id = $('#exam_id').val();
         var class_id = $('#class_id').val();
         var section_id = $('#section_id').val();
         var subject_id = $('#subject_id').val();
-        if(exam_category_id != "" &&  class_id != "" && section_id!= "" && subject_id!= ""){
+        if(exam_id != "" &&  class_id != "" && section_id!= "" && subject_id!= ""){
             let url = "{{ route('teacher.marks.list') }}";
             $.ajax({
                 url: url,
                 headers: {
                     'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
                 },
-                data: {exam_category_id: exam_category_id, class_id : class_id, section_id : section_id, subject_id: subject_id},
+                data: {exam_id: exam_id, class_id : class_id, section_id : section_id, subject_id: subject_id},
                 success: function(response){
                     $('.marks_content').html(response);
                 }

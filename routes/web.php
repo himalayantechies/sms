@@ -720,6 +720,7 @@ Route::controller(CommonController::class)->middleware('auth')->group(function (
     Route::get('section/{id}', 'classWiseSections')->name('class_wise_sections');
     Route::get('subjects/{id}', 'classWiseSubject')->name('class_wise_subject');
     Route::get('students/{id}', 'classWiseStudents')->name('class_wise_student');
+    Route::get('exams/{class_id}', 'classWiseExams')->name('class_wise_exams');
 
     //Grade crud routes
     Route::get('grade/get/{exam_mark}', 'getGrade')->name('get.grade');

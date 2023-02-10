@@ -25,6 +25,12 @@ use App\Models\Grade;
   </div>
 </div>
 
+@php
+    $th_fm = 100;    
+    $pr_fm = 0;    
+@endphp
+
+
 @if(count($enroll_students) > 0)
 <div class="export position-relative">
   <button class="eBtn-3 dropdown-toggle float-end mb-4" type="button" id="defaultDropdown" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
@@ -51,47 +57,71 @@ use App\Models\Grade;
     <table class="table eTable">
         <thead>
             <tr>
-                <th>{{ get_phrase('Student name') }}</td>
-                <th>{{ get_phrase('Mark') }}</td>
-                <th>{{ get_phrase('Grade Point') }}</td>
-                <th>{{ get_phrase('Comment') }}</td>
-                <th>{{ get_phrase('Action') }}</td>
+                <th scope="col">Roll No.</th>
+                <th scope="col">{{ get_phrase('Student name') }}</th>
+                @if ($pr_fm <= 0)
+                    <th scope="col">{{ get_phrase('Marks') }}</th>    
+                @else
+                    <th scope="col">{{ get_phrase('Theory') }}</th>    
+                    <th scope="col">{{ get_phrase('Practical') }}</th>
+                    <th scope="col">{{ get_phrase('Total marks') }}</th>
+                @endif    
+                <th scope="col">{{ get_phrase('Grade Point') }}</th>
+                <th scope="col">{{ get_phrase('Comment') }}</th>
+                <th scope="col">{{ get_phrase('Action') }}</th>
             </tr>   
         </thead>
         <tbody>
             @foreach($enroll_students as $enroll_student)
                 <?php
                 $student_details = User::find($enroll_student->user_id);
-
-                $filterd_data = Gradebook::where('exam_category_id', $page_data['exam_category_id'])
+                $filterd_data = Gradebook::where('exam_id', $page_data['exam_id'])
                                             ->where('class_id', $page_data['class_id'])
                                             ->where('section_id', $page_data['section_id'])
                                             ->where('subject_id', $page_data['subject_id'])
-                                            ->where('student_id', $enroll_student->user_id)->get();                                            
+                                            ->where('session_id', $page_data['session_id'])
+                                            ->where('user_id', $enroll_student->user_id)->get();                                     
 
-                if($filterd_data->value('marks')){
-                    $marks = $filterd_data->value('marks');
-                    $user_marks = (!empty($marks))?  $marks : 0;
+                if($filterd_data->value('th_marks')){
+                    $th_marks = (!empty($filterd_data->value('th_marks')))? $filterd_data->value('th_marks'): 0 ;
+                    $pr_marks = (!empty($filterd_data->value('pr_marks')))? $filterd_data->value('pr_marks'): 0 ;
                 } else {
-                    $user_marks = 0;
+                    $th_marks = 0;
+                    $pr_marks = 0;
                 }
 
                 $comment = ($filterd_data->value('comment'))? $filterd_data->value('comment'):''; ?>
-                <tr>
-                    <td>{{ $student_details->name }}</td>
+               <tr>
+                <td>{{$enroll_student->roll_no}}</td>
+                <td>{{ $student_details->name }}</td>
+                
+                @if ($pr_fm <= 0)
                     <td>
-                        <input class="form-control eForm-control" type="number" id="mark-{{ $enroll_student->user_id }}" name="mark" placeholder="mark" min="0" value="{{ $user_marks }}" required onchange="get_grade(this.value, this.id)">
+                        {{-- <input class="form-control eForm-control" type="number" id="mark-{{ $enroll_student->user_id }}" name="th_marks" placeholder="th_marks" min="0" value="{{ $th_marks }}" required onchange="get_grade(this.value, this.id)"> --}}
+                        <input class="form-control eForm-control" type="number" id="th_marks-{{ $enroll_student->user_id }}" name="th_marks" min="0" value="{{ $th_marks }}" required onchange="get_total(this.id)">
+                    </td>
+                @else
+                    <td>
+                        <input class="form-control eForm-control" type="number" id="th_marks-{{ $enroll_student->user_id }}" name="th_marks" min="0" value="{{ $th_marks }}" required onchange="get_total(this.id)">
                     </td>
                     <td>
-                        <span id="grade-for-mark-{{ $enroll_student->user_id }}">{{ get_grade($user_marks) }}</span> 
+                        <input class="form-control eForm-control" type="number" id="pr_marks-{{ $enroll_student->user_id }}" name="pr_marks" min="0" value="{{ $pr_marks }}" required onchange="get_total(this.id)">
                     </td>
                     <td>
-                        <input class="form-control eForm-control" type="text" id="comment-{{ $enroll_student->user_id }}" name="comment" placeholder="comment" value="{{ $comment }}" required>
-                    </td>
-                    <td class="text-center">
-                        <button class="btn btn-success" onclick="mark_update('{{ $enroll_student->user_id }}')"><i class="bi bi-check2-circle"></i></button>
-                    </td>
-                </tr>
+                        <span id="total-marks-{{ $enroll_student->user_id }}" ></span> 
+                    </td>    
+                @endif
+                
+                <td>
+                    <span id="grade-for-mark-{{ $enroll_student->user_id }}">{{ get_grade($th_marks) }}</span> 
+                </td>
+                <td>
+                    <input class="form-control eForm-control" type="text" id="comment-{{ $enroll_student->user_id }}" name="comment" placeholder="comment" value="{{ $comment }}" >
+                </td>
+                <td class="text-center">
+                    <button class="btn btn-success" onclick="mark_update('{{ $enroll_student->user_id }}')"><i class="bi bi-check2-circle"></i></button>
+                </td>
+            </tr>
             @endforeach
         </tbody>
     </table>
@@ -113,14 +143,15 @@ use App\Models\Grade;
         var class_id = '{{ $page_data['class_id'] }}';
         var section_id = '{{ $page_data['section_id'] }}';
         var subject_id = '{{ $page_data['subject_id'] }}';
-        var exam_category_id = '{{ $page_data['exam_category_id'] }}';
-        var mark = $('#mark-' + student_id).val();
+        var exam_id = '{{ $page_data['exam_id'] }}';
+        var pr_marks = (!isNaN($('#pr_marks-' + student_id).val()))?  $('#pr_marks-' + student_id).val() : null;
+        var th_marks = (!isNaN($('#th_marks-' + student_id).val()))?  $('#th_marks-' + student_id).val() : null;
         var comment = $('#comment-' + student_id).val();
         if(subject_id != ""){
             $.ajax({
                 type : 'GET',
                 url : "{{ route('update.mark') }}",
-                data : {student_id : student_id, class_id : class_id, section_id : section_id, subject_id : subject_id, exam_category_id : exam_category_id, mark : mark, comment : comment},
+                data : {user_id : student_id, class_id : class_id, section_id : section_id, subject_id : subject_id, exam_id : exam_id, th_marks : th_marks, pr_marks : pr_marks, comment : comment},
                 success : function(response){
                     toastr.success('{{ get_phrase('Value has been updated successfully') }}');
                 }
@@ -133,11 +164,12 @@ use App\Models\Grade;
     function get_grade(exam_mark, id){
         let url = "{{ route('get.grade', ['exam_mark' => ":exam_mark"]) }}";
         url = url.replace(":exam_mark", exam_mark);
-        console.log(url);
         $.ajax({
             url : url,
             success : function(response){
-                $('#grade-for-'+id).text(response);
+                // $('#grade-for-'+id).text(response);
+                $('#grade-for-mark-'+id).text(response);
+
             }
         });
     }
