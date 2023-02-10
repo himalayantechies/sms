@@ -46,8 +46,13 @@ use App\Models\Grade;
 </div>
 @endif
 @php
-    $th_fm = 100;    
-    $pr_fm = 0;    
+
+    $th_fm = 0;
+    $pr_fm = 0;
+    if($page_data['is_mark_set']){
+        $th_fm = $page_data['th_fm'];    
+        $pr_fm = $page_data['pr_fm'];    
+    }
 @endphp
 
 
@@ -59,10 +64,10 @@ use App\Models\Grade;
                 <th scope="col">Roll No.</th>
                 <th scope="col">{{ get_phrase('Student name') }}</th>
                 @if ($pr_fm <= 0)
-                    <th scope="col">{{ get_phrase('Marks') }}</th>    
+                    <th scope="col">{{ get_phrase('Marks') }} ({{$th_fm}})</th>    
                 @else
-                    <th scope="col">{{ get_phrase('Theory') }}</th>    
-                    <th scope="col">{{ get_phrase('Practical') }}</th>
+                    <th scope="col">{{ get_phrase('Theory') }}  ({{$th_fm}})</th>    
+                    <th scope="col">{{ get_phrase('Practical') }} ({{$pr_fm}})</th>
                     <th scope="col">{{ get_phrase('Total marks') }}</th>
                 @endif    
                 <th scope="col">{{ get_phrase('Grade Point') }}</th>
@@ -73,7 +78,10 @@ use App\Models\Grade;
         <tbody>
             @foreach($enroll_students as $enroll_student)
                 <?php
-
+                if(!$page_data['is_mark_set']){
+                    print_r('Marks not yet setup');
+                    die;
+                }
                 $student_details = User::find($enroll_student->user_id);
                 $filterd_data = Gradebook::where('exam_id', $page_data['exam_id'])
                                             ->where('class_id', $page_data['class_id'])
@@ -85,15 +93,16 @@ use App\Models\Grade;
                 if($filterd_data->value('th_marks')){
                     $th_marks = (!empty($filterd_data->value('th_marks')))? $filterd_data->value('th_marks'): 0 ;
                     $pr_marks = (!empty($filterd_data->value('pr_marks')))? $filterd_data->value('pr_marks'): 0 ;
+                    $total =  $th_marks + $pr_marks;
                 } else {
                     $th_marks = 0;
                     $pr_marks = 0;
+                    $total = 0;
                 }
 
-                $comment = (!empty($filterd_data->value('comment')))? $filterd_data->value('comment'):'';
-                ?>
+                $comment = (!empty($filterd_data->value('comment')))? $filterd_data->value('comment'):''; ?>
                 <tr>
-                    <td>{{$enroll_student->roll_no}}</td>
+                    <td>{{ $enroll_student->roll_no }}</td>
                     <td>{{ $student_details->name }}</td>
                     
                     @if ($pr_fm <= 0)
@@ -109,7 +118,7 @@ use App\Models\Grade;
                             <input class="form-control eForm-control" type="number" id="pr_marks-{{ $enroll_student->user_id }}" name="pr_marks" min="0" value="{{ $pr_marks }}" required onchange="get_total(this.id)">
                         </td>
                         <td>
-                            <span id="total-marks-{{ $enroll_student->user_id }}" ></span> 
+                            <span id="total-marks-{{ $enroll_student->user_id }}" >{{$total}}</span> 
                         </td>    
                     @endif
                     

@@ -19,6 +19,7 @@ use App\Models\Subject;
 use App\Models\Gradebook;
 use App\Models\Grade;
 use App\Models\GradeSubject;
+
 use App\Models\Department;
 use App\Models\ClassRoom;
 use App\Models\ClassList;
@@ -2025,21 +2026,26 @@ class AdminController extends Controller
                             ->where('school_id', $school_id)
                             ->get();
 
-        // $exam_mark_setups = ExamMarkSetup::where('class_id', $page_data['class_id'])
-        //                                 ->where('section_id', $page_data['section_id'])
-        //                                 ->where('session_id', $session_id)
-        //                                 ->where('school_id', $school_id)
-        //                                 ->where('subject_id', $page_data['subject_id'])
-        //                                 ->get(); 
-
-        // echo "<pre>";
-        // print_r($exam_mark_setups->toArray());
-        // die;
-
+        $mark_setups = ExamMarkSetup::where('class_id', $page_data['class_id'])
+                                        ->where('session_id', $session_id)
+                                        ->where('school_id', $school_id)
+                                        ->where('exam_id', $data['exam_id'])
+                                        ->where('subject_id', $page_data['subject_id'])
+                                        ->select('th_fm', 'pr_fm')
+                                        ->first(); 
+                                        
+        if(!empty($mark_setups)){
+            $page_data['th_fm'] = (isset($mark_setups->th_fm))? $mark_setups->th_fm: 0;
+            $page_data['pr_fm'] = (isset($mark_setups->pr_fm))? $mark_setups->pr_fm: 0;
+            $page_data['is_mark_set'] = true;  
+        }else{
+            $page_data['is_mark_set'] = false;
+        }
+        
         $page_data['exam_categories'] = ExamCategory::where('school_id', $school_id)->get();
         $page_data['classes'] = (new Classes)->getClassBySchool($school_id);
 
-        return view('admin.marks.marks_list', ['enroll_students' => $enroll_students, 'page_data' => $page_data]);
+        return view('admin.marks.marks_list', ['enroll_students' => $enroll_students, 'page_data' => $page_data, 'mark_setups' => $mark_setups]);
     }
 
     /**

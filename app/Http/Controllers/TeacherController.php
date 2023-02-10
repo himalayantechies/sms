@@ -31,6 +31,7 @@ use App\Models\Expense;
 use App\Models\StudentFeeManager;
 use App\Models\Teacher;
 use App\Models\TeacherPermission;
+use App\Models\ExamMarkSetup;
 use Illuminate\Foundation\Auth\User as AuthUser;
 use Illuminate\Support\Facades\Auth;
 use Stripe\Exception\PermissionException;
@@ -79,18 +80,36 @@ class TeacherController extends Controller
         $page_data['section_name'] = Section::find($data['section_id'])->name;
         $page_data['subject_name'] = Subject::find($data['subject_id'])->name;
 
-        // $enroll_students = Enrollment::where('class_id', $page_data['class_id'])
-        //     ->where('section_id', $page_data['section_id'])
-        //     ->get();
-
         $enroll_students = Enrollment::where('class_id', $page_data['class_id'])
                                 ->where('section_id', $page_data['section_id'])
                                 ->where('session_id', $session_id)
                                 ->where('school_id', $school_id)
                                 ->get();    
 
+        $mark_setups = ExamMarkSetup::where('class_id', $page_data['class_id'])
+                                ->where('session_id', $session_id)
+                                ->where('school_id', $school_id)
+                                ->where('exam_id', $data['exam_id'])
+                                ->where('subject_id', $page_data['subject_id'])
+                                ->select('th_fm', 'pr_fm')
+                                ->first(); 
+                                
+        if(!empty($mark_setups)){
+            $page_data['th_fm'] = (isset($mark_setups->th_fm))? $mark_setups->th_fm: 0;
+            $page_data['pr_fm'] = (isset($mark_setups->pr_fm))? $mark_setups->pr_fm: 0;
+            $page_data['is_mark_set'] = true;  
+        }else{
+            $page_data['is_mark_set'] = false;
+        }
+
         $page_data['exam_categories'] = ExamCategory::where('school_id', auth()->user()->school_id)->get();
         $page_data['classes'] = (new Classes)->getClassBySchool($school_id);
+
+        // $role_id = auth()->user()->role_id;
+        // echo "<pre>";
+        // print_r(auth()->user()->toArray());
+        // echo $role_id;
+        // die;
 
         return view('teacher.marks.marks_list', ['enroll_students' => $enroll_students, 'page_data' => $page_data]);
     }

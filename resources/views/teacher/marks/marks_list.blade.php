@@ -26,8 +26,12 @@ use App\Models\Grade;
 </div>
 
 @php
-    $th_fm = 100;    
-    $pr_fm = 0;    
+    $th_fm = 0;
+    $pr_fm = 0;
+    if($page_data['is_mark_set']){
+        $th_fm = $page_data['th_fm'];    
+        $pr_fm = $page_data['pr_fm'];    
+    }
 @endphp
 
 
@@ -60,10 +64,10 @@ use App\Models\Grade;
                 <th scope="col">Roll No.</th>
                 <th scope="col">{{ get_phrase('Student name') }}</th>
                 @if ($pr_fm <= 0)
-                    <th scope="col">{{ get_phrase('Marks') }}</th>    
+                    <th scope="col">{{ get_phrase('Marks') }} ({{$th_fm}})</th>    
                 @else
-                    <th scope="col">{{ get_phrase('Theory') }}</th>    
-                    <th scope="col">{{ get_phrase('Practical') }}</th>
+                    <th scope="col">{{ get_phrase('Theory') }}  ({{$th_fm}})</th>    
+                    <th scope="col">{{ get_phrase('Practical') }} ({{$pr_fm}})</th>
                     <th scope="col">{{ get_phrase('Total marks') }}</th>
                 @endif    
                 <th scope="col">{{ get_phrase('Grade Point') }}</th>
