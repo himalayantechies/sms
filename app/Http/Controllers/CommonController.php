@@ -147,39 +147,38 @@ class CommonController extends Controller
     {
         $data = $request->all();
 
+        // echo "<pre>";
+        // print_r($data);
+        // die;
         $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
 
         $data['school_id'] = auth()->user()->school_id;
         $data['session_id'] = $active_session;
 
-        $query = Gradebook::where('exam_category_id', $data['exam_category_id'])
+        $query = Gradebook::where('exam_id', $data['exam_id'])
             ->where('class_id', $data['class_id'])
             ->where('section_id', $data['section_id'])
-            ->where('student_id', $data['student_id'])
+            ->where('user_id', $data['user_id'])
             ->where('subject_id', $data['subject_id'])
             ->where('school_id', $data['school_id'])
             ->where('session_id', $data['session_id'])
             ->first();
 
         if (!empty($query) && $query->count() > 0) {
-            $query->marks = $data['mark'];
+            $query->th_marks = $data['th_marks'];
+            $query->pr_marks = $data['pr_marks'];
             $query->comment = $data['comment'];
             $query->save();
-
         } else {
-            // $mark[$data['subject_id']] = $data['mark'];
-            // $marks = json_encode($mark);
-            // $data['marks'] = $marks;
-            $data['subject_id'] =  $data['subject_id'];
 
-            $data['marks'] = $data['mark'];
+            $data['th_marks'] = $data['th_marks'];
+            $data['pr_marks'] = $data['pr_marks'];
             $data['timestamp'] = strtotime(date('Y-m-d'));
             Gradebook::create($data);
         }
     }
 
-    public function get_user_by_id_from_user_table($id)
-    {
+    public function get_user_by_id_from_user_table($id){
         $user = User::find($id);
 
         return $user;
