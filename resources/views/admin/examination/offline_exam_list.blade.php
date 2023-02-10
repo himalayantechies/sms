@@ -108,6 +108,9 @@
                                                 <a class="dropdown-item" href="javascript:;" onclick="rightModal('{{ route('admin.edit.offline_exam', ['id' => $exam->id]) }}', '{{ get_phrase('Edit Exam') }}')">{{ get_phrase('Edit') }}</a>
                                               </li>
                                               <li>
+                                                <a class="dropdown-item" href="{{ route('admin.setup.offline_exam', ['id' => $exam->id]) }}">{{ get_phrase('Setup') }}</a>
+                                              </li>
+                                              <li>
                                                 <a class="dropdown-item" href="javascript:;" onclick="confirmModal('{{ route('admin.offline_exam.delete', ['id' => $exam->id]) }}', 'undefined');">{{ get_phrase('Delete') }}</a>
                                               </li>
                                             </ul>
