@@ -42,6 +42,7 @@ use App\Models\TeacherPermission;
 use App\Models\Payments;
 use App\Models\Student;
 use App\Models\Teacher;
+use App\Models\ExamMarkSetup;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -1369,7 +1370,7 @@ class AdminController extends Controller
             'total_marks' => $data['total_marks'],
             'status' => 'pending',
             'class_id' => $data['class_id'],
-            'subject_id' => $data['subject_id'],
+            
             'school_id' => auth()->user()->school_id,
             'session_id' => $active_session,
             'pass_marks' => $data['pass_marks'],
@@ -1424,6 +1425,62 @@ class AdminController extends Controller
         return redirect()->back()->with('message', 'You have successfully delete exam.');
     }
 
+    public function setupOfflineExam($id)
+    {
+        $exam = Exam::find($id);
+        
+        $school_id = auth()->user()->school_id;
+        $class_id = $exam['class_id'];
+        $session_id = $exam['session_id'];
+        $classes = (new Classes)->getClassBySchool($school_id);
+        $subjects = (new GradeSubject)->getSubjectByClass($session_id, $school_id, $class_id);
+        //dd($subjects);
+        $exam_categories = ExamCategory::where('school_id', auth()->user()->school_id)->get();
+        $exam_marks_setup = ExamMarkSetup::where('exam_id','=',$id)->get();
+        $marks_setup = [];
+        foreach($exam_marks_setup as $exam_marks){
+            $marks_setup[$exam_marks->subject_id]['id'] = $exam_marks->id;
+            $marks_setup[$exam_marks->subject_id]['th_fm'] = $exam_marks->th_fm;
+            $marks_setup[$exam_marks->subject_id]['th_pm'] = $exam_marks->th_pm;
+            $marks_setup[$exam_marks->subject_id]['th_ch'] = $exam_marks->th_ch;
+            $marks_setup[$exam_marks->subject_id]['pr_fm'] = $exam_marks->pr_fm;
+            $marks_setup[$exam_marks->subject_id]['pr_fm'] = $exam_marks->pr_fm;
+            $marks_setup[$exam_marks->subject_id]['pr_fm'] = $exam_marks->pr_fm;
+        }
+        //dd($marks_setup);
+        return view('admin.examination.setup_offline_exam', ['exam' => $exam, 'classes' => $classes, 'subjects' => $subjects,'exam_marks_setup' => $marks_setup]);
+    }
+
+    public function setupOfflineExamSave(Request $request){
+        $data = $request->all();
+        $exam_id = $data['exam_id'];
+        $session_id = $data['session_id'];
+        $class_id = $data['class_id'];
+        $school_id = auth()->user()->school_id;
+//dd($data);
+        foreach($data['exam_marks_setup'] as $value){
+            if($value['marks_setup_id'] == 0){
+                $exam_marks_setup = new ExamMarkSetup();
+            } else{
+                $exam_marks_setup = ExamMarkSetup::find($value['marks_setup_id']);
+            }
+            
+            $exam_marks_setup->exam_id = $exam_id;
+            $exam_marks_setup->session_id = $session_id;
+            $exam_marks_setup->class_id = $class_id;
+            $exam_marks_setup->school_id = $school_id;
+
+            $exam_marks_setup->subject_id = $value['subject_id'];
+            $exam_marks_setup->th_fm = isset($value['th_fm'])? $value['th_fm']: 0;
+            $exam_marks_setup->th_pm = isset($value['th_pm'])? $value['th_pm']: 0;
+            $exam_marks_setup->th_ch = isset($value['th_ch'])? $value['th_ch']: 0;
+            $exam_marks_setup->pr_fm = isset($value['pr_fm'])? $value['pr_fm']: 0;
+            $exam_marks_setup->pr_pm = isset($value['pr_pm'])? $value['pr_pm']: 0;
+            $exam_marks_setup->pr_ch = isset($value['pr_ch'])? $value['pr_ch']: 0;
+            $exam_marks_setup->save();
+        }
+        return redirect()->back()->with('message', 'You have successfully update exam.');
+    }
     /**
      * Show the grade daily attendance.
      *

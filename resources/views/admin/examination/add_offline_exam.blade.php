@@ -26,12 +26,7 @@
                 </select>
             </div>
 
-            <div class="fpb-7">
-                <label for="subject_id" class="eForm-label">{{ get_phrase('Subject') }}</label>
-                <select name="subject_id" id="subject_id" class="form-select eForm-select eChoice-multiple-with-remove" required >
-                    <option value="">{{ get_phrase('First select a class') }}</option>
-                </select>
-            </div>
+            
 
             <div class="fpb-7">
                 <label for="starting_date" class="eForm-label">{{ get_phrase('Starting date') }}<span class="required">*</span></label>
