@@ -40,20 +40,33 @@ $category_details = ExamCategory::where('name', $exam->name)->first();
            @endif
            <div class="row">
                 <div class="col-md-2 fpb-7">
-                    <label for="subject_id" class="eForm-label">{{ get_phrase('Subject') }}<span class="required">*</span></label>
+                    <!-- <label for="subject_id" class="eForm-label">{{ get_phrase('Subject') }}<span class="required">*</span></label> -->
                     <input type="text" class="form-control eForm-control"  name="exam_marks_setup[{{$subject->id}}][subject_id]" value = "{{$subject->id}}" hidden= "true">
-                    <input type="text" class="form-control eForm-control"  value = "{{$subject->name}}" readOnly= "readOnly">
+                    <label  class="eForm-label">{{$subject->name}}</label>
+                    
                 </div>
                 <div class="col-md-2">
-                    <label for="Theory" class="eForm-label">{{ get_phrase('Theory') }}<span class="required">*</span></label>
+                    <label for="Theory" class="eForm-label">{{ get_phrase('Theory') }}<span class="required">*</span></label><br/>
+                    <label for="Theory" class="eForm-label">{{ get_phrase('Full Marks') }}<span class="required">*</span></label>
                     <input type="text" class="form-control eForm-control"  name="exam_marks_setup[{{$subject->id}}][th_fm]" placeholder="Full Marks" value="<?php echo isset($exam_marks_setup[$subject->id]['th_fm'])?$exam_marks_setup[$subject->id]['th_fm']:0 ?>">
+                    <label for="Theory" class="eForm-label">{{ get_phrase('Pass Marks') }}<span class="required">*</span></label>
                     <input type="text" class="form-control eForm-control"  name="exam_marks_setup[{{$subject->id}}][th_pm]" placeholder="Pass Marks" value="<?php echo isset($exam_marks_setup[$subject->id]['th_pm'])?$exam_marks_setup[$subject->id]['th_pm']:0 ?>">
-                    <input type="text" class="form-control eForm-control"  name="exam_marks_setup[{{$subject->id}}][th_ch]" placeholder="Credit Hours" value="<?php echo isset($exam_marks_setup[$subject->id]['th_ch'])?$exam_marks_setup[$subject->id]['th_ch']:0 ?>">
+                    
+                    
                 </div>
                 <div class="col-md-2 fpb-7">
-                    <label for="Practical" class="eForm-label">{{ get_phrase('Practical') }}<span class="required">*</span></label>
+                    <label for="Practical" class="eForm-label">{{ get_phrase('Practical') }}<span class="required">*</span></label><br/>
+                    <label for="Theory" class="eForm-label">{{ get_phrase('Full Marks') }}<span class="required">*</span></label>
                     <input type="text" class="form-control eForm-control"  name="exam_marks_setup[{{$subject->id}}][pr_fm]" placeholder="Full Marks" value="<?php echo isset($exam_marks_setup[$subject->id]['pr_fm'])?$exam_marks_setup[$subject->id]['pr_fm']:0 ?>">
+                    <label for="Theory" class="eForm-label">{{ get_phrase('Pass Marks') }}<span class="required">*</span></label>
                     <input type="text" class="form-control eForm-control"  name="exam_marks_setup[{{$subject->id}}][pr_pm]" placeholder="Pass Marks" value="<?php echo isset($exam_marks_setup[$subject->id]['pr_pm'])?$exam_marks_setup[$subject->id]['pr_pm']:0 ?>">
+                    
+                </div>
+                <div class="col-md-2 fpb-7">
+                    <label for="Practical" class="eForm-label">{{ get_phrase('Credit Hours') }}<span class="required">*</span></label><br/>
+                    <label for="Theory" class="eForm-label">{{ get_phrase('Theory') }}<span class="required">*</span></label>
+                    <input type="text" class="form-control eForm-control"  name="exam_marks_setup[{{$subject->id}}][th_ch]" placeholder="Credit Hours" value="<?php echo isset($exam_marks_setup[$subject->id]['th_ch'])?$exam_marks_setup[$subject->id]['th_ch']:0 ?>">
+                    <label for="Theory" class="eForm-label">{{ get_phrase('Practical') }}<span class="required">*</span></label>
                     <input type="text" class="form-control eForm-control"  name="exam_marks_setup[{{$subject->id}}][pr_ch]" placeholder="Credit Hours" value="<?php echo isset($exam_marks_setup[$subject->id]['pr_ch'])?$exam_marks_setup[$subject->id]['pr_ch']:0 ?>">
                 </div>
                 
