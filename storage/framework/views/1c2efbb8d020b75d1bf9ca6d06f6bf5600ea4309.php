@@ -208,6 +208,10 @@
                             href="<?php echo e(route('admin.offline_exam')); ?>"><span><?php echo e(get_phrase('Offline Exam')); ?></span></a>
                     </li>
                     <li>
+                        <a class="<?php echo e(request()->is('admin/electiveEnrollment*') ? 'active' : ''); ?>"
+                            href="<?php echo e(route('admin.electiveEnrollment')); ?>"><span><?php echo e(get_phrase('Elective Enrollment')); ?></span></a>
+                    </li>
+                    <li>
                         <a class="<?php echo e(request()->is('admin/marks') ? 'active' : ''); ?>"
                             href="<?php echo e(route('admin.marks')); ?>"><span><?php echo e(get_phrase('Marks')); ?></span></a>
                     </li>

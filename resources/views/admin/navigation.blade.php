@@ -199,6 +199,10 @@
                             href="{{ route('admin.offline_exam') }}"><span>{{ get_phrase('Offline Exam') }}</span></a>
                     </li>
                     <li>
+                        <a class="{{ request()->is('admin/electiveEnrollment*') ? 'active' : '' }}"
+                            href="{{ route('admin.electiveEnrollment') }}"><span>{{ get_phrase('Elective Enrollment') }}</span></a>
+                    </li>
+                    <li>
                         <a class="{{ request()->is('admin/marks') ? 'active' : '' }}"
                             href="{{ route('admin.marks') }}"><span>{{ get_phrase('Marks') }}</span></a>
                     </li>

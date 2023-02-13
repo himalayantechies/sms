@@ -804,10 +804,12 @@ class AdminController extends Controller
 
         $students = $users->join('enrollments', 'users.id', '=', 'enrollments.user_id')->select('enrollments.*')->paginate(10);
 
-        $classes = Classes::get()->where('school_id', auth()->user()->school_id);
-
+        $classes = Classes::get();
+        
         return view('admin.student.student_list', compact('students', 'search', 'classes', 'class_id', 'section_id'));
     }
+
+    
 
     public function createStudentModal()
     {
@@ -1458,7 +1460,7 @@ class AdminController extends Controller
         $session_id = $data['session_id'];
         $class_id = $data['class_id'];
         $school_id = auth()->user()->school_id;
-//dd($data);
+
         foreach($data['exam_marks_setup'] as $value){
             if($value['marks_setup_id'] == 0){
                 $exam_marks_setup = new ExamMarkSetup();
@@ -3995,5 +3997,59 @@ class AdminController extends Controller
         } else {
             return redirect()->back()->with('error', 'Can not delete active session.');
         }
+    }
+
+    public function electiveEnrollment($value = '')
+    {
+        $school_id = auth()->user()->school_id;
+        $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
+       
+        $classes = (new Classes)->getClassBySchool($school_id);
+        
+        return view('admin.elective_enrollment.index', [ 'classes' => $classes]);
+    }
+
+    public function electiveEnrollmentFilter(Request $request)
+    {
+        $data = $request->all();
+        $school_id = auth()->user()->school_id;
+        $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
+
+        $page_data['class_id'] = $data['class_id'];
+        $page_data['section_id'] = $data['section_id'];
+        $page_data['session_id'] = $session_id;
+
+        $page_data['class_name'] = Classes::find($data['class_id'])->name;
+        $page_data['section_name'] = Section::find($data['section_id'])->name;
+       
+        $enroll_students = Enrollment::where('class_id', $page_data['class_id'])
+                            ->where('section_id', $page_data['section_id'])
+                            ->where('session_id', $session_id)
+                            ->where('school_id', $school_id)
+                            ->get();
+        
+        
+        $page_data['classes'] = (new Classes)->getClassBySchool($school_id);
+        $elective_subjects = $this->get_elective_subjects($page_data['class_id'], $session_id, $school_id);
+        $page_data['elective_subjects'] = $elective_subjects;
+        // dd($elective_subjects);
+        return view('admin.elective_enrollment.marks_list', ['enroll_students' => $enroll_students, 'page_data' => $page_data]);
+    }
+
+    public function get_elective_subjects($class_id, $session_id, $school_id){
+        $elective_subjects = GradeSubject::where('class_id', $class_id)
+                ->where('session_id', $session_id)
+                ->where('school_id', $school_id)
+                ->where('elective_name_id', '!=', 0)
+                ->whereNotNull('elective_name_id')
+                ->get();
+        $elective_subjects_list = [];
+
+        foreach($elective_subjects as $elective_subject){
+           
+            $subject = Subject::find($elective_subject->subject_id);
+            $elective_subjects_list[$elective_subject->elective_name_id][$elective_subject->subject_id] = $subject->name;
+        }   
+        return $elective_subjects_list;
     }
 }

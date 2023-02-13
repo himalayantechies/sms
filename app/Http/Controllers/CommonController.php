@@ -18,6 +18,7 @@ use App\Models\Grade;
 use App\Models\Exam;
 use App\Models\Subject;
 use App\Models\GradeSubject;
+use App\Models\ElectiveSubject;
 use DB;
 use PDF;
 
@@ -190,6 +191,28 @@ class CommonController extends Controller
             $data['timestamp'] = strtotime(date('Y-m-d'));
             Gradebook::create($data);
         }
+    }
+
+    public function elective_subjectUpdate(Request $request)
+    {
+        $data = $request->all();
+        $elective = ElectiveSubject::where('user_id', '=',$data['user_id'] )
+                    ->where('class_id','=',$data['class_id'])
+                    ->where('section_id','=',$data['section_id'])->delete();
+
+        $electives = new ElectiveSubject();
+        $electives->user_id = $data['user_id'];
+        $electives->class_id = $data['class_id'];
+        $electives->section_id = $data['section_id'];
+        $electives->elective_1 = isset($data['elective_1'])? $data['elective_1']: 0;
+        $electives->elective_2 = isset($data['elective_2'])? $data['elective_2']: 0;
+        $electives->elective_3 = isset($data['elective_3'])? $data['elective_3']: 0;
+        $electives->modified_by = auth()->user()->id;
+       if($electives->save()){
+            return response()->json(['msg' => 'Saved Successfully'], 200); 
+       } else {
+            return response()->json(['msg' => 'Data could not be saved'], 200); 
+       }
     }
 
     public function get_user_by_id_from_user_table($id){

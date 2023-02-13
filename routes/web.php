@@ -267,6 +267,7 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
     Route::post('admin/student/{id}', 'studentUpdate')->name('admin.student.update');
     Route::get('admin/student/delete/{id}', 'studentDelete')->name('admin.student.delete');
     Route::get('admin/student/edit/{id}', 'editStudent')->name('admin.student.edit');
+    
 
     //Teacher permission route
     Route::get('admin/permission', 'teacherPermission')->name('admin.teacher.permission');
@@ -304,6 +305,9 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
     Route::get('admin/exam_list_by_class/{id}', 'classWiseOfflineExam')->name('admin.class_wise_exam_list');
     Route::get('admin/offline_exam/setup/{id}', 'setupOfflineExam')->name('admin.setup.offline_exam');
     Route::post('admin/offline_exam/setupSave/{id}', 'setupOfflineExamSave')->name('admin.setup.offline_exam.save');
+
+    Route::get('admin/elective_enrollment', 'electiveEnrollment')->name('admin.electiveEnrollment');
+    Route::get('admin/student_list', 'electiveEnrollmentFilter')->name('admin.electiveEnrollment.list');
 
 
     //Attendance routes
@@ -727,7 +731,7 @@ Route::controller(CommonController::class)->middleware('auth')->group(function (
     //Grade crud routes
     Route::get('grade/get/{exam_mark}', 'getGrade')->name('get.grade');
     Route::get('mark/update', 'markUpdate')->name('update.mark');
-
+    Route::get('elective_subject/update', 'elective_subjectUpdate')->name('update.elective_subject');
 
     Route::get('user/{id}', 'idWiseUserName')->name('id_wise_user_name');
 });
