@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\EventController;
+use App\Http\Controllers\API\NoticeBoardController;
+use App\Http\Controllers\API\RoutineController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,4 +26,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/events/{id}', [EventController::class, 'show']);
     Route::post('/events/update/{id}', [EventController::class, 'update']);
     Route::post('/events/delete/{id}', [EventController::class, 'destroy']);
+    
+    
+    // Noticeboard Route
+    Route::get('/noticeboards', [NoticeBoardController::class,'index']);
+
+    // Classroutine Route
+    // Route::post('/classroutine',[RoutineController::class, 'index'] );
+    Route::get('/classroutine/{class_id}/{section_id}',[RoutineController::class, 'index'] );
+
 });

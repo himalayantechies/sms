@@ -740,9 +740,7 @@ Route::controller(CommonController::class)->middleware('auth')->group(function (
 
 //Accountant routes are here
 Route::controller(AccountantController::class)->middleware('accountant', 'auth')->group(function () {
-
     Route::get('accountant/dashboard', 'accountantDashboard')->name('accountant.dashboard')->middleware('role_id');
-
 
     //Fee manager routes
     Route::get('accountant/student_fee_manager', 'studentFeeManagerList')->name('accountant.fee_manager.list');
@@ -754,7 +752,6 @@ Route::controller(AccountantController::class)->middleware('accountant', 'auth')
     Route::post('accountant/fee_manager_list/{id}', 'feeManagerUpdate')->name('accountant.fee_manager.update');
     Route::get('accountant/student_fee/delete/{id}', 'studentFeeDelete')->name('accountant.fee_manager.delete');
     Route::get('accountant/student_fee/invoice/{id}', 'studentFeeinvoice')->name('accountant.studentFeeinvoice');
-
 
     //Offline payment routes
     Route::get('accountant/offline_payment/pending', 'offline_payment_pending')->name('accountant.offline_payment_pending');

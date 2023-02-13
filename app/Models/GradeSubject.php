@@ -35,7 +35,9 @@ class GradeSubject extends Model
                     'grade_subjects.session_id'=> $session_id,
                     'grade_subjects.school_id' => $school_id
                     ])
-            ->select('subjects.id', 'subjects.name')->get();
+            ->select('subjects.id', 'subjects.name')
+            ->orderby('grade_subjects.sequence', 'asc')
+            ->get();
         
         return $subjects;
 
