@@ -311,8 +311,10 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
 
     // Exam Hierarchy
 
-    Route::resource('exam', ExamController::class);
-
+    // Route::resource('exam', ExamController::class);
+    Route::get('admin/exam', [ExamController::class, 'index'])->name('admin.exam.index');
+    Route::get('admin/exam/create', [ExamController::class, 'create'])->name('admin.exam.create');
+    Route::post('admin/exam/store', [ExamController::class, 'store'])->name('admin.exam.store');
 
     //Attendance routes
     Route::get('admin/attendance', 'dailyAttendance')->name('admin.daily_attendance');

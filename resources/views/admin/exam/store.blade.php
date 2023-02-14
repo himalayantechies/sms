@@ -39,7 +39,7 @@
         </div>
     </div>
     <div class="custom-card p-30">
-        <form action="{{ route('exam.store') }}" method="post">
+        <form action="{{ route('admin.exam.store') }}" method="post">
             @csrf
             <div class="row">
                 <div class="col-md-6 col-sm-12 mt-2">
@@ -148,14 +148,13 @@
                 </div>
             </div>
             <div class="form-group row mb-0">
-                <div class="col-md-6 offset-md-4">
+                <div class="col-md-6">
                     <button type="submit" class="btn btn-primary">
-                        {{ __('Save exam') }}
+                        {{ get_phrase('Save') }}
                     </button>
                 </div>
             </div>
         </form>
-
     </div>
 @endsection
 @section('scripts')

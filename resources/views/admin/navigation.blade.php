@@ -43,9 +43,11 @@
             box-shadow: 0 6px 15px rgb(0 0 0 / 0%);
             border-radius: 5px;
         }
-        .p-30{
+
+        .p-30 {
             padding: 30px;
         }
+
         @yield('styles')
     </style>
 </head>
@@ -190,6 +192,10 @@
                     </span>
                 </div>
                 <ul class="sub-menu">
+                    <li>
+                        <a class="{{ request()->is('admin/exam*') ? 'active' : '' }}"
+                            href="{{ route('admin.exam.index') }}"><span>{{ get_phrase('Exam') }}</span></a>
+                    </li>
                     <li>
                         <a class="{{ request()->is('admin/exam_category*') ? 'active' : '' }}"
                             href="{{ route('admin.exam_category') }}"><span>{{ get_phrase('Exam Category') }}</span></a>
