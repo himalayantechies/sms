@@ -14,7 +14,7 @@ use App\Http\Controllers\AccountantController;
 use App\Http\Controllers\Updater;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
-
+use App\Http\Controllers\ExamController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -267,7 +267,7 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
     Route::post('admin/student/{id}', 'studentUpdate')->name('admin.student.update');
     Route::get('admin/student/delete/{id}', 'studentDelete')->name('admin.student.delete');
     Route::get('admin/student/edit/{id}', 'editStudent')->name('admin.student.edit');
-    
+
 
     //Teacher permission route
     Route::get('admin/permission', 'teacherPermission')->name('admin.teacher.permission');
@@ -308,6 +308,10 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
 
     Route::get('admin/elective_enrollment', 'electiveEnrollment')->name('admin.electiveEnrollment');
     Route::get('admin/student_list', 'electiveEnrollmentFilter')->name('admin.electiveEnrollment.list');
+
+    // Exam Hierarchy
+
+    Route::resource('exam', ExamController::class);
 
 
     //Attendance routes
@@ -840,5 +844,3 @@ Route::controller(Updater::class)->middleware('superAdmin', 'auth')->group(funct
     Route::post('superadmin/product/update', 'update')->name('superadmin.product.update');
 });
 //Updater routes end here
-
-

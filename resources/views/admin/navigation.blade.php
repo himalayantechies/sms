@@ -348,9 +348,9 @@
 
             @if (addon_status('hr_management') == 1)
                 <?php
-                
+
                 $to = strtotime(date('m/d/Y')) + 8600;
-                
+
                 $f = date('m/d/Y', strtotime('-31 days'));
                 $form = strtotime(date('m/d/Y'), strtotime($f));
                 ?>
