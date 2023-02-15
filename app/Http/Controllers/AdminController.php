@@ -44,6 +44,7 @@ use App\Models\Payments;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\ExamMarkSetup;
+use App\Models\ExamAttendance;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -2115,6 +2116,82 @@ class AdminController extends Controller
         $grades = Grade::get()->where('school_id', auth()->user()->school_id);
         return redirect()->back()->with('message', 'You have successfully delete grade.');
     }
+
+    /**
+     * show Exam Attendance page
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function createExamAttendance(){
+        $school_id = auth()->user()->school_id;
+        $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
+        $classes = (new Classes)->getClassBySchool($school_id);
+        
+        return view('admin.exam_attendance.index', ['classes' => $classes]);
+
+    }
+
+    
+    public function examAttendanceFilter(Request $request){
+        $pageData   = $request->all();
+        $school_id  = auth()->user()->school_id;
+        $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
+        $class_id   = $pageData['class_id'];
+        $section_id = $pageData['section_id'];
+        $exam_id    = $pageData['exam_id'];
+
+        $data = (new ExamAttendance)->getExamAttendance($school_id, $session_id, $class_id, $section_id, $exam_id);
+        // echo "<pre>";
+        // print_r($data);
+        // die;
+
+        return view('admin.exam_attendance.exam_attendance_list', ['data'=>$data, 'page_data'=> $pageData]);
+        
+    }
+
+
+    public function updateExamAttendance(Request $request){
+
+            $data = $request->all();
+
+            $enrollment_id  = $data['enrollment_id']; 
+            $user_id        = $data['user_id'];  
+            $exam_id        = $data['exam_id'];  
+            $present_day    = $data['present_day'];  
+            $working_day    = $data['working_day']; 
+    
+            (new ExamAttendance)->updateExamAttendance($enrollment_id, $user_id, $exam_id, $present_day, $working_day);
+
+    }
+
+    public function bulkUpdateExamAttendance(Request $request){
+        $data           = $request->all();
+        $working_day    = $data['total-working-days'];
+        $user_list      = $data['user_id'];
+        $exam_list      = $data['exam_id'];
+        $enrollment_list = $data['enrollment-id'];
+        $presentday_list = $data['present-day'];
+
+        // echo "<pre>";
+        // print_r($data);
+
+        for( $i = 0; $i <= count($user_list)-1; $i++){
+            $enrollment_id  = $enrollment_list[$i]; 
+            $user_id        = $user_list[$i];  
+            $exam_id        = $exam_list[$i];  
+            $present_day    = $presentday_list[$i];  
+            $working_day    = $working_day; 
+
+            (new ExamAttendance)->updateExamAttendance($enrollment_id, $user_id, $exam_id, $present_day, $working_day);
+
+        }   
+
+        // return redirect()->back()->with('message', 'Exam attendance updated.');
+        return view('admin.exam_attendance.exam_attendance_list', ['data'=>$data, 'page_data'=> $pageData]);
+        // die;
+
+    }
+
 
     /**
      * Show the promotion list.

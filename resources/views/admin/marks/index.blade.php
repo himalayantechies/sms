@@ -5,8 +5,7 @@
     <div class="row">
       <div class="col-12">
         <div
-          class="d-flex justify-content-between align-items-center flex-wrap gr-15"
-        >
+          class="d-flex justify-content-between align-items-center flex-wrap gr-15"        >
           <div class="d-flex flex-column">
             <h4>{{ get_phrase('Manage Marks') }}</h4>
             <ul class="d-flex align-items-center eBreadcrumb-2">
@@ -23,7 +22,7 @@
 <div class="row">
     <div class="col-12">
         <div class="eSection-wrap">
-             <div class="row">
+            <div class="row">
                 <div class="row justify-content-md-center">
                     <div class="col-md-2">
                         <select name="class_id" id="class_id" class="form-select eForm-select eChoice-multiple-with-remove" required onchange="classWiseSection(this.value)">

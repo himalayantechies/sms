@@ -50,7 +50,7 @@ class User extends Authenticatable
 
     //  public function getTomoNameAttribute()
     // {
-    //     return $this->checkEnrollment()->class_id;  
+    //     return $this->checkEnrollment()->class_id;
     // }
     public function createUsername($role_id)
     {
@@ -71,5 +71,9 @@ class User extends Authenticatable
                 # code...
                 break;
         }
+    }
+    public function student_info()
+    {
+        return $this->hasOne(Student::class, 'user_id');
     }
 }

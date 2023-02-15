@@ -27,10 +27,14 @@ class AuthController extends Controller
         if (!$authenticated) {
             return ["success" => false, "msg" => "Invalid Credentials"];
         } else {
-            $user = User::where('username', $request->username)->first();
+            $query = User::where('username', $request->username);
+            if (Auth::user()->role_id == 7) {
+                $query->with('student_info');
+            }
+            $user = $query->first();
+            $this->_data["user"] = $user;
             $token = $user->createToken('auth_token')->plainTextToken;
             $this->_data["token"] = "Bearer " . $token;
-            $this->_data["user"] = $user;
             return response()->json(["success" => true, "data" => $this->_data, "msg" => "Login Successful"]);
         }
     }
