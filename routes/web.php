@@ -16,7 +16,7 @@ use App\Http\Controllers\ExamController;
 use App\Http\Controllers\Updater;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
-
+// use App\Http\Controllers\ExamController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -270,6 +270,7 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
     Route::get('admin/student/delete/{id}', 'studentDelete')->name('admin.student.delete');
     Route::get('admin/student/edit/{id}', 'editStudent')->name('admin.student.edit');
 
+
     //Teacher permission route
     Route::get('admin/permission', 'teacherPermission')->name('admin.teacher.permission');
     Route::get('admin/permission/list/{filter}', 'teacherPermissionList')->name('admin.teacher.permission_list');
@@ -307,6 +308,15 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
     Route::get('admin/offline_exam/setup/{id}', 'setupOfflineExam')->name('admin.setup.offline_exam');
     Route::post('admin/offline_exam/setupSave/{id}', 'setupOfflineExamSave')->name('admin.setup.offline_exam.save');
 
+    Route::get('admin/elective_enrollment', 'electiveEnrollment')->name('admin.electiveEnrollment');
+    Route::get('admin/student_list', 'electiveEnrollmentFilter')->name('admin.electiveEnrollment.list');
+
+    // Exam Hierarchy
+
+    // Route::resource('exam', ExamController::class);
+    Route::get('admin/exam', [ExamController::class, 'index'])->name('admin.exam.index');
+    Route::get('admin/exam/create', [ExamController::class, 'create'])->name('admin.exam.create');
+    Route::post('admin/exam/store', [ExamController::class, 'store'])->name('admin.exam.store');
 
     //Attendance routes
     Route::get('admin/attendance', 'dailyAttendance')->name('admin.daily_attendance');
@@ -735,7 +745,7 @@ Route::controller(CommonController::class)->middleware('auth')->group(function (
     //Grade crud routes
     Route::get('grade/get/{exam_mark}', 'getGrade')->name('get.grade');
     Route::get('mark/update', 'markUpdate')->name('update.mark');
-
+    Route::get('elective_subject/update', 'elective_subjectUpdate')->name('update.elective_subject');
 
     Route::get('user/{id}', 'idWiseUserName')->name('id_wise_user_name');
 });
@@ -844,10 +854,3 @@ Route::controller(Updater::class)->middleware('superAdmin', 'auth')->group(funct
     Route::post('superadmin/product/update', 'update')->name('superadmin.product.update');
 });
 //Updater routes end here
-
-
-
-// Route::controller(ExamController::class)->middleware('auth')->group(function () {
-//     // Exam Attendance route
-//     Route::get('admin/exam_attendance_create', 'createExamAttendance')->name('exam.add_attendance');
-// });

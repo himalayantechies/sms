@@ -43,9 +43,11 @@
             box-shadow: 0 6px 15px rgb(0 0 0 / 0%);
             border-radius: 5px;
         }
-        .p-30{
+
+        .p-30 {
             padding: 30px;
         }
+
         @yield('styles');
     </style>
 </head>
@@ -191,6 +193,10 @@
                 </div>
                 <ul class="sub-menu">
                     <li>
+                        <a class="{{ request()->is('admin/exam*') ? 'active' : '' }}"
+                            href="{{ route('admin.exam.index') }}"><span>{{ get_phrase('Exam') }}</span></a>
+                    </li>
+                    <li>
                         <a class="{{ request()->is('admin/exam_category*') ? 'active' : '' }}"
                             href="{{ route('admin.exam_category') }}"><span>{{ get_phrase('Exam Category') }}</span></a>
                     </li>
@@ -199,7 +205,11 @@
                             href="{{ route('admin.offline_exam') }}"><span>{{ get_phrase('Offline Exam') }}</span></a>
                     </li>
                     <li>
-                        <a class="{{ request()->is('admin/marks*') ? 'active' : '' }}"
+                        <a class="{{ request()->is('admin/electiveEnrollment*') ? 'active' : '' }}"
+                            href="{{ route('admin.electiveEnrollment') }}"><span>{{ get_phrase('Elective Enrollment') }}</span></a>
+                    </li>
+                    <li>
+                        <a class="{{ request()->is('admin/marks') ? 'active' : '' }}"
                             href="{{ route('admin.marks') }}"><span>{{ get_phrase('Marks') }}</span></a>
                     </li>
                     <li>
@@ -345,9 +355,9 @@
 
             @if (addon_status('hr_management') == 1)
                 <?php
-                
+
                 $to = strtotime(date('m/d/Y')) + 8600;
-                
+
                 $f = date('m/d/Y', strtotime('-31 days'));
                 $form = strtotime(date('m/d/Y'), strtotime($f));
                 ?>

@@ -12,9 +12,10 @@ class Student extends Model
 {
     use HasFactory;
     protected $fillable = ['user_id', 'student_type', 'class_id', 'section_id', 'registration_no', 'roll_no', 'dob_ad', 'dob_bs', 'gender', 'admitted_date', 'phone', 'password', 'address', 'blood_group', 'disability', 'caste', 'religion', 'previous_school', 'ecd_type', 'ecd_no', 'ecd_ppc_experience', 'new_admission_status', 'photo'];
+
     public function users()
     {
-        return $this->hasMany('App\Models\User', 'user_id')->select(['id', 'name', 'role_id', 'code']);
+        return $this->belongsTo('users', 'user_id');
     }
     public function getSpecificStudent($user_id)
     {

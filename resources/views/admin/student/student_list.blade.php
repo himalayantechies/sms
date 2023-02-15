@@ -3,11 +3,11 @@
 @section('content')
 
     <?php
-    
+
     use App\Http\Controllers\CommonController;
     use App\Models\School;
     use App\Models\Section;
-    
+
     ?>
 
     <div class="mainSection-title">
@@ -57,6 +57,7 @@
                         </div>
                     </form>
                     <div class="filter-export-area d-flex align-items-center">
+
                         <div class="position-relative">
                             <button class="eBtn-3 dropdown-toggle" type="button" id="defaultDropdown"
                                 data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
@@ -96,7 +97,7 @@
                                             <select class="form-select" name="section_id" id="section_id"
                                                 data-placeholder="Type to search...">
                                                 <?php if($class_id !=""){
-                                $sections = Section::get()->where('class_id', $class_id); ?>
+                                                $sections = Section::get()->where('class_id', $class_id); ?>
                                                 @foreach ($sections as $section)
                                                     <option value="{{ $section->id }}"
                                                         {{ $section_id == $section->id ? 'selected' : '' }}>
@@ -161,14 +162,14 @@
                             <tbody>
                                 @foreach ($students as $user)
                                     <?php
-                                    
+
                                     $student = DB::table('users')
                                         ->where('id', $user->user_id)
                                         ->first();
-                                    
+
                                     $user_image = get_user_image($user->user_id);
                                     $info = json_decode($student->user_information);
-                                    
+
                                     $student_details = (new CommonController())->get_student_academic_info($student->id);
                                     ?>
                                     <tr>
@@ -259,14 +260,14 @@
                 <tbody>
                     @foreach ($students as $user)
                         <?php
-                        
+
                         $student = DB::table('users')
                             ->where('id', $user->user_id)
                             ->first();
-                        
+
                         $user_image = get_user_image($user->user_id);
                         $info = json_decode($student->user_information);
-                        
+
                         $student_details = (new CommonController())->get_student_academic_info($student->id);
                         ?>
                         <tr>
@@ -312,6 +313,10 @@
 
     <script type="text/javascript">
         "use strict";
+
+        function electiveEnrollment(){
+            alert('here');
+        }
 
         function classWiseSection(classId) {
             let url = "{{ route('class_wise_sections', ['id' => ':classId']) }}";
