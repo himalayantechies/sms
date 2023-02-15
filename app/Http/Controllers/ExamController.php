@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Http\Controllers\CommonController;
 
+use Illuminate\Http\Request;
 
 use App\Models\Exam;
 use App\Models\User;
@@ -14,9 +14,6 @@ use App\Models\Section;
 use App\Models\Enrollment;
 use App\Models\ExamCategory;
 
-
-use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -24,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 
 class ExamController extends Controller
 {
+    //
     public function classWiseExams($class_id){
         $school_id      = auth()->user()->school_id;
         $session_id    = get_school_settings($school_id)->value('running_session');
@@ -67,5 +65,15 @@ class ExamController extends Controller
 
     }
 
-}
+    public function createExamAttendance(){
 
+        echo "<pre>";
+        echo "Create Exam Attenaance";
+        // die;
+        
+        return view('admin.exam_attendance.index');
+
+    }
+
+
+}

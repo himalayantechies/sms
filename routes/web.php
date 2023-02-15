@@ -11,6 +11,8 @@ use App\Http\Controllers\CommonController;
 use App\Http\Controllers\ParentController;
 use App\Http\Controllers\LibrarianController;
 use App\Http\Controllers\AccountantController;
+use App\Http\Controllers\ExamController;
+
 use App\Http\Controllers\Updater;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
@@ -348,6 +350,12 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
     Route::get('admin/marks/list', 'marksFilter')->name('admin.marks.list');
 
 
+    Route::get('admin/exam_attendance_create', 'createExamAttendance')->name('admin.exam.add_attendance');
+    Route::get('admin/exam_attendance/list', 'examAttendanceFilter')->name('admin.exam_attendance.list');
+    Route::get('admin/exam_attendance_update', 'updateExamAttendance')->name('admin.exam.update_attendance');
+    Route::post('admin/exam_attendance_bulkupdate', 'bulkUpdateExamAttendance')->name('admin.exam.bulkupdate_attendance');
+
+    
     //Grade routes
     Route::get('admin/grade', 'gradeList')->name('admin.grade_list');
     Route::get('admin/grade_create', 'createGrade')->name('admin.grade.open_modal');
@@ -838,3 +846,8 @@ Route::controller(Updater::class)->middleware('superAdmin', 'auth')->group(funct
 //Updater routes end here
 
 
+
+// Route::controller(ExamController::class)->middleware('auth')->group(function () {
+//     // Exam Attendance route
+//     Route::get('admin/exam_attendance_create', 'createExamAttendance')->name('exam.add_attendance');
+// });
