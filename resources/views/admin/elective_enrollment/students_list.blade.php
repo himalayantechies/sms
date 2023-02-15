@@ -45,12 +45,6 @@ use App\Models\ElectiveSubject;
   </ul>
 </div>
 @endif
-@php
-
-    $th_fm = 0;
-    $pr_fm = 0;
-    
-@endphp
 
 
 @if(count($enroll_students) > 0)
@@ -67,23 +61,33 @@ use App\Models\ElectiveSubject;
             </tr>   
         </thead>
         <tbody>
+            
+            <input type="hidden" name="class_id" value="{{$page_data['class_id']}}"></input> 
+            <input type="hidden" name="section_id" value="{{$page_data['section_id']}}"></input> 
+            <input type="hidden" name="session_id" value="{{$page_data['session_id']}}"></input> 
             @foreach($enroll_students as $enroll_student)
                 <?php
                     $student_details = User::find($enroll_student->user_id);
-                    $electives = ElectiveSubject::where('user_id','=',$enroll_student->user_id)->first();
-                    //dd($electives);
+                    
                 ?>
-                <tr>
+                <tr id="student_{{$enroll_student->user_id}}">
+                
                     <td>{{ $enroll_student->user_id }}</td>
                     <td>{{ $student_details->name }}</td>
                     @foreach($page_data['elective_subjects'] as $key => $elective_subject)
                     <td>
-                    <select class="elective_subject" name = "elective_{{$key}}" id="elective_{{$key}}-{{$enroll_student->user_id }}">
+                    <?php
+                        $electives = ElectiveSubject::where('user_id','=',$enroll_student->user_id)
+                                    ->where('elective_group','=',$key)->first();
+                    ?>
+                    <input type="hidden" class="key" value="{{$key}}"/>
+                    <select class="elective_subject" data="{{$key}}" id = "elective_subject[{{$enroll_student->user_id}}][{{$key}}]" >
+
                         <option id="">Select </option>
                         @foreach($elective_subject as $k => $v)
-                        <?php $elective_name = 'elective_'.$key; ?>
-                        <?php if(isset($electives->$elective_name)) {?>
-                            @if($electives->$elective_name == $k)
+                        
+                        <?php if($electives !== null) {?>
+                            @if($electives->subject_id == $k)
                                 <option id="{{$k}}" selected = "selected">{{$v}}</option>
                             @else
                                 <option id="{{$k}}" >{{$v}}</option>
@@ -100,6 +104,7 @@ use App\Models\ElectiveSubject;
                     <td class="text-center">
                         <button class="btn btn-success" onclick="elective_update('{{ $enroll_student->user_id }}')"><i class="bi bi-check2-circle"></i></button>
                     </td>
+                
                 </tr>
             @endforeach
         </tbody>
@@ -112,7 +117,7 @@ use App\Models\ElectiveSubject;
     <span class="">{{ get_phrase('No data found') }}</span>
 </div>
 @endif
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 <script type="text/javascript">
 
   "use strict";
@@ -120,27 +125,31 @@ use App\Models\ElectiveSubject;
     function elective_update(student_id){
         var class_id = '{{ $page_data['class_id'] }}';
         var section_id = '{{ $page_data['section_id'] }}';
-        var elective_1 = (!isNaN($('#elective_1-' + student_id).find('option:selected').attr('id')))?  $('#elective_1-' + student_id).find('option:selected').attr('id') : '';
-        var elective_2 = (!isNaN($('#elective_2-' + student_id).find('option:selected').attr('id')))?  $('#elective_2-' + student_id).find('option:selected').attr('id') : '';
-       
-        if(elective_1 != ''){
-            $.ajax({
-                type : 'GET',
-                url : "{{ route('update.elective_subject') }}",
-                data : {
-                    user_id : student_id, 
-                    class_id : class_id, 
-                    section_id : section_id, 
-                    elective_1 : elective_1,
-                    elective_2 : elective_2
-                },
-                success : function(response){
-                    toastr.success('{{ get_phrase('Value has been updated successfully') }}');
-                }
-            });
-        }else{
-            toastr.error('{{ get_phrase('Please select elective subject') }}');
-        }
+        var session_id = '{{ $page_data['session_id'] }}';
+        var el = $("#student_"+student_id);
+        
+        var elective_subjects = {};
+        $(el).find('.elective_subject').each(function(i, obj) {
+            
+            elective_subjects[$(obj).attr('data')] = $(obj).find('option:selected').attr('id');
+        });
+    
+    
+        $.ajax({
+            type : 'GET',
+            url : "{{ route('update.elective_subject') }}",
+            data : {
+                user_id : student_id, 
+                class_id : class_id, 
+                section_id : section_id, 
+                elective: elective_subjects
+                
+            },
+            success : function(response){
+                toastr.success('{{ get_phrase('Value has been updated successfully') }}');
+            }
+        });
+        
     }
 
     function get_grade(exam_mark, id){

@@ -196,23 +196,29 @@ class CommonController extends Controller
     public function elective_subjectUpdate(Request $request)
     {
         $data = $request->all();
-        $elective = ElectiveSubject::where('user_id', '=',$data['user_id'] )
+        
+        foreach($data['elective'] as $key => $value){
+            $elective = ElectiveSubject::where('user_id', '=',$data['user_id'] )
                     ->where('class_id','=',$data['class_id'])
-                    ->where('section_id','=',$data['section_id'])->delete();
-
-        $electives = new ElectiveSubject();
-        $electives->user_id = $data['user_id'];
-        $electives->class_id = $data['class_id'];
-        $electives->section_id = $data['section_id'];
-        $electives->elective_1 = isset($data['elective_1'])? $data['elective_1']: 0;
-        $electives->elective_2 = isset($data['elective_2'])? $data['elective_2']: 0;
-        $electives->elective_3 = isset($data['elective_3'])? $data['elective_3']: 0;
-        $electives->modified_by = auth()->user()->id;
-       if($electives->save()){
-            return response()->json(['msg' => 'Saved Successfully'], 200); 
-       } else {
-            return response()->json(['msg' => 'Data could not be saved'], 200); 
-       }
+                    ->where('section_id','=',$data['section_id'])
+                    ->where('elective_group','=',$key)->first();
+            if($elective == null){
+                $elective = new ElectiveSubject();
+            }
+            $elective->session_id = get_school_settings(auth()->user()->school_id)->value('running_session');;
+            $elective->user_id = $data['user_id'];
+            $elective->class_id = $data['class_id'];
+            $elective->section_id = $data['section_id'];
+            $elective->subject_id = isset($value)? $value: 0;
+            $elective->elective_group = isset($key)? $key: 0;
+            
+            $elective->modified_by = auth()->user()->id;
+            $elective->save();
+        }
+        
+       
+        return response()->json(['msg' => 'Saved Successfully'], 200); 
+       
     }
 
     public function get_user_by_id_from_user_table($id){
