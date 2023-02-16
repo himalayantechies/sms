@@ -11,18 +11,24 @@ use Illuminate\Support\Facades\Hash;
 class Student extends Model
 {
     use HasFactory;
-    protected $fillable = ['user_id', 'student_type', 'class_id', 'section_id', 'registration_no', 'roll_no', 'dob_ad', 'dob_bs', 'gender', 'admitted_date', 'phone', 'password', 'address', 'blood_group', 'disability', 'caste', 'religion', 'previous_school', 'ecd_type', 'ecd_no', 'ecd_ppc_experience', 'new_admission_status', 'photo'];
+    protected $fillable = ['user_id', 'student_type', 'registration_no', 'roll_no', 'dob_ad', 'dob_bs', 'gender', 'admitted_date', 'phone', 'password', 'address', 'blood_group', 'disability', 'caste', 'religion', 'previous_school', 'ecd_type', 'ecd_no', 'ecd_ppc_experience', 'new_admission_status', 'photo'];
 
     public function users()
     {
         return $this->belongsTo('users', 'user_id');
     }
+
     public function getSpecificStudent($user_id)
     {
-
+        $user = User::find($user_id);
+        $school_id = $user->school_id;
+        $active_session = get_school_settings($school_id)->value('running_session');
         return User::leftjoin('students', 'students.user_id', 'users.id')
             ->leftjoin('enrollments', 'enrollments.user_id', 'users.id')
+            ->leftjoin('sections', 'enrollments.section_id', 'sections.id')
+            ->leftjoin('classes', 'enrollments.class_id', 'classes.id')
             ->where('users.id', $user_id)
+            ->where('enrollments.session_id', $active_session)
             ->first([
                 'users.username',
                 'users.name',
@@ -48,7 +54,9 @@ class Student extends Model
                 'students.ecd_no',
                 'students.ecd_ppc_experience',
                 'students.new_admission_status',
-                'students.photo'
+                'students.photo',
+                'sections.name as section',
+                'classes.name as class'
             ]);
     }
     public function storeStudent($request)

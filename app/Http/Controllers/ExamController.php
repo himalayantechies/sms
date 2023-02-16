@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Http\Controllers\CommonController;
 
 use Illuminate\Http\Request;
@@ -21,8 +22,10 @@ use Illuminate\Support\Facades\Route;
 
 class ExamController extends Controller
 {
+    private $_data = [];
 
-    public function classWiseExams($class_id){
+    public function classWiseExams($class_id)
+    {
         $school_id      = auth()->user()->school_id;
         $session_id    = get_school_settings($school_id)->value('running_session');
         $exams          = (new Exam)->getExamsByClass($school_id, $session_id, $class_id);
@@ -88,13 +91,13 @@ class ExamController extends Controller
     {
         $school_id = auth()->user()->school_id;
         $active_session = get_school_settings($school_id)->value('running_session');
-        $this->data['classes'] = (new Classes)->getClassBySchool($school_id);
-        $this->data['exams'] = Exam::withDepth()
+        $this->_data['classes'] = (new Classes)->getClassBySchool($school_id);
+        $this->_data['exams'] = Exam::withDepth()
             ->with('ancestors')
             ->get()
             ->toTree();
-        $this->data['exam_categories'] = ExamCategory::where('school_id', $school_id)->where('session_id', $active_session)->get(['name', 'id']);
-        return view('admin.exam.store', $this->data);
+        $this->_data['exam_categories'] = ExamCategory::where('school_id', $school_id)->where('session_id', $active_session)->get(['name', 'id']);
+        return view('admin.exam.store', $this->_data);
     }
 
     /**

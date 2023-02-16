@@ -4134,8 +4134,8 @@ class AdminController extends Controller
         $page_data['classes'] = (new Classes)->getClassBySchool($school_id);
         $elective_subjects = $this->get_elective_subjects($page_data['class_id'], $session_id, $school_id);
         $page_data['elective_subjects'] = $elective_subjects;
-        // dd($elective_subjects);
-        return view('admin.elective_enrollment.marks_list', ['enroll_students' => $enroll_students, 'page_data' => $page_data]);
+        //dd($elective_subjects);
+        return view('admin.elective_enrollment.students_list', ['enroll_students' => $enroll_students, 'page_data' => $page_data]);
     }
 
     public function get_elective_subjects($class_id, $session_id, $school_id){

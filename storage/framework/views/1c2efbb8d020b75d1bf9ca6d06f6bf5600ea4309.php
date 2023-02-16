@@ -43,10 +43,12 @@
             box-shadow: 0 6px 15px rgb(0 0 0 / 0%);
             border-radius: 5px;
         }
-        .p-30{
+
+        .p-30 {
             padding: 30px;
         }
-        <?php echo $__env->yieldContent('styles'); ?>
+
+        <?php echo $__env->yieldContent('styles'); ?>;
     </style>
 </head>
 
@@ -174,7 +176,7 @@
             </li>
 
             <li
-                class="nav-links-li <?php echo e(request()->is('admin/exam_category*') || request()->is('admin/offline_exam*') || request()->is('admin/marks') || request()->is('admin/grade') || request()->is('admin/promotion*') ? 'showMenu' : ''); ?>">
+                class="nav-links-li <?php echo e(request()->is('admin/exam_category*') || request()->is('admin/offline_exam*') || request()->is('admin/marks') ||  request()->is('admin/exam_attendance_create*') || request()->is('admin/grade') || request()->is('admin/promotion*') ? 'showMenu' : ''); ?>">
                 <div class="iocn-link">
                     <a href="#">
                         <div class="sidebar_icon">
@@ -200,6 +202,10 @@
                 </div>
                 <ul class="sub-menu">
                     <li>
+                        <a class="<?php echo e(request()->is('admin/exam*') ? 'active' : ''); ?>"
+                            href="<?php echo e(route('admin.exam.index')); ?>"><span><?php echo e(get_phrase('Exam')); ?></span></a>
+                    </li>
+                    <li>
                         <a class="<?php echo e(request()->is('admin/exam_category*') ? 'active' : ''); ?>"
                             href="<?php echo e(route('admin.exam_category')); ?>"><span><?php echo e(get_phrase('Exam Category')); ?></span></a>
                     </li>
@@ -215,7 +221,10 @@
                         <a class="<?php echo e(request()->is('admin/marks') ? 'active' : ''); ?>"
                             href="<?php echo e(route('admin.marks')); ?>"><span><?php echo e(get_phrase('Marks')); ?></span></a>
                     </li>
-                    
+                    <li>
+                    <a class="<?php echo e((request()->is('admin/exam_attendance_create*')) ? 'active' : ''); ?>" 
+                            href="<?php echo e(route('admin.exam.add_attendance')); ?>"><span><?php echo e(get_phrase('Exam Attendance')); ?></span></a>
+                </li>
                     <li>
                         <a class="<?php echo e(request()->is('admin/promotion*') ? 'active' : ''); ?>"
                             href="<?php echo e(route('admin.promotion')); ?>"><span><?php echo e(get_phrase('Promotion')); ?></span></a>
@@ -370,9 +379,9 @@
 
             <?php if(addon_status('hr_management') == 1): ?>
                 <?php
-                
+
                 $to = strtotime(date('m/d/Y')) + 8600;
-                
+
                 $f = date('m/d/Y', strtotime('-31 days'));
                 $form = strtotime(date('m/d/Y'), strtotime($f));
                 ?>
