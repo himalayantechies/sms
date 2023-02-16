@@ -45,6 +45,7 @@ use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\ExamMarkSetup;
 use App\Models\ExamAttendance;
+use App\Models\ExamRoutine;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -2153,7 +2154,9 @@ class AdminController extends Controller
     public function updateExamAttendance(Request $request){
 
             $data = $request->all();
-
+            // echo "<pre>";
+            // print_r($data);
+            // die;
             $enrollment_id  = $data['enrollment_id']; 
             $user_id        = $data['user_id'];  
             $exam_id        = $data['exam_id'];  
@@ -2192,6 +2195,28 @@ class AdminController extends Controller
 
     }
 
+
+    public function examRoutine(){
+        $school_id = auth()->user()->school_id;
+        $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
+        $classes = (new Classes)->getClassBySchool($school_id);
+        
+        return view('admin.exam_routine.index', ['classes' => $classes]);
+    }
+
+    public function examRoutineFilter(Request $request){
+        $data = $request->all();
+
+        $school_id  = auth()->user()->school_id;
+        $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
+        $class_id   = $data['class_id'];
+        $exam_id    = $data['exam_id'];
+        
+        $exam_routines = (new ExamRoutine)->index( $session_id, $school_id, $class_id, $exam_id);
+
+        return view('admin.exam_routine.exam_routine_list', ['exam_routines' => $exam_routines, 'page_data'=> $data]);
+
+    }
 
     /**
      * Show the promotion list.

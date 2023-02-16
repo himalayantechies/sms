@@ -75,7 +75,7 @@ use App\Models\Grade;
                 <th scope="col">{{ get_phrase('Action') }}</th>
             </tr>   
         </thead>
-        <tbody>
+        <tbody> 
             @foreach($enroll_students as $enroll_student)
                 <?php
                 if(!$page_data['is_mark_set']){

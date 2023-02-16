@@ -213,9 +213,13 @@
                             href="{{ route('admin.marks') }}"><span>{{ get_phrase('Marks') }}</span></a>
                     </li>
                     <li>
-                    <a class="{{ (request()->is('admin/exam_attendance_create*')) ? 'active' : '' }}" 
+                        <a class="{{ (request()->is('admin/exam_attendance_create*')) ? 'active' : '' }}" 
                             href="{{ route('admin.exam.add_attendance') }}"><span>{{ get_phrase('Exam Attendance') }}</span></a>
-                </li>
+                    </li>
+                    <li>
+                        <a class="{{ (request()->is('admin/exam_routine*')) ? 'active' : '' }}" 
+                            href="{{ route('admin.exam.add_routine') }}"><span>{{ get_phrase('Exam Routine') }}</span></a>
+                    </li>
                     <li>
                         <a class="{{ request()->is('admin/promotion*') ? 'active' : '' }}"
                             href="{{ route('admin.promotion') }}"><span>{{ get_phrase('Promotion') }}</span></a>

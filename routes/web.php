@@ -365,6 +365,11 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
     Route::get('admin/exam_attendance_update', 'updateExamAttendance')->name('admin.exam.update_attendance');
     Route::post('admin/exam_attendance_bulkupdate', 'bulkUpdateExamAttendance')->name('admin.exam.bulkupdate_attendance');
 
+    // Exam Routine route
+    Route::get('admin/exam_routine', 'examRoutine')->name('admin.exam.add_routine');
+    Route::get('admin/exam_routine/list', 'examRoutineFilter')->name('admin.exam_routine.list');
+
+
     
     //Grade routes
     Route::get('admin/grade', 'gradeList')->name('admin.grade_list');

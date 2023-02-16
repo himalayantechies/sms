@@ -141,6 +141,7 @@
                 data: {exam_id: exam_id, class_id : class_id, section_id : section_id, subject_id: subject_id},
                 success: function(response){
                     $('.marks_content').html(response);
+                    
                 }
             });
         }

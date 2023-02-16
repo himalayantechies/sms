@@ -28,8 +28,9 @@
     <div class="eSection-wrap-2">
       <!-- Filter area -->
       <form method="GET" enctype="multipart/form-data" class="d-block ajaxForm" action="{{ route('admin.daily_attendance.filter') }}">
-        <div class="att-filter d-flex flex-wrap">
-          <div class="att-filter-option">
+        {{-- <div class="att-filter d-flex flex-wrap"> --}}
+        <div class="row justify-content-md-center">
+          <div class="col-md-2">
             <select name="month" id="month" class="form-select eForm-select eChoice-multiple-with-remove" required>
               <option value="">{{ get_phrase('Select a month') }}</option>
               <option value="Jan"{{ date('M') == 'Jan' ?  'selected':'' }}>{{ get_phrase('January') }}</option>
@@ -46,7 +47,7 @@
               <option value="Dec"{{ date('M') == 'Dec' ?  'selected':'' }}>{{ get_phrase('December') }}</option>
             </select>
           </div>
-          <div class="att-filter-option">
+          <div class="col-md-2" >
             <select name="year" id="year" class="form-select eForm-select eChoice-multiple-with-remove" required>
               <option value="">{{ get_phrase('Select a year') }}</option>
               <?php for($year = 2015; $year <= date('Y'); $year++){ ?>
@@ -55,7 +56,8 @@
 
             </select>
           </div>
-          <div class="att-filter-option">
+          <div class="col-md-2">
+          {{-- <div class="att-filter-option"> --}}
             <select name="class_id" id="class_id" class="form-select eForm-select eChoice-multiple-with-remove" onchange="classWiseSection(this.value)" required>
               <option value="">{{ get_phrase('Select a class') }}</option>
               @foreach($classes as $class)
@@ -63,13 +65,14 @@
               @endforeach
             </select>
           </div>
-
-          <div class="att-filter-option">
+          <div class="col-md-2">
+          {{-- <div class="att-filter-option"> --}}
             <select name="section_id" id="section_id" class="form-select eForm-select eChoice-multiple-with-remove" required>
               <option value="">{{ get_phrase('Select section') }}</option>
             </select>
           </div>
-          <div class="att-filter-btn">
+          {{-- <div class="att-filter-btn"> --}}
+          <div class="col-md-2">  
             <button class="eBtn eBtn btn-secondary" type="submit" >{{ get_phrase('Filter') }}</button>
           </div>
         </div>
