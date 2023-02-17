@@ -299,7 +299,7 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
     //Exam routes
     Route::get('admin/offline_exam', 'offlineExamList')->name('admin.offline_exam');
     Route::get('admin/offline_exam/export/{id}', 'offlineExamExport')->name('admin.offline_exam.export');
-    Route::get('admin/exam', 'createOfflineExam')->name('admin.offline_exam.open_modal');
+    Route::get('admin/exam/open_modal', 'createOfflineExam')->name('admin.offline_exam.open_modal');
     Route::post('admin/offline_exam', 'offlineExamCreate')->name('admin.create.offline_exam');
     Route::get('admin/offline_exam/{id}', 'editOfflineExam')->name('admin.edit.offline_exam');
     Route::post('admin/offline_exam/{id}', 'offlineExamUpdate')->name('admin.offline_exam.update');

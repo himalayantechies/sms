@@ -1389,7 +1389,7 @@ class AdminController extends Controller
     public function editOfflineExam($id)
     {
         $exam = Exam::find($id);
-
+        //dd($exam);
         $school_id = auth()->user()->school_id;
         $class_id = $exam['class_id'];
         $session_id = $exam['session_id'];
