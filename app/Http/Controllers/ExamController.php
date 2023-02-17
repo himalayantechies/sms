@@ -145,8 +145,7 @@ class ExamController extends Controller
             $node->is_end_leaf = '0';
             $node->appendNode($exam);
         }
-
-        return redirect()->back();
+        return redirect()->back()->with('returned_class_id', $request->class_id);
     }
 
     /**

@@ -30,11 +30,20 @@
                         <div class="col-md-6 col-sm-12 mt-2">
                             <label for="class_id" class="form-label eForm-label">{{ get_phrase('Class') }}*</label>
                             <div class="d-flex">
+
+                                @php
+                                    $returned_class_id = 'null';
+                                    if (session()->has('returned_class_id')) {
+                                        $returned_class_id = session('returned_class_id');
+                                    }
+                                @endphp
                                 <select name="class_id" id="class_id"
                                     class="form-select eForm-select eChoice-multiple-with-remove" required>
                                     <option value="null">Select a class</option>
                                     @foreach ($classes as $class)
-                                        <option value="{{ $class->id }}">{{ $class->name }}</option>
+                                        <option value="{{ $class->id }}"
+                                            {{ $class->id == $returned_class_id ? 'selected' : '' }}>
+                                            {{ $class->name }}</option>
                                     @endforeach
                                 </select>
                                 <button type="button" class="btn btn-primary mx-5"
@@ -138,6 +147,7 @@
     <script>
         $(document).ready(function() {
 
+
             // Add click event listener to each toggle button
 
             $('#exam-details').jstree({
@@ -175,7 +185,10 @@
                                         'responsive': true,
 
                                     }
-                                }
+                                },
+                                "plugins": [
+                                    "themes"
+                                ]
                             });
 
                             $('#modal_parent_exam').jstree('destroy');
@@ -193,7 +206,6 @@
                                 },
                                 "plugins": [
                                     "themes",
-                                    "wholerow",
                                     "checkbox"
                                 ]
                             });
@@ -237,6 +249,7 @@
 
                 }
             });
+            $('#filter-button').click();
         });
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
