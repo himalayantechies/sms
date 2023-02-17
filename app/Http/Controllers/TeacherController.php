@@ -384,14 +384,21 @@ class TeacherController extends Controller
         $this->_data['teaching_medium'] = ['Nepali', 'English', 'Nepal Bhasa', 'Hindi', 'Maithali', 'Bhojpuri', 'Tamang', 'Sanskrit'];
         $this->_data['mother_tongue'] = ['Nepali', 'English', 'Nepal Bhasa', 'Hindi', 'Maithali', 'Bhojpuri', 'Tamang', 'Sanskrit'];
         $this->_data['user'] = (new Teacher)->specificTeacherDetail(Auth::id());
+        
         return view('teacher.profile.view', $this->_data);
     }
 
     function profile_update(Request $request)
     {
+        $data_raw = $request->except('_token','teacher_id');
+        $teacher = Teacher::find($request->teacher_id);
+        $teacher->fill($data_raw);
+        $teacher->save();
+
         $data['name'] = $request->name;
         $data['email'] = $request->email;
         $data['designation'] = $request->designation;
+        $data['code'] = $request->code;
 
         $user_info['birthday'] = strtotime($request->eDefaultDateRange);
         $user_info['gender'] = $request->gender;

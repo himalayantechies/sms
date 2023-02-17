@@ -56,6 +56,8 @@
                         <form action="{{ route('teacher.profile.update') }}" method="post" enctype="multipart/form-data">
                             @csrf
                             <div class="row">
+                                <input type="hidden" class="form-control eForm-control" id="teacher_id" name="teacher_id"
+                                        required value="{{ $user->teacher_id }}">
                                 <div class="col-md-6 col-sm-12 mt-2">
                                     <label for="username"
                                         class="eForm-label form-label">{{ get_phrase('Username') }}*</label>

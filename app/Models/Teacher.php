@@ -72,7 +72,8 @@ class Teacher extends Model
                 'teachers.will_person',
                 'teachers.address',
                 'teachers.phone_number',
-                'teachers.mobile_number'
+                'teachers.mobile_number',
+                'teachers.id as teacher_id'
             ]);
     }
     public function storeTeacher($request)
