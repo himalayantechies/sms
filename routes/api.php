@@ -43,4 +43,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Class Section Route
     Route::get('/classSection/{school_id}',[CommonController::class, 'getClassSectionList'] );
 
+    // Class Exam Route
+    Route::get('/classExams/{school_id}',[CommonController::class, 'getClassExamList'] );
+
 });
