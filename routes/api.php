@@ -4,6 +4,7 @@ use App\Http\Controllers\API\AuthController;
 // use App\Http\Controllers\API\EventController;
 use App\Http\Controllers\API\NoticeBoardController;
 use App\Http\Controllers\API\RoutineController;
+use App\Http\Controllers\API\CommonController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -39,5 +40,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Exam Routine Route
     Route::get('/examroutine/{class_id}/{exam_id}',[RoutineController::class, 'getExamRoutine'] );
     
+    // Class Section Route
+    Route::get('/classSection/{school_id}',[CommonController::class, 'getClassSectionList'] );
 
 });
