@@ -41,9 +41,7 @@
                                     class="form-select eForm-select eChoice-multiple-with-remove" required>
                                     <option value="null">Select a class</option>
                                     @foreach ($classes as $class)
-                                        <option value="{{ $class->id }}"
-                                            {{ $class->id == $returned_class_id ? 'selected' : '' }}>
-                                            {{ $class->name }}</option>
+                                        <option value="{{ $class->id }}"{{ $class->id == $returned_class_id ? 'selected' : '' }}>{{ $class->name }}</option>
                                     @endforeach
                                 </select>
                                 <button type="button" class="btn btn-primary mx-5"
@@ -82,7 +80,7 @@
                                 <div class="col-sm-12 mt-2">
                                     <label for="exam_category_id"
                                         class="form-label eForm-label">{{ get_phrase('Class') }}*</label>
-                                    <input id="class_id_modal_text" type="text" readonly class="form-control">
+                                    <input id="class_id_modal_text" type="text" class="form-control" readonly>
                                     <input id="class_id_modal_value" type="hidden" name="class_id" required>
                                 </div>
 
