@@ -43,22 +43,22 @@ $category_details = ExamCategory::where('name', $exam->name)->first();
 
             <div class="fpb-7">
                 <label for="starting_date" class="eForm-label">{{ get_phrase('Starting date') }}<span class="required">*</span></label>
-                <input type="date" class="form-control eForm-control" id="eInputDate" name="starting_date" value="{{ date('Y-m-d', $exam->starting_time) }}">
+                <input type="date" class="form-control eForm-control" id="eInputDate" name="starting_date" value="{{ date('Y-m-d', strtotime($exam->starting_time)) }}">
             </div>
 
             <div class="fpb-7">
                 <label for="starting_time" class="eForm-label">{{ get_phrase('Starting time') }}<span class="required">*</span></label>
-                <input type="time" class="form-control eForm-control" id="starting_time" name="starting_time" value="{{ date('H:i', $exam->starting_time) }}">
+                <input type="time" class="form-control eForm-control" id="starting_time" name="starting_time" value="{{ date('H:i', strtotime($exam->starting_time)) }}">
             </div>
 
             <div class="fpb-7">
                 <label for="ending_date" class="eForm-label">{{ get_phrase('Ending date') }}<span class="required">*</span></label>
-                <input type="date" class="form-control eForm-control" id="eInputDate" name="ending_date" value="{{ date('Y-m-d', $exam->ending_time) }}">
+                <input type="date" class="form-control eForm-control" id="eInputDate" name="ending_date" value="{{ date('Y-m-d', strtotime($exam->ending_time)) }}">
             </div>
 
             <div class="fpb-7">
                 <label for="ending_time" class="eForm-label">{{ get_phrase('Ending time') }}<span class="required">*</span></label>
-                <input type="time" class="form-control eForm-control" id="ending_time" name="ending_time" value="{{ date('H:i', $exam->ending_time) }}">
+                <input type="time" class="form-control eForm-control" id="ending_time" name="ending_time" value="{{ date('H:i', strtotime($exam->ending_time)) }}">
             </div>
 
             <div class="fpb-7">
