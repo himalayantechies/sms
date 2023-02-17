@@ -314,9 +314,10 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
     // Exam Hierarchy
 
     // Route::resource('exam', ExamController::class);
-    Route::get('admin/exam', [ExamController::class, 'index'])->name('admin.exam.index');
-    Route::get('admin/exam/create', [ExamController::class, 'create'])->name('admin.exam.create');
-    Route::post('admin/exam/store', [ExamController::class, 'store'])->name('admin.exam.store');
+    Route::get('admin/manage/exam', [ExamController::class, 'index'])->name('admin.exam.index');
+    Route::get('admin/manage/exam/create', [ExamController::class, 'create'])->name('admin.exam.create');
+    Route::post('admin/manage/exam/store', [ExamController::class, 'store'])->name('admin.exam.store');
+    Route::post('admin/manage/exam/loadExamClasswise', [ExamController::class, 'loadExamClasswise'])->name('admin.loadExamClasswise');
 
     //Attendance routes
     Route::get('admin/attendance', 'dailyAttendance')->name('admin.daily_attendance');
@@ -371,7 +372,7 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
     Route::post('admin/exam_routine_update', 'examRoutineUpdate')->name('admin.exam_routine.update');
 
 
-    
+
     //Grade routes
     Route::get('admin/grade', 'gradeList')->name('admin.grade_list');
     Route::get('admin/grade_create', 'createGrade')->name('admin.grade.open_modal');

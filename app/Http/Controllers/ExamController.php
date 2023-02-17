@@ -75,13 +75,29 @@ class ExamController extends Controller
      */
     public function index()
     {
-        $exams = Exam::withDepth()
+        $school_id = auth()->user()->school_id;
+        $active_session = get_school_settings($school_id)->value('running_session');
+        $this->_data['classes'] = (new Classes)->getClassBySchool($school_id);
+        $this->_data['exam_categories'] = ExamCategory::where('school_id', $school_id)->where('session_id', $active_session)->get(['name', 'id']);
+        $this->_data['exams'] = Exam::withDepth()
             ->with('ancestors')
             ->get()
             ->toTree();
-        return view('admin.exam.index', compact('exams'));
+        return view('admin.exam.index', $this->_data);
     }
+    public function loadExamClasswise(Request $request)
+    {
+        $school_id = auth()->user()->school_id;
+        $active_session = get_school_settings($school_id)->value('running_session');
 
+        $this->_data['exams'] = Exam::withDepth()
+            ->with('ancestors')
+            ->where('exams.session_id', $active_session)
+            ->where('class_id', $request->class_id)
+            ->get()
+            ->toTree();
+        return view('admin.exam.exam', $this->_data);
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -114,7 +130,6 @@ class ExamController extends Controller
             'name' => $request->name,
             'exam_category_id' => $request->exam_category_id,
             'class_id' => $request->class_id,
-            'section_id' => $request->section_id,
             'starting_time' => $request->starting_time,
             'ending_time' => $request->ending_time,
             'status' => $request->status,

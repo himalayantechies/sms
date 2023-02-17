@@ -75,9 +75,9 @@
                 </div>
 
                 <div class="col-md-6 col-sm-12 mt-2">
-                    <label for="section_id" class="form-label eForm-label">{{ get_phrase('Section') }}*</label>
+                    <label for="section_id" class="form-label eForm-label">{{ get_phrase('Section') }}</label>
                     <select name="section_id" id="section_id" class="form-select eForm-select eChoice-multiple-with-remove"
-                        required>
+                        >
                         <option value="">{{ get_phrase('Select section') }}</option>
                     </select>
                 </div>
