@@ -20,7 +20,7 @@
 </div>
 
 <div class="row">
-    <div class="col-12">
+    <div class="col-10 offset-md-1">
         <div class="eSection-wrap">
             <div class="row">
                 <div class="row justify-content-md-center">

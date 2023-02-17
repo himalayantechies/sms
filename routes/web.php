@@ -368,6 +368,7 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
     // Exam Routine route
     Route::get('admin/exam_routine', 'examRoutine')->name('admin.exam.add_routine');
     Route::get('admin/exam_routine/list', 'examRoutineFilter')->name('admin.exam_routine.list');
+    Route::post('admin/exam_routine_update', 'examRoutineUpdate')->name('admin.exam_routine.update');
 
 
     

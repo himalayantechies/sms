@@ -2218,6 +2218,47 @@ class AdminController extends Controller
 
     }
 
+    public function examRoutineUpdate(Request $request){
+        $data = $request->all();
+      
+
+        $school_id  = auth()->user()->school_id;
+        $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
+        $classes = (new Classes)->getClassBySchool($school_id);
+
+        $exam_id        = $data['exam_id'];
+        $class_id       = $data['class_id'];
+        $subject_list   = $data['subject_id'];
+        $exam_date_list = $data['exam_date'];
+        $start_time_list = $data['start_time'];
+        $end_time_list  = $data['end_time'];
+
+        $page_data = array(
+            'exam_id' => $exam_id,
+            'class_id' => $class_id
+        );
+
+        // echo "<pre>";
+        // print_r($data);
+        // print_r($page_data);
+
+        // die;
+
+        for( $i = 0; $i <= count($subject_list)-1; $i++){
+            $subject_id = $subject_list[$i]; 
+            $exam_date  = $exam_date_list[$i];  
+            $start_time = $start_time_list[$i];  
+            $end_time   = $end_time_list[$i];  
+
+            (new ExamRoutine)->updateExamRoutine($session_id, $school_id, $class_id, $exam_id, $subject_id, $exam_date, $start_time, $end_time);
+        }
+
+        return view('admin.exam_routine.index', ['classes' => $classes]);
+    }   
+
+
+
+        
     /**
      * Show the promotion list.
      *
