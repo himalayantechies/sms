@@ -79,10 +79,6 @@ class ExamController extends Controller
         $active_session = get_school_settings($school_id)->value('running_session');
         $this->_data['classes'] = (new Classes)->getClassBySchool($school_id);
         $this->_data['exam_categories'] = ExamCategory::where('school_id', $school_id)->where('session_id', $active_session)->get(['name', 'id']);
-        $this->_data['exams'] = Exam::withDepth()
-            ->with('ancestors')
-            ->get()
-            ->toTree();
         return view('admin.exam.index', $this->_data);
     }
     public function loadExamClasswise(Request $request)
@@ -91,12 +87,26 @@ class ExamController extends Controller
         $active_session = get_school_settings($school_id)->value('running_session');
 
         $this->_data['exams'] = Exam::withDepth()
-            ->with('ancestors')
             ->where('exams.session_id', $active_session)
             ->where('class_id', $request->class_id)
             ->get()
             ->toTree();
         return view('admin.exam.exam', $this->_data);
+    }
+    public function configureExamDetails(Request $request)
+    {
+        $exam = Exam::find($request->exam_id);
+        $this->_data['exam'] = $exam;
+        $this->_data['classes'] = $exam->join('classes', 'exams.class_id', 'classes.id')->get(['classes.name', 'classes.id']);
+        return view('admin.exam.configureExamDetails', $this->_data);
+    }
+    public function saveExamWeightage(Request $request)
+    {
+        $data = $request->except('_token');
+        for ($count = 0; $count < count($data['exam_id']); $count++) {
+            Exam::where('id', $data['exam_id'][$count])->update(['weightage' => $data['weightage'][$count]]);
+        }
+        return redirect()->back()->with('returned_class_id', $request->class_id);
     }
     /**
      * Show the form for creating a new resource.
@@ -109,7 +119,6 @@ class ExamController extends Controller
         $active_session = get_school_settings($school_id)->value('running_session');
         $this->_data['classes'] = (new Classes)->getClassBySchool($school_id);
         $this->_data['exams'] = Exam::withDepth()
-            ->with('ancestors')
             ->get()
             ->toTree();
         $this->_data['exam_categories'] = ExamCategory::where('school_id', $school_id)->where('session_id', $active_session)->get(['name', 'id']);
@@ -143,6 +152,7 @@ class ExamController extends Controller
             //  Here we define the parent for new created exam
             $node = Exam::find($request->parent);
             $node->is_end_leaf = '0';
+            $node->save();
             $node->appendNode($exam);
         }
         return redirect()->back()->with('returned_class_id', $request->class_id);

@@ -1,5 +1,8 @@
 @extends('admin.navigation')
 @section('styles')
+    .configure-exam-card{
+    background-color:#f1f1f1;
+    }
 @endsection
 
 @section('content')
@@ -24,30 +27,30 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="card">
-                <form action="{{ route('admin.exam.store') }}" method="post">
-                    @csrf
-                    <div class="card-body">
-                        <div class="col-md-6 col-sm-12 mt-2">
-                            <label for="class_id" class="form-label eForm-label">{{ get_phrase('Class') }}*</label>
-                            <div class="d-flex">
+                <div class="card-body row">
+                    <div class="col-md-4 col-sm-12 mt-2">
+                        <label for="class_id" class="form-label eForm-label">{{ get_phrase('Class') }}*</label>
+                        <div class="d-flex">
 
-                                @php
-                                    $returned_class_id = 'null';
-                                    if (session()->has('returned_class_id')) {
-                                        $returned_class_id = session('returned_class_id');
-                                    }
-                                @endphp
-                                <select name="class_id" id="class_id"
-                                    class="form-select eForm-select eChoice-multiple-with-remove" required>
-                                    <option value="null">Select a class</option>
-                                    @foreach ($classes as $class)
-                                        <option value="{{ $class->id }}"{{ $class->id == $returned_class_id ? 'selected' : '' }}>{{ $class->name }}</option>
-                                    @endforeach
-                                </select>
-                                <button type="button" class="btn btn-primary mx-5"
-                                    id="filter-button">{{ get_phrase('Filter') }}</button>
-                            </div>
+                            @php
+                                $returned_class_id = 'null';
+                                if (session()->has('returned_class_id')) {
+                                    $returned_class_id = session('returned_class_id');
+                                }
+                            @endphp
+                            <select name="class_id" id="class_id"
+                                class="form-select eForm-select eChoice-multiple-with-remove" required>
+                                <option value="null">Select a class</option>
+                                @foreach ($classes as $class)
+                                    <option
+                                        value="{{ $class->id }}"{{ $class->id == $returned_class_id ? 'selected' : '' }}>
+                                        {{ $class->name }}</option>
+                                @endforeach
+                            </select>
+                            <button type="button" class="btn btn-primary mx-5"
+                                id="filter-button">{{ get_phrase('Filter') }}</button>
                         </div>
+
                         <div class="mt-5 container">
                             <div class="row">
                                 <div id="exam-details" class="col-md-5">
@@ -61,7 +64,11 @@
                             </div>
                         </div>
                     </div>
-                </form>
+                    <div class="col-md-8 col-sm-12 mt-2">
+                        <div id="configureExam">
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -168,6 +175,7 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         success: function(data) {
+                            $('#configureExam').html('');
                             $('#class_id_modal_value').val(selectedValue);
                             $('#class_id_modal_text').val(selectedText);
                             var a =
@@ -184,10 +192,42 @@
 
                                     }
                                 },
+                                'checkbox': {
+                                    three_state: false,
+                                    cascade: 'none'
+                                },
                                 "plugins": [
-                                    "themes"
+                                    "themes",
+                                    "checkbox"
                                 ]
                             });
+
+                            var examDetailsresetting = false;
+                            $('#exam-details').on('changed.jstree', function(e, data) {
+                                $('#configureExam').html('');
+                                if (examDetailsresetting) //ignoring the changed event
+                                {
+                                    examDetailsresetting = false;
+                                    return;
+                                }
+                                if (data.selected.length > 1) {
+                                    //ignore next changed event
+                                    examDetailsresetting = true;
+                                    //will invoke the changed event once
+                                    data.instance.uncheck_all();
+                                    data.instance.check_node(data.node);
+                                    return;
+                                }
+                                selectedId = [];
+                                for (var i = 0; i < data.selected.length; i++) {
+                                    selectedId.push(data.instance.get_node(data
+                                        .selected[i]).id);
+                                }
+                                if (selectedId[0] !== undefined) {
+                                    loadConfigureExam(selectedId[0]);
+                                }
+                            });
+
 
                             $('#modal_parent_exam').jstree('destroy');
                             $("#modal_parent_exam").append(data);
@@ -240,7 +280,7 @@
                         'core': {
                             'themes': {
                                 'name': 'default',
-                                'responsive': true
+                                'responsive': true,
                             }
                         }
                     });
@@ -249,6 +289,22 @@
             });
             $('#filter-button').click();
         });
+
+        function loadConfigureExam(exam_id) {
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('admin.exam.configureExamDetails') }}",
+                data: {
+                    "exam_id": exam_id
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(data) {
+                    $('#configureExam').html(data);
+                }
+            });
+        }
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>

@@ -318,7 +318,8 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
     Route::get('admin/manage/exam/create', [ExamController::class, 'create'])->name('admin.exam.create');
     Route::post('admin/manage/exam/store', [ExamController::class, 'store'])->name('admin.exam.store');
     Route::post('admin/manage/exam/loadExamClasswise', [ExamController::class, 'loadExamClasswise'])->name('admin.loadExamClasswise');
-
+    Route::post('admin/manage/exam/configureExamDetails', [ExamController::class, 'configureExamDetails'])->name('admin.exam.configureExamDetails');
+    Route::post('admin/manage/exam/saveExamWeightage', [ExamController::class, 'saveExamWeightage'])->name('admin.exam.saveExamWeightage');
     //Attendance routes
     Route::get('admin/attendance', 'dailyAttendance')->name('admin.daily_attendance');
     Route::get('admin/take_attendance', 'takeAttendance')->name('admin.take_attendance.open_modal');
