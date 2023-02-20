@@ -1,8 +1,9 @@
 <div class="card text-bg-light mb-3">
     <div class="card-header d-flex justify-content-between">Configure {{ $exam->name }}
         <div>
-            <button type="button" class="btn btn-secondary btn-sm text-white" data-bs-toggle="modal" onclick="editModalConfigureExam({{$exam->class_id}})"
-                data-bs-target="#editExamModal"><i class="bi bi-pencil-fill"></i></button>
+            <button type="button" class="btn btn-secondary btn-sm text-white" data-bs-toggle="modal"
+                onclick="editModalConfigureExam({{ $exam->class_id }})" data-bs-target="#editExamModal"><i
+                    class="bi bi-pencil-fill"></i></button>
             <button class="btn btn-danger btn-sm delete-btn" onclick="deleteExam({{ $exam->id }})">
                 <i class="bi bi-trash3-fill"></i>
             </button>
@@ -54,6 +55,34 @@
                         </form>
                     </div>
                 </div>
+                <div class="row px-3 mt-3">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">S.N</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php $count = 1; ?>
+                            @foreach ($exam->children as $child_exam)
+                                <tr>
+                                    <th scope="row">{{ $count++ }}</th>
+                                    <td>{{ $child_exam->name }}</td>
+                                    <td>
+                                        <div>
+                                            <button class="btn btn-danger btn-sm delete-btn"
+                                                onclick="deleteExam({{ $child_exam->id }})">
+                                                <i class="bi bi-trash3-fill"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         @else
             <div class="row">
@@ -77,7 +106,7 @@
                 <div class="modal-body">
                     <div class="container">
                         @csrf
-                        <input type="hidden" value="{{$exam->id}}" name="exam_id">
+                        <input type="hidden" value="{{ $exam->id }}" name="exam_id">
                         <div class="row">
                             <div class="col-sm-12 mt-2">
                                 <label for="exam_category_id"
