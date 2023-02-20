@@ -37,6 +37,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('public/assets/calender/main.css') }}" />
 
     <script src="{{ asset('public/assets/vendors/jquery/jquery-3.6.0.min.js') }}"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css" crossorigin="anonymous">
     <style>
         .custom-card {
             background-color: #fff;
@@ -213,11 +214,11 @@
                             href="{{ route('admin.marks') }}"><span>{{ get_phrase('Marks') }}</span></a>
                     </li>
                     <li>
-                        <a class="{{ (request()->is('admin/exam_attendance_create*')) ? 'active' : '' }}" 
+                        <a class="{{ (request()->is('admin/exam_attendance_create*')) ? 'active' : '' }}"
                             href="{{ route('admin.exam.add_attendance') }}"><span>{{ get_phrase('Exam Attendance') }}</span></a>
                     </li>
                     <li>
-                        <a class="{{ (request()->is('admin/exam_routine*')) ? 'active' : '' }}" 
+                        <a class="{{ (request()->is('admin/exam_routine*')) ? 'active' : '' }}"
                             href="{{ route('admin.exam.add_routine') }}"><span>{{ get_phrase('Exam Routine') }}</span></a>
                     </li>
                     <li>
@@ -799,7 +800,7 @@
             toastr.warning("{{ session('warning') }}");
         @endif
     </script>
-
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
         "use strict";
 
@@ -815,7 +816,9 @@
             });
         });
     </script>
-    @yield('scripts')
+
+@yield('scripts')
+
 
 </body>
 

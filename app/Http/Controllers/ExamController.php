@@ -85,7 +85,7 @@ class ExamController extends Controller
     {
         $school_id = auth()->user()->school_id;
         $active_session = get_school_settings($school_id)->value('running_session');
-
+        $this->_data['random_number'] = rand(10, 100);
         $this->_data['exams'] = Exam::withDepth()
             ->where('exams.session_id', $active_session)
             ->where('class_id', $request->class_id)
@@ -95,8 +95,11 @@ class ExamController extends Controller
     }
     public function configureExamDetails(Request $request)
     {
+        $school_id = auth()->user()->school_id;
+        $active_session = get_school_settings($school_id)->value('running_session');
         $exam = Exam::find($request->exam_id);
         $this->_data['exam'] = $exam;
+        $this->_data['exam_categories'] = ExamCategory::where('school_id', $school_id)->where('session_id', $active_session)->get(['name', 'id']);
         $this->_data['classes'] = $exam->join('classes', 'exams.class_id', 'classes.id')->get(['classes.name', 'classes.id']);
         return view('admin.exam.configureExamDetails', $this->_data);
     }
@@ -158,34 +161,59 @@ class ExamController extends Controller
         return redirect()->back()->with('returned_class_id', $request->class_id);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function moveNodeUp(Request $request)
     {
+        $node = Exam::find($request->exam_id);
+        $node->up();
     }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function moveNodeDown(Request $request)
     {
+        $node = Exam::find($request->exam_id);
+        $node->down();
     }
-
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function deleteExam(Request $request)
     {
+        $exam = Exam::find($request->exam_id);
+        $exam->delete();
+    }
+    public function updateExam(Request $request)
+    {
+        $exam = Exam::find($request->exam_id);
+        if (isset($request->name)) {
+            $exam->name = $request->name;
+        }
+        if (isset($request->exam_category_id)) {
+            $exam->exam_category_id = $request->exam_category_id;
+        }
+        if (isset($request->class_id)) {
+            $exam->class_id = $request->class_id;
+        }
+        if (isset($request->starting_time)) {
+            $exam->starting_time = $request->starting_time;
+        }
+        if (isset($request->ending_time)) {
+            $exam->ending_time = $request->ending_time;
+        }
+        if (isset($request->status)) {
+            $exam->status = $request->status;
+        }
+        if (isset($request->parent) && $request->parent == 'none') {
+            $exam->parent = NULL;
+        }
+        $exam->save();
+        if ($request->parent && $request->parent !== 'none') {
+            //  Here we define the parent for new created exam
+            $node = Exam::find($request->parent);
+            $node->is_end_leaf = '0';
+            $node->save();
+            $node->appendNode($exam);
+        }
+        return redirect()->back()->with('returned_class_id', $request->class_id);
     }
 }
