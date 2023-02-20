@@ -5,6 +5,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\NoticeBoardController;
 use App\Http\Controllers\API\RoutineController;
 use App\Http\Controllers\API\CommonController;
+use App\Http\Controllers\API\ExamController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -46,4 +47,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // Class Exam Route
     Route::get('/classExams/{school_id}',[CommonController::class, 'getClassExamList'] );
 
+    //Exam Marks Update
+    Route::post('/exam/marks/update',[ExamController::class, 'marks_update'] );
 });
