@@ -46,6 +46,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Class Exam Route
     Route::get('/classExams/{school_id}',[CommonController::class, 'getClassExamList'] );
+    
+    //Class Subjects
+    Route::get('/classSubjects/{school_id}',[CommonController::class, 'getClassSubjectsList'] );
 
     //Exam Marks Update
     Route::post('/exam/marks/update',[ExamController::class, 'marks_update'] );

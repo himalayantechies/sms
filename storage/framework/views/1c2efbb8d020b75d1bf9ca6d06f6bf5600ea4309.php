@@ -37,6 +37,7 @@
     <link rel="stylesheet" type="text/css" href="<?php echo e(asset('public/assets/calender/main.css')); ?>" />
 
     <script src="<?php echo e(asset('public/assets/vendors/jquery/jquery-3.6.0.min.js')); ?>"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css" crossorigin="anonymous">
     <style>
         .custom-card {
             background-color: #fff;
@@ -176,7 +177,7 @@
             </li>
 
             <li
-                class="nav-links-li <?php echo e(request()->is('admin/exam_category*') || request()->is('admin/offline_exam*') || request()->is('admin/marks') ||  request()->is('admin/exam_attendance_create*') || request()->is('admin/grade') || request()->is('admin/promotion*') ? 'showMenu' : ''); ?>">
+                class="nav-links-li <?php echo e(request()->is('admin/exam_category*') || request()->is('admin/offline_exam*') || request()->is('admin/marks') ||  request()->is('admin/exam_attendance_create*') || request()->is('admin/grade') || request()->is('admin/promotion*')||request()->is('admin/manage/exam/*')||request()->is('admin/manage/exam') ? 'showMenu' : ''); ?>">
                 <div class="iocn-link">
                     <a href="#">
                         <div class="sidebar_icon">
@@ -202,7 +203,7 @@
                 </div>
                 <ul class="sub-menu">
                     <li>
-                        <a class="<?php echo e(request()->is('admin/exam*') ? 'active' : ''); ?>"
+                        <a class="<?php echo e(request()->is('admin/manage/exam/*')||request()->is('admin/manage/exam') ? 'active' : ''); ?>"
                             href="<?php echo e(route('admin.exam.index')); ?>"><span><?php echo e(get_phrase('Exam')); ?></span></a>
                     </li>
                     <li>
@@ -222,9 +223,13 @@
                             href="<?php echo e(route('admin.marks')); ?>"><span><?php echo e(get_phrase('Marks')); ?></span></a>
                     </li>
                     <li>
-                    <a class="<?php echo e((request()->is('admin/exam_attendance_create*')) ? 'active' : ''); ?>" 
+                        <a class="<?php echo e((request()->is('admin/exam_attendance_create*')) ? 'active' : ''); ?>"
                             href="<?php echo e(route('admin.exam.add_attendance')); ?>"><span><?php echo e(get_phrase('Exam Attendance')); ?></span></a>
-                </li>
+                    </li>
+                    <li>
+                        <a class="<?php echo e((request()->is('admin/exam_routine*')) ? 'active' : ''); ?>"
+                            href="<?php echo e(route('admin.exam.add_routine')); ?>"><span><?php echo e(get_phrase('Exam Routine')); ?></span></a>
+                    </li>
                     <li>
                         <a class="<?php echo e(request()->is('admin/promotion*') ? 'active' : ''); ?>"
                             href="<?php echo e(route('admin.promotion')); ?>"><span><?php echo e(get_phrase('Promotion')); ?></span></a>
@@ -841,7 +846,7 @@
             toastr.warning("<?php echo e(session('warning')); ?>");
         <?php endif; ?>
     </script>
-
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
         "use strict";
 
@@ -857,7 +862,9 @@
             });
         });
     </script>
-    <?php echo $__env->yieldContent('scripts'); ?>
+
+<?php echo $__env->yieldContent('scripts'); ?>
+
 
 </body>
 

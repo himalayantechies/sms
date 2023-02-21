@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Classes;
 
 use Illuminate\Support\Facades\DB;
 
@@ -37,6 +38,29 @@ class CommonController extends Controller
                             ', [$school_id]);
 
         return $result;
+
+    }
+
+    public function getClassSubjectsList($school_id){
+        $classes = Classes::get(['id','name']);
+        $result = [];
+        $school_id = auth()->user()->school_id;
+        $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
+        foreach($classes as $class){
+            $subjects = DB::select("
+                Select gs.subject_id,s.name from 
+                grade_subjects gs
+                Left join subjects s ON gs.subject_id = s.id
+                
+                Where 
+                    gs.school_id = $school_id
+                and gs.session_id = $session_id
+            ");
+            $class->subjects = $subjects;
+        }
+        
+
+        return $classes;
 
     }
 }

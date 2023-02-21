@@ -40,7 +40,10 @@ class ExamController extends Controller
         $err_flag = 0;
         foreach($data as $student_marks){
             $id = $student_marks['id'] ?? '';
-        
+            $enrollment_id = $student_marks['enrollment_id'] ?? '';
+            if($enrollment_id == ''){
+                return response()->json(["success" => false, "msg" => 'Enrollment Id Missing'], 400);
+            }
             $user_id = $student_marks['user_id'] ?? '';
             if($user_id == ''){
                 return response()->json(["success" => false, "msg" => 'User Id Missing'], 400);
@@ -75,6 +78,7 @@ class ExamController extends Controller
     
             $gradebook->session_id = $session_id;
             $gradebook->user_id = $user_id;
+            $gradebook->enrollment_id = $user_id;
             $gradebook->exam_id = $exam_id;
             $gradebook->th_marks = $th_marks;
             $gradebook->pr_marks = $pr_marks;
