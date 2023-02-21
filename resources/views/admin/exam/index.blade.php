@@ -162,133 +162,204 @@
             });
 
             $('#filter-button').click(function() {
-                var selectedValue = $('#class_id option').filter(":selected").val();
-                var selectedText = $('#class_id option').filter(":selected").text();
-                if (selectedValue !== "null") {
-                    $.ajax({
-                        type: 'POST',
-                        url: "{{ route('admin.loadExamClasswise') }}",
-                        data: {
-                            "class_id": selectedValue
-                        },
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        success: function(data) {
-                            $('#configureExam').html('');
-                            $('#class_id_modal_value').val(selectedValue);
-                            $('#class_id_modal_text').val(selectedText);
-                            var a =
-                                '<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addExamModal"> {{ get_phrase('Add Exam') }}</button>';
-                            $('#add_exam_button').html(a);
-
-                            $('#exam-details').jstree('destroy');
-                            $("#exam-details").append(data);
-                            $('#exam-details').jstree({
-                                'core': {
-                                    'themes': {
-                                        'name': 'default',
-                                        'responsive': true,
-
-                                    }
-                                },
-                                'checkbox': {
-                                    three_state: false,
-                                    cascade: 'none'
-                                },
-                                "plugins": [
-                                    "themes",
-                                    "checkbox"
-                                ]
-                            });
-
-                            var examDetailsresetting = false;
-                            $('#exam-details').on('changed.jstree', function(e, data) {
-                                $('#configureExam').html('');
-                                if (examDetailsresetting) //ignoring the changed event
-                                {
-                                    examDetailsresetting = false;
-                                    return;
-                                }
-                                if (data.selected.length > 1) {
-                                    //ignore next changed event
-                                    examDetailsresetting = true;
-                                    //will invoke the changed event once
-                                    data.instance.uncheck_all();
-                                    data.instance.check_node(data.node);
-                                    return;
-                                }
-                                selectedId = [];
-                                for (var i = 0; i < data.selected.length; i++) {
-                                    selectedId.push(data.instance.get_node(data
-                                        .selected[i]).id);
-                                }
-                                if (selectedId[0] !== undefined) {
-                                    loadConfigureExam(selectedId[0]);
-                                }
-                            });
-
-
-                            $('#modal_parent_exam').jstree('destroy');
-                            $("#modal_parent_exam").append(data);
-                            $('#modal_parent_exam').jstree({
-                                'core': {
-                                    'themes': {
-                                        'name': 'default',
-                                        'responsive': true
-                                    }
-                                },
-                                'checkbox': {
-                                    three_state: false,
-                                    cascade: 'none'
-                                },
-                                "plugins": [
-                                    "themes",
-                                    "checkbox"
-                                ]
-                            });
-                            var resetting = false;
-                            $('#modal_parent_exam').on('changed.jstree', function(e, data) {
-                                $('#selected_parent_exam').val('none');
-                                if (resetting) //ignoring the changed event
-                                {
-                                    resetting = false;
-                                    return;
-                                }
-                                if (data.selected.length > 1) {
-                                    //ignore next changed event
-                                    resetting = true;
-                                    //will invoke the changed event once
-                                    data.instance.uncheck_all();
-                                    data.instance.check_node(data.node);
-                                    return;
-                                }
-                                selectedId = [];
-                                for (var i = 0; i < data.selected.length; i++) {
-                                    selectedId.push(data.instance.get_node(data
-                                        .selected[i]).id);
-                                }
-                                $('#selected_parent_exam').val(selectedId[0]);
-                            });
-                        }
-                    });
-                } else {
-                    $('#exam-details').jstree('destroy');
-                    $("#exam-details").html('<ul>');
-                    $('#exam-details').append('</ul>');
-                    $('#exam-details').jstree({
-                        'core': {
-                            'themes': {
-                                'name': 'default',
-                                'responsive': true,
-                            }
-                        }
-                    });
-
-                }
+                selectClassJSTree();
             });
             $('#filter-button').click();
         });
+
+        function selectClassJSTree() {
+            var selectedValue = $('#class_id option').filter(":selected").val();
+            var selectedText = $('#class_id option').filter(":selected").text();
+            if (selectedValue !== "null") {
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('admin.loadExamClasswise') }}",
+                    data: {
+                        "class_id": selectedValue
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(data) {
+                        $('#configureExam').html('');
+                        $('#class_id_modal_value').val(selectedValue);
+                        $('#class_id_modal_text').val(selectedText);
+                        var a =
+                            '<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addExamModal"> {{ get_phrase('Add Exam') }}</button>';
+                        $('#add_exam_button').html(a);
+
+                        $('#exam-details').jstree('destroy');
+                        $("#exam-details").append(data);
+                        $('#exam-details').jstree({
+                            'core': {
+                                'themes': {
+                                    'name': 'default',
+                                    'responsive': true,
+
+                                }
+                            },
+                            'checkbox': {
+                                three_state: false,
+                                cascade: 'none'
+                            },
+                            "plugins": [
+                                "themes",
+                                "checkbox"
+                            ]
+                        });
+                        $("#exam-details").jstree("open_all");
+                        var examDetailsresetting = false;
+                        $('#exam-details').on('changed.jstree', function(e, data) {
+                            $('#configureExam').html('');
+                            if (examDetailsresetting) //ignoring the changed event
+                            {
+                                examDetailsresetting = false;
+                                return;
+                            }
+                            if (data.selected.length > 1) {
+                                //ignore next changed event
+                                examDetailsresetting = true;
+                                //will invoke the changed event once
+                                data.instance.uncheck_all();
+                                data.instance.check_node(data.node);
+                                return;
+                            }
+                            selectedId = [];
+                            for (var i = 0; i < data.selected.length; i++) {
+                                selectedId.push(data.instance.get_node(data
+                                    .selected[i]).id);
+                            }
+                            if (selectedId[0] !== undefined) {
+                                var mySelectedId = (selectedId[0].split('_'))[0];
+                                loadConfigureExam(mySelectedId);
+                            }
+                        });
+
+
+                        $('#modal_parent_exam').jstree('destroy');
+                        $("#modal_parent_exam").append(data);
+                        $('#modal_parent_exam').jstree({
+                            'core': {
+                                'themes': {
+                                    'name': 'default',
+                                    'responsive': true
+                                }
+                            },
+                            'checkbox': {
+                                three_state: false,
+                                cascade: 'none'
+                            },
+                            "plugins": [
+                                "themes",
+                                "checkbox"
+                            ]
+                        });
+                        var resetting = false;
+                        $('#modal_parent_exam').on('changed.jstree', function(e, data) {
+                            $('#selected_parent_exam').val('none');
+                            if (resetting) //ignoring the changed event
+                            {
+                                resetting = false;
+                                return;
+                            }
+                            if (data.selected.length > 1) {
+                                //ignore next changed event
+                                resetting = true;
+                                //will invoke the changed event once
+                                data.instance.uncheck_all();
+                                data.instance.check_node(data.node);
+                                return;
+                            }
+                            selectedId = [];
+                            for (var i = 0; i < data.selected.length; i++) {
+                                selectedId.push(data.instance.get_node(data
+                                    .selected[i]).id);
+                            }
+                            var mySelectedId = (selectedId[0].split('_'))[0];
+                            $('#selected_parent_exam').val(mySelectedId);
+                        });
+                    }
+                });
+            } else {
+                $('#exam-details').jstree('destroy');
+                $("#exam-details").html('<ul>');
+                $('#exam-details').append('</ul>');
+                $('#exam-details').jstree({
+                    'core': {
+                        'themes': {
+                            'name': 'default',
+                            'responsive': true,
+                        }
+                    }
+                });
+
+            }
+        }
+
+        function editModalConfigureExam(class_id) {
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('admin.loadExamClasswise') }}",
+                data: {
+                    "class_id": class_id
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(data) {
+                    var parent_id = $('#selected_parent_exam_edit_modal').val();
+
+                    $('#edit_modal_parent_exam').jstree('destroy');
+                    $("#edit_modal_parent_exam").append(data);
+
+                    $('#edit_modal_parent_exam').jstree({
+                        'core': {
+                            'themes': {
+                                'name': 'default',
+                                'responsive': true
+                            }
+                        },
+                        'checkbox': {
+                            three_state: false,
+                            cascade: 'none'
+                        },
+                        "plugins": [
+                            "themes",
+                            "checkbox"
+                        ]
+                    });
+                    $("#edit_modal_parent_exam").jstree("open_all");
+                    var resetting = false;
+                    $('#edit_modal_parent_exam').on('changed.jstree', function(e, data) {
+                        $('#selected_parent_exam_edit_modal').val('none');
+                        if (resetting) //ignoring the changed event
+                        {
+                            resetting = false;
+                            return;
+                        }
+                        if (data.selected.length > 1) {
+                            //ignore next changed event
+                            resetting = true;
+                            //will invoke the changed event once
+                            data.instance.uncheck_all();
+                            data.instance.check_node(data.node);
+                            return;
+                        }
+                        selectedId = [];
+                        for (var i = 0; i < data.selected.length; i++) {
+                            selectedId.push(data.instance.get_node(data
+                                .selected[i]).id);
+                        }
+                        var mySelectedId = (selectedId[0].split('_'))[0];
+                        $('#selected_parent_exam_edit_modal').val(mySelectedId);
+                    });
+                    $("#edit_modal_parent_exam").jstree("check_node", $("#edit_modal_parent_exam [id^='" +
+                        parent_id + "_']"));
+                }
+            });
+
+
+        }
 
         function loadConfigureExam(exam_id) {
             $.ajax({
@@ -304,6 +375,68 @@
                     $('#configureExam').html(data);
                 }
             });
+        }
+
+        function moveNodeUp(exam_id) {
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('admin.exam.moveNodeUp') }}",
+                data: {
+                    "exam_id": exam_id
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(data) {
+                    $('#filter-button').click();
+                }
+            });
+        }
+
+        function moveNodeDown(exam_id) {
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('admin.exam.moveNodeDown') }}",
+                data: {
+                    "exam_id": exam_id
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(data) {
+                    $('#filter-button').click();
+                }
+            });
+        }
+
+        function deleteExam(exam_id) {
+            event.preventDefault();
+            swal({
+                    title: "Are you sure?",
+                    text: "Are you sure you want to delete?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willApprove) => {
+                    if (willApprove) {
+                        $.ajax({
+                            type: 'POST',
+                            url: "{{ route('admin.exam.deleteExam') }}",
+                            data: {
+                                "exam_id": exam_id
+                            },
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function(data) {
+                                $('#filter-button').click();
+                            }
+                        });
+                    } else {
+                        $('#filter-button').click();
+                    }
+                });
         }
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
