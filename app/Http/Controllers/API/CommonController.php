@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Classes;
+use App\Models\Enrollment;
+
 
 use Illuminate\Support\Facades\DB;
 
@@ -55,6 +57,7 @@ class CommonController extends Controller
                 Where 
                     gs.school_id = $school_id
                 and gs.session_id = $session_id
+                and gs.class_id = $class->id
             ");
             $class->subjects = $subjects;
         }
@@ -63,4 +66,22 @@ class CommonController extends Controller
         return $classes;
 
     }
+
+    public function getEnrolledStudents($school_id, $class_id, $section_id){
+        $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
+        $enrolled_students = DB::select("
+                Select e.id,e.user_id,e.class_id,e.section_id,e.school_id,e.session_id,
+                e.roll_no,u.name,u.email,u.username
+                from 
+                enrollments e
+                left join users u ON e.user_id = u.id
+                Where 
+                    e.school_id = $school_id
+                and e.session_id = $session_id
+                and e.class_id = $class_id
+                and e.section_id = $section_id
+        ");
+        return $enrolled_students;
+    }
+    
 }
