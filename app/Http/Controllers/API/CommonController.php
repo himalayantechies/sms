@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Classes;
 use App\Models\Enrollment;
 use App\Models\ExamMarkSetup;
+use App\Models\GradeBook;
 
 use Illuminate\Support\Facades\DB;
 
@@ -94,4 +95,17 @@ class CommonController extends Controller
         return $exam_details;
     }
     
+    public function getStudentMarksByClassSection($school_id, $class_id, $section_id, $subject_id, $exam_id){
+        $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
+
+        $marks_list = Gradebook::where('exam_id', $exam_id)
+                                ->where('school_id', $school_id)                        
+                                ->where('class_id', $class_id)
+                                ->where('section_id', $section_id)
+                                ->where('subject_id', $subject_id)
+                                ->where('session_id', $session_id)->get();
+        return $marks_list;
+
+    }
+   
 }
