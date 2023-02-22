@@ -1,6 +1,8 @@
 <div class="card text-bg-light mb-3">
     <div class="card-header d-flex justify-content-between">Configure {{ $exam->name }}
         <div>
+            <button type="button" class="btn btn-sm btn-primary text-white" data-bs-toggle="modal"
+                data-bs-target="#addExamModal"> <i class="bi bi-plus-lg"></i></button>
             <button type="button" class="btn btn-secondary btn-sm text-white" data-bs-toggle="modal"
                 onclick="editModalConfigureExam({{ $exam->class_id }})" data-bs-target="#editExamModal"><i
                     class="bi bi-pencil-fill"></i></button>
@@ -48,7 +50,7 @@
                                 </div>
                             </div>
                             <div class="row px-3">
-                                <button class="btn btn-primary col col-md-1 col-sm-4">
+                                <button class="eBtn eBtn btn-primary form-control mb-3">
                                     Save
                                 </button>
                             </div>
@@ -137,7 +139,7 @@
                                     class="form-control @error('name') is-invalid @enderror" name="name"
                                     value="{{ $exam->name }}" required autofocus>
                             </div>
-                            <div class="col-sm-12 mt-2">
+                            {{-- <div class="col-sm-12 mt-2">
                                 <label for="status"
                                     class="form-label eForm-label">{{ get_phrase('Status') }}*</label>
                                 <select name="status" id="status"
@@ -147,7 +149,7 @@
                                     <option value="1" {{ $exam->status == '1' ? 'selected' : '' }}>Active
                                     </option>
                                 </select>
-                            </div>
+                            </div> --}}
                         </div>
                         <div class="form-group row mt-4">
                             <label for="parent"
@@ -162,9 +164,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary"
+                    <button type="button" class="eBtn eBtn btn btn-secondary"
                         data-bs-dismiss="modal">{{ get_phrase('Close') }}</button>
-                    <button type="submit" class="btn btn-primary">{{ get_phrase('Save') }}</button>
+                    <button type="submit" class="eBtn eBtn btn btn-primary">{{ get_phrase('Save') }}</button>
                 </div>
             </form>
         </div>

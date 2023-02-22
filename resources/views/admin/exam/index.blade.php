@@ -23,15 +23,12 @@
             </div>
         </div>
     </div>
-
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="card">
-                <div class="card-body row">
-                    <div class="col-md-4 col-sm-12 mt-2">
-                        <label for="class_id" class="form-label eForm-label">{{ get_phrase('Class') }}*</label>
-                        <div class="d-flex">
-
+    <div class="row">
+        <div class="col-12">
+            <div class="eSection-wrap">
+                <div class="row">
+                    <div class="row justify-content-md-center">
+                        <div class="col-md-4">
                             @php
                                 $returned_class_id = 'null';
                                 if (session()->has('returned_class_id')) {
@@ -40,38 +37,47 @@
                             @endphp
                             <select name="class_id" id="class_id"
                                 class="form-select eForm-select eChoice-multiple-with-remove" required>
-                                <option value="null">Select a class</option>
+                                <option value="null">{{ get_phrase('Select class') }}</option>
                                 @foreach ($classes as $class)
                                     <option
                                         value="{{ $class->id }}"{{ $class->id == $returned_class_id ? 'selected' : '' }}>
                                         {{ $class->name }}</option>
                                 @endforeach
                             </select>
-                            <button type="button" class="btn btn-primary mx-5"
+                        </div>
+                        <div class="col-xl-2 mb-3">
+                            <button type="button" class="eBtn eBtn btn-secondary form-control"
                                 id="filter-button">{{ get_phrase('Filter') }}</button>
-                        </div>
-
-                        <div class="mt-5 container">
-                            <div class="row">
-                                <div id="exam-details" class="col-md-5">
-                                    <ul>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="row d-flex">
-                                <div id="add_exam_button" class="mt-4">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-8 col-sm-12 mt-2">
-                        <div id="configureExam">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="eSection-wrap">
+                <div class="row">
+                    <div class="row justify-content-md-center">
+                        <div id="exam-details" class="col-md-4 mb-4 p-3">
+                            <ul>
+                            </ul>
+                        </div>
+                        <div class="col-md-8 col-sm-12 mt-2">
+                            <div id="configureExam">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div id="add_exam_button" class="mt-4">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <div class="modal fade" id="addExamModal" tabindex="-1" aria-labelledby="addExamModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -90,17 +96,14 @@
                                     <input id="class_id_modal_text" type="text" class="form-control" readonly>
                                     <input id="class_id_modal_value" type="hidden" name="class_id" required>
                                 </div>
+                            </div>
 
+                            <div class="row">
                                 <div class="col-sm-12 mt-2">
-                                    <label for="exam_category_id"
-                                        class="form-label eForm-label">{{ get_phrase('Exam Category') }}*</label>
-                                    <select name="exam_category_id" id="exam_category_id"
-                                        class="form-select eForm-select eChoice-multiple-with-remove"required>
-                                        <option value="">Select exam category</option>
-                                        @foreach ($exam_categories as $category)
-                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                        @endforeach
-                                    </select>
+                                    <label for="parent"
+                                        class="form-label eForm-label">{{ get_phrase('Parent Exam') }}*</label>
+                                    <div id="parent_exam_dropdown">
+                                    </div>
                                 </div>
                                 <div class="col-sm-12 mt-2">
                                     <label for="section_id"
@@ -116,30 +119,24 @@
                                     @enderror
                                 </div>
                                 <div class="col-sm-12 mt-2">
-                                    <label for="status"
-                                        class="form-label eForm-label">{{ get_phrase('Status') }}*</label>
-                                    <select name="status" id="status"
-                                        class="form-select eForm-select eChoice-multiple-with-remove" required>
-                                        <option value="0">Inactive</option>
-                                        <option value="1">Active</option>
+                                    <label for="exam_category_id"
+                                        class="form-label eForm-label">{{ get_phrase('Exam Category') }}*</label>
+                                    <select name="exam_category_id" id="exam_category_id"
+                                        class="form-select eForm-select eChoice-multiple-with-remove"required>
+                                        <option value="">Select exam category</option>
+                                        @foreach ($exam_categories as $category)
+                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group row mt-4">
-                                <label for="parent"
-                                    class="form-label eForm-label">{{ get_phrase('Parent Exam') }}*</label>
-                                <input type="hidden" id="selected_parent_exam" name="parent">
-                                <div class="col-md-6">
-                                    <div id="modal_parent_exam" class="mt-4" value="none">
-                                    </div>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary"
+                        <button type="button" class="eBtn eBtn btn btn-secondary"
                             data-bs-dismiss="modal">{{ get_phrase('Close') }}</button>
-                        <button type="submit" class="btn btn-primary">{{ get_phrase('Save') }}</button>
+                        <button type="submit" class="eBtn eBtn btn btn-primary">{{ get_phrase('Save') }}</button>
                     </div>
                 </form>
             </div>
@@ -167,6 +164,19 @@
             $('#filter-button').click();
         });
 
+        function loadParentExamDropdown(class_id) {
+            $.ajax({
+                type: 'GET',
+                url: "{{ route('admin.exam.exam_dropdown') }}",
+                data: {
+                    "class_id": class_id
+                },
+                success: function(data) {
+                    $('#parent_exam_dropdown').html(data);
+                }
+            });
+        }
+
         function selectClassJSTree() {
             var selectedValue = $('#class_id option').filter(":selected").val();
             var selectedText = $('#class_id option').filter(":selected").text();
@@ -184,9 +194,10 @@
                         $('#configureExam').html('');
                         $('#class_id_modal_value').val(selectedValue);
                         $('#class_id_modal_text').val(selectedText);
-                        var a =
-                            '<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addExamModal"> {{ get_phrase('Add Exam') }}</button>';
-                        $('#add_exam_button').html(a);
+                        loadParentExamDropdown(selectedValue);
+                        var button_body =
+                            '<button type="button" class="eBtn eBtn btn-primary form-control mb-3" data-bs-toggle="modal" data-bs-target="#addExamModal"> {{ get_phrase('Add Exam') }}</button>';
+                        $('#add_exam_button').html(button_body);
 
                         $('#exam-details').jstree('destroy');
                         $("#exam-details").append(data);
@@ -234,50 +245,6 @@
                                 loadConfigureExam(mySelectedId);
                             }
                         });
-
-
-                        $('#modal_parent_exam').jstree('destroy');
-                        $("#modal_parent_exam").append(data);
-                        $('#modal_parent_exam').jstree({
-                            'core': {
-                                'themes': {
-                                    'name': 'default',
-                                    'responsive': true
-                                }
-                            },
-                            'checkbox': {
-                                three_state: false,
-                                cascade: 'none'
-                            },
-                            "plugins": [
-                                "themes",
-                                "checkbox"
-                            ]
-                        });
-                        var resetting = false;
-                        $('#modal_parent_exam').on('changed.jstree', function(e, data) {
-                            $('#selected_parent_exam').val('none');
-                            if (resetting) //ignoring the changed event
-                            {
-                                resetting = false;
-                                return;
-                            }
-                            if (data.selected.length > 1) {
-                                //ignore next changed event
-                                resetting = true;
-                                //will invoke the changed event once
-                                data.instance.uncheck_all();
-                                data.instance.check_node(data.node);
-                                return;
-                            }
-                            selectedId = [];
-                            for (var i = 0; i < data.selected.length; i++) {
-                                selectedId.push(data.instance.get_node(data
-                                    .selected[i]).id);
-                            }
-                            var mySelectedId = (selectedId[0].split('_'))[0];
-                            $('#selected_parent_exam').val(mySelectedId);
-                        });
                     }
                 });
             } else {
@@ -294,6 +261,14 @@
                 });
 
             }
+        }
+
+        function return_blank_data() {
+            return ' <div class="card-body table-responsive marks_content">' +
+                '<div class="empty_box center">' +
+                '<img class="mb-3" width="150px" src="{{ asset('public/assets/images/empty_box.png') }}" />' +
+                '</div>' +
+                '</div>';
         }
 
         function editModalConfigureExam(class_id) {
