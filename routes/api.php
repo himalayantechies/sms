@@ -51,8 +51,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/classSubjects/{school_id}',[CommonController::class, 'getClassSubjectsList'] );
 
     //Get Enrolled Students
-    Route::get('/enrolledStudents/{school_id}/{class_id}/{section_id}',[CommonController::class, 'getEnrolledStudents'] );
-
+    Route::get('/enrolledStudents/{school_id}/{class_id}/{section_id}/{subject_id}/{exam_id}',[CommonController::class, 'getEnrolledStudents'] );
+    
     //Get Exam Details
     Route::get('/getExamDetails/{school_id}/{class_id}/{subject_id}/{exam_id}',[CommonController::class, 'getExamDetails'] );
 

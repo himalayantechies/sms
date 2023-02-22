@@ -68,20 +68,34 @@ class CommonController extends Controller
 
     }
 
-    public function getEnrolledStudents($school_id, $class_id, $section_id){
+    public function getEnrolledStudents($school_id, $class_id, $section_id, $subject_id, $exam_id){
         $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
-        $enrolled_students = DB::select("
-                Select e.id,e.user_id,e.class_id,e.section_id,e.school_id,e.session_id,
-                e.roll_no,u.name,u.email,u.username
-                from 
-                enrollments e
-                left join users u ON e.user_id = u.id
-                Where 
-                    e.school_id = $school_id
-                and e.session_id = $session_id
-                and e.class_id = $class_id
-                and e.section_id = $section_id
-        ");
+        // $enrolled_students = DB::select("
+        //         Select e.id,e.user_id,e.class_id,e.section_id,e.school_id,e.session_id,
+        //         e.roll_no,u.name,u.email,u.username
+        //         from 
+        //         enrollments e
+        //         left join users u ON e.user_id = u.id
+        //         Where 
+        //             e.school_id = $school_id
+        //         and e.session_id = $session_id
+        //         and e.class_id = $class_id
+        //         and e.section_id = $section_id
+
+                
+        // ");
+
+
+        $enrolled_students = DB::select("Select e.id,e.user_id,e.class_id,e.section_id,e.school_id,e.session_id,e.roll_no,u.name, exam_id, th_marks, pr_marks,
+                                            comment, attendance
+                                from enrollments e
+                                left join users         u ON e.user_id = u.id and e.session_id = $session_id and e.class_id = $class_id and e.section_id = $section_id
+                                left join gradebooks    gb on gb.session_id = e.session_id and gb.user_id = u.id and e.class_id = gb.class_id 
+                                    and e.section_id = gb.section_id and e.school_id = gb.school_id and gb.subject_id = $subject_id and gb.school_id = $school_id 
+                                    and gb.exam_id = $exam_id
+                                where name is not null ");
+
+
         return $enrolled_students;
     }
 
