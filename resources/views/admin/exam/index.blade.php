@@ -68,10 +68,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    {{-- <div class="row">
                         <div id="add_exam_button" class="mt-4">
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -195,10 +195,6 @@
                         $('#class_id_modal_value').val(selectedValue);
                         $('#class_id_modal_text').val(selectedText);
                         loadParentExamDropdown(selectedValue);
-                        var button_body =
-                            '<button type="button" class="eBtn eBtn btn-primary form-control mb-3" data-bs-toggle="modal" data-bs-target="#addExamModal"> {{ get_phrase('Add Exam') }}</button>';
-                        $('#add_exam_button').html(button_body);
-
                         $('#exam-details').jstree('destroy');
                         $("#exam-details").append(data);
                         $('#exam-details').jstree({
@@ -218,6 +214,9 @@
                                 "checkbox"
                             ]
                         });
+                        var button_body =
+                            '<button type="button" class="eBtn eBtn btn-primary form-control mb-3 mt-3" data-bs-toggle="modal" data-bs-target="#addExamModal"> {{ get_phrase('Add Exam') }}</button>';
+                        $('#exam-details').append(button_body);
                         $("#exam-details").jstree("open_all");
                         var examDetailsresetting = false;
                         $('#exam-details').on('changed.jstree', function(e, data) {
@@ -348,6 +347,7 @@
                 },
                 success: function(data) {
                     $('#configureExam').html(data);
+                    // $('#add_exam_button').html(button_body);
                 }
             });
         }
