@@ -15,6 +15,7 @@ class Gradebook extends Model
      * @var array
      */
     protected $fillable = [
-        'session_id', 'school_id','user_id', 'class_id', 'section_id', 'exam_id', 'subject_id', 'th_marks', 'pr_marks', 'comment', 'attendance', 'timestamp'
+        'session_id', 'school_id','user_id', 'class_id', 'section_id', 'exam_id', 
+        'subject_id', 'th_marks', 'pr_marks', 'comment', 'attendance', 'timestamp','enrollment_id'
     ];
 }

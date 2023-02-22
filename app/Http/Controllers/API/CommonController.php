@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Classes;
 use App\Models\Enrollment;
-
+use App\Models\ExamMarkSetup;
 
 use Illuminate\Support\Facades\DB;
 
@@ -82,6 +82,16 @@ class CommonController extends Controller
                 and e.section_id = $section_id
         ");
         return $enrolled_students;
+    }
+
+    public function getExamDetails($school_id, $class_id, $subject_id, $exam_id){
+        $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
+        $exam_details = ExamMarkSetup::where('school_id','=', $school_id)
+                        ->where('session_id','=', $session_id)
+                        ->where('class_id','=', $class_id)
+                        ->where('subject_id','=', $subject_id)
+                        ->where('exam_id','=', $exam_id)->first();
+        return $exam_details;
     }
     
 }

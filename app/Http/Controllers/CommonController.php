@@ -178,17 +178,22 @@ class CommonController extends Controller
             ->where('school_id', $data['school_id'])
             ->where('session_id', $data['session_id'])
             ->first();
-
+        $enrollment = Enrollment::where('user_id','=',$data['user_id'])
+                    ->where('session_id','=',$data['session_id'])
+                    ->where('school_id','=',$data['school_id'])->first();
+        // dd($enrollment);
         if (!empty($query) && $query->count() > 0) {
             $query->th_marks = $data['th_marks'];
             $query->pr_marks = $data['pr_marks'];
             $query->comment = $data['comment'];
+            $query->enrollment_id = $enrollment->id;
             $query->save();
         } else {
 
             $data['th_marks'] = $data['th_marks'];
             $data['pr_marks'] = $data['pr_marks'];
             $data['timestamp'] = strtotime(date('Y-m-d'));
+            $data['enrollment_id'] = $enrollment->id;
             Gradebook::create($data);
         }
     }

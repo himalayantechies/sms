@@ -53,6 +53,9 @@ Route::middleware('auth:sanctum')->group(function () {
     //Get Enrolled Students
     Route::get('/enrolledStudents/{school_id}/{class_id}/{section_id}',[CommonController::class, 'getEnrolledStudents'] );
 
+    //Get Exam Details
+    Route::get('/getExamDetails/{school_id}/{class_id}/{subject_id}/{exam_id}',[CommonController::class, 'getExamDetails'] );
+
     //Exam Marks Update
     Route::post('/exam/marks/update',[ExamController::class, 'marks_update'] );
 });
