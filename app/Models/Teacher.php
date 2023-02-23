@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -80,7 +81,7 @@ class Teacher extends Model
     {
         DB::transaction(function () use ($request) {
             $data = $request->all();
-            $data['username']=(new User)->createUsername(3);
+            $data['username'] = (new User)->createUsername(3);
             if (!empty($data['photo'])) {
                 $imageName = time() . '.' . $data['photo']->extension();
                 $data['photo']->move(public_path('assets/uploads/user-images/'), $imageName);
@@ -169,28 +170,28 @@ class Teacher extends Model
             $user->save();
 
             $teacher = Teacher::where('user_id', $id)->first();
-            $teacher->gender = $data['gender'] ;
-            $teacher->nationality = $data['nationality'] ;
-            $teacher->teacher_type = $data['teacher_type'] ;
-            $teacher->marital_status = $data['marital_status'] ;
-            $teacher->citizenship_no = $data['citizenship_no'] ;
-            $teacher->issuing_district = $data['issuing_district'] ;
-            $teacher->dob = $data['dob'] ;
-            $teacher->teaching_medium = $data['teaching_medium'] ;
-            $teacher->mother_tongue = $data['mother_tongue'] ;
-            $teacher->caste = $data['caste'] ;
-            $teacher->disability = $data['disability'] ;
-            $teacher->designation = $data['designation'] ;
-            $teacher->responsibility = $data['responsibility'] ;
-            $teacher->join_date = $data['join_date'] ;
-            $teacher->leaving_date = $data['leaving_date'] ;
-            $teacher->father_name = $data['father_name'] ;
-            $teacher->mother_name = $data['mother_name'] ;
-            $teacher->spouse_name = $data['spouse_name'] ;
-            $teacher->will_person = $data['will_person'] ;
-            $teacher->address = $data['address'] ;
-            $teacher->phone_number = $data['phone_number'] ;
-            $teacher->mobile_number = $data['mobile_number'] ;
+            $teacher->gender = $data['gender'];
+            $teacher->nationality = $data['nationality'];
+            $teacher->teacher_type = $data['teacher_type'];
+            $teacher->marital_status = $data['marital_status'];
+            $teacher->citizenship_no = $data['citizenship_no'];
+            $teacher->issuing_district = $data['issuing_district'];
+            $teacher->dob = $data['dob'];
+            $teacher->teaching_medium = $data['teaching_medium'];
+            $teacher->mother_tongue = $data['mother_tongue'];
+            $teacher->caste = $data['caste'];
+            $teacher->disability = $data['disability'];
+            $teacher->designation = $data['designation'];
+            $teacher->responsibility = $data['responsibility'];
+            $teacher->join_date = $data['join_date'];
+            $teacher->leaving_date = $data['leaving_date'];
+            $teacher->father_name = $data['father_name'];
+            $teacher->mother_name = $data['mother_name'];
+            $teacher->spouse_name = $data['spouse_name'];
+            $teacher->will_person = $data['will_person'];
+            $teacher->address = $data['address'];
+            $teacher->phone_number = $data['phone_number'];
+            $teacher->mobile_number = $data['mobile_number'];
             $teacher->photo = $photo;
             $teacher->save();
         });
@@ -200,4 +201,5 @@ class Teacher extends Model
         $user = User::find($id);
         $user->delete();
     }
+
 }
