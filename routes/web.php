@@ -232,7 +232,7 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
     Route::post('admin/teacher/{id}', 'teacherUpdate')->name('admin.teacher.update');
     Route::get('admin/teacher/delete/{id}', 'teacherDelete')->name('admin.teacher.delete');
     Route::get('/admin/teacher/teacherReport', 'downloadTeacherReport')->name('admin.downloadTeacherReport');
-
+    Route::get('/admin/teacher/teacherReport/PDF', 'prepareTeacherDataForPDF')->name('admin.downloadTeacherReport.prepare.pdf');
     //Accountant users route
     Route::get('admin/accountant', 'accountantList')->name('admin.accountant');
     Route::get('admin/accountant/create_modal', 'createAccountantModal')->name('admin.accountant.open_modal');

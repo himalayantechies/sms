@@ -1,5 +1,6 @@
 @if (count($teachers) > 0)
     <!-- Table -->
+
     <table>
         <thead>
             <tr>

@@ -75,14 +75,14 @@
                                     <a class="dropdown-item"
                                         href="{{ route('admin.downloadTeacherReport', ['format' => 'excel', 'class_id' => $class_id ?? '']) }}">{{ get_phrase('Excel') }}</a>
                                 </li>
-                                <li>
+                                {{-- <li>
                                     <a class="dropdown-item" id="pdf" href="javascript:;"
-                                        onclick="Export()">{{ get_phrase('PDF') }}</a>
+                                        onclick="Export({{ $class_id }})">{{ get_phrase('PDF') }}</a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item" id="print" href="javascript:;"
                                         onclick="printableDiv('teacher_list')">{{ get_phrase('Print') }}</a>
-                                </li>
+                                </li> --}}
                             </ul>
                         </div>
                     @endif
@@ -162,7 +162,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        {!! $teachers->links() !!}
+                        {{-- {!! $teachers->links() !!} --}}
                     </div>
                 @else
                     <div class="empty_box center">
@@ -174,97 +174,74 @@
             </div>
         </div>
     </div>
+    <div class="">
+        <div id="teacherData">
 
-    @if (count($teachers) > 0)
-        <!-- Table -->
-        <div class="table-responsive teacher_list display-none-view" id="teacher_list">
-            <table class="table eTable eTable-2">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">{{ get_phrase('Name') }}</th>
-                        <th scope="col">{{ get_phrase('Email') }}</th>
-                        <th scope="col">{{ get_phrase('User Info') }}</th>
-                </thead>
-                <tbody>
-                    @foreach ($teachers as $teacher)
-                        <?php
-                        $info = json_decode($teacher->user_information);
-                        $user_image = $info->photo;
-                        if (!empty($info->photo)) {
-                            $user_image = 'uploads/user-images/' . $info->photo;
-                        } else {
-                            $user_image = 'uploads/user-images/thumbnail.png';
-                        }
-                        ?>
-                        <tr>
-                            <th scope="row">
-                                <p class="row-number">{{ $loop->index + 1 }}</p>
-                            </th>
-                            <td>
-                                <div class="dAdmin_profile d-flex align-items-center min-w-200px">
-                                    <div class="dAdmin_profile_img">
-                                        <img class="img-fluid" width="50" height="50"
-                                            src="{{ asset('public/assets') }}/{{ $user_image }}" />
-                                    </div>
-                                    <div class="dAdmin_profile_name">
-                                        <h4>{{ $teacher->name }}</h4>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="dAdmin_info_name min-w-250px">
-                                    <p>{{ $teacher->email }}</p>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="dAdmin_info_name min-w-250px">
-                                    <p><span>{{ get_phrase('Phone') }}:</span> {{ $info->phone }}</p>
-                                    <p>
-                                        <span>{{ get_phrase('Address') }}:</span> {{ $info->address }}
-                                    </p>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            {!! $teachers->links() !!}
         </div>
-    @endif
-
-    <script type="text/javascript">
-        "use strict";
-
-        function Export() {
-
-            // Choose the element that our invoice is rendered in.
-            const element = document.getElementById("teacher_list");
-
-            // clone the element
-            var clonedElement = element.cloneNode(true);
-
-            // change display of cloned element
-            $(clonedElement).css("display", "block");
-
-            // Choose the clonedElement and save the PDF for our user.
-            var opt = {
-                margin: 1,
-                filename: 'teacher_list_{{ date('y-m-d') }}.pdf',
-                image: {
-                    type: 'jpeg',
-                    quality: 0.98
+    </div>
+@endsection
+@section('scripts')
+    <script>
+        function Export(class_id) {
+            $.ajax({
+                type: 'GET',
+                url: "{{ route('admin.downloadTeacherReport.prepare.pdf') }}",
+                data: {
+                    "class_id": class_id
                 },
-                html2canvas: {
-                    scale: 2
+                success: function(data) {
+                    // $('#teacherData').html(data);
+                    // const element = document.getElementById("teacherData");
+                    // var clonedElement = element.cloneNode(true);
+                    $(data).css("display", "block");
+                    var opt = {
+                        margin: 1,
+                        filename: 'teacher_list_{{ date('y-m-d') }}.pdf',
+                        image: {
+                            type: 'jpeg',
+                            quality: 0.98
+                        },
+                        html2canvas: {
+                            scale: 2
+                        },
+                        jsPDF: {
+                            unit: 'in',
+                            format: 'A4',
+                            orientation: 'landscape'
+                        }
+                    };
+                    html2pdf().set(opt).from(data).save();
+
+                    // clonedElement.remove();
                 }
-            };
+            });
+            // // Choose the element that our invoice is rendered in.
+            // const element = document.getElementById("teacher_list");
 
-            // New Promise-based usage:
-            html2pdf().set(opt).from(clonedElement).save();
+            // // clone the element
+            // var clonedElement = element.cloneNode(true);
 
-            // remove cloned element
-            clonedElement.remove();
+            // // change display of cloned element
+            // $(clonedElement).css("display", "block");
+
+            // // Choose the clonedElement and save the PDF for our user.
+            // var opt = {
+            //     margin: 1,
+            //     filename: 'teacher_list_{{ date('y-m-d') }}.pdf',
+            //     image: {
+            //         type: 'jpeg',
+            //         quality: 0.98
+            //     },
+            //     html2canvas: {
+            //         scale: 2
+            //     }
+            // };
+
+            // // New Promise-based usage:
+            // html2pdf().set(opt).from(clonedElement).save();
+
+            // // remove cloned element
+            // clonedElement.remove();
         }
 
         function printableDiv(printableAreaDivId) {
@@ -278,6 +255,5 @@
             document.body.innerHTML = originalContents;
         }
     </script>
-
-    <!-- End Teacher area -->
 @endsection
+<!-- End Teacher area -->

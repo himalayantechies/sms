@@ -23,7 +23,6 @@ class TeacherDataExport implements FromCollection, WithHeadings, WithTitle, Shou
     public function collection()
     {
         $query = User::join('teachers', 'teachers.user_id', 'users.id');
-
         if (isset($this->class_id)) {
             $query->join('routines', 'users.id', 'routines.teacher_id')
                 ->where('routines.class_id', $this->class_id);
@@ -50,7 +49,7 @@ class TeacherDataExport implements FromCollection, WithHeadings, WithTitle, Shou
         $count = count($teacher);
         for ($i = 0; $i < $count; $i++) {
             array_push($collection, array(
-                $i,
+                $i + 1,
                 $teacher[$i]->name,
                 $teacher[$i]->gender,
                 $teacher[$i]->caste,

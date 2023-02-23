@@ -278,7 +278,7 @@ class AdminController extends Controller
         $search = $request['search'] ?? "";
         $class_id = $request['class_id'] ?? "";
         $school_id = auth()->user()->school_id;
-        $query = User::where('users.role_id', 3)->where('users.school_id', $school_id);
+        $query = User::join('teachers', 'teachers.user_id', 'users.id')->where('users.role_id', 3)->where('users.school_id', $school_id);
         if ($search !== "") {
             $query->orWhere('users.name', 'LIKE', "%{$search}%")
                 ->orWhere('users.email', 'LIKE', "%{$search}%");
@@ -287,7 +287,7 @@ class AdminController extends Controller
             $query->join('routines', 'users.id', 'routines.teacher_id')
                 ->where('routines.class_id', $class_id);
         }
-        $teachers = $query->paginate(10);
+        $teachers = $query->get(['users.*']);
         $classes = (new Classes)->getClassBySchool($school_id);
 
         // if ($search != "") {
@@ -402,6 +402,38 @@ class AdminController extends Controller
             $file_name = "TeacherReport_" . $time . ".xlsx";
             return Excel::download(new TeacherDataExport($class_id), $file_name);
         }
+    }
+    public function prepareTeacherDataForPDF(Request $request)
+    {
+        $class_id = NULL;
+        if (isset($request->class_id)) {
+            $class_id = $request->class_id;
+        }
+        $query = User::join('teachers', 'teachers.user_id', 'users.id');
+        if (isset($class_id)) {
+            $query->join('routines', 'users.id', 'routines.teacher_id')
+                ->where('routines.class_id', $class_id);
+        }
+        $teachers = $query->where('users.school_id', auth()->user()->school_id)->get([
+            'users.name',
+            'teachers.gender',
+            'teachers.caste',
+            'teachers.nationality',
+            'teachers.dob',
+            'teachers.citizenship_no',
+            'teachers.issuing_district',
+            'teachers.father_name',
+            'teachers.mother_name',
+            'teachers.spouse_name',
+            'teachers.mother_tongue',
+            'teachers.disability',
+            'users.email',
+            'teachers.mobile_number',
+            'teachers.teacher_type',
+            'teachers.designation'
+        ]);
+
+        return view('admin.teacher.teacher_report', compact('teachers'));
     }
 
     /**
