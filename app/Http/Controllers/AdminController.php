@@ -1507,10 +1507,10 @@ class AdminController extends Controller
             $marks_setup[$exam_marks->subject_id]['th_pm'] = $exam_marks->th_pm;
             $marks_setup[$exam_marks->subject_id]['th_ch'] = $exam_marks->th_ch;
             $marks_setup[$exam_marks->subject_id]['pr_fm'] = $exam_marks->pr_fm;
-            $marks_setup[$exam_marks->subject_id]['pr_fm'] = $exam_marks->pr_fm;
-            $marks_setup[$exam_marks->subject_id]['pr_fm'] = $exam_marks->pr_fm;
+            $marks_setup[$exam_marks->subject_id]['pr_pm'] = $exam_marks->pr_pm;
+            $marks_setup[$exam_marks->subject_id]['pr_ch'] = $exam_marks->pr_ch;
         }
-        //dd($marks_setup);
+        // dd($marks_setup);
         return view('admin.examination.setup_offline_exam', ['exam' => $exam, 'classes' => $classes, 'subjects' => $subjects, 'exam_marks_setup' => $marks_setup]);
     }
 
@@ -1521,7 +1521,6 @@ class AdminController extends Controller
         $session_id = $data['session_id'];
         $class_id = $data['class_id'];
         $school_id = auth()->user()->school_id;
-
         foreach ($data['exam_marks_setup'] as $value) {
             if ($value['marks_setup_id'] == 0) {
                 $exam_marks_setup = new ExamMarkSetup();

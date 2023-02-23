@@ -1,11 +1,16 @@
 <div class="card text-bg-light mb-3">
     <div class="card-header d-flex justify-content-between">Configure {{ $exam->name }}
         <div>
-            <button type="button" class="btn btn-sm btn-primary text-white" data-bs-toggle="modal"
-                data-bs-target="#addExamModal"> <i class="bi bi-plus-lg"></i></button>
-            <button type="button" class="btn btn-secondary btn-sm text-white" data-bs-toggle="modal"
+
+            <a class="btn btn-sm btn-warning text-dark mx-2"
+                href="{{ route('admin.setup.offline_exam', ['id' => $exam->id]) }}"><i class="bi bi-gear-fill"></i>
+                {{ get_phrase('Setup Marks') }}</a>
+
+            <button type="button" class="btn btn-sm btn-primary text-white mx-2" data-bs-toggle="modal"
+                data-bs-target="#addExamModal"><i class="bi bi-plus-lg"></i> Add Exam </button>
+            <button type="button" class="btn btn-secondary btn-sm text-white mx-2" data-bs-toggle="modal"
                 onclick="editModalConfigureExam({{ $exam->class_id }})" data-bs-target="#editExamModal"><i
-                    class="bi bi-pencil-fill"></i></button>
+                    class="bi bi-pencil-fill"></i> Edit Exam </button>
             {{-- <button class="btn btn-danger btn-sm delete-btn" onclick="deleteExam({{ $exam->id }})">
                 <i class="bi bi-trash3-fill"></i>
             </button> --}}
@@ -25,6 +30,8 @@
                                         percentage contribution to the exam :</h6>
                                 </div>
                                 <input type="hidden" value="{{ $classes[0]->id }}" name="class_id">
+                            </div>
+                            <div>
                                 <div class="row">
                                     @foreach ($exam->children as $child_exam)
                                         <div class="col-md-3 col-sm-12 mt-2">
