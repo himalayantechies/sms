@@ -6,9 +6,9 @@
             <button type="button" class="btn btn-secondary btn-sm text-white" data-bs-toggle="modal"
                 onclick="editModalConfigureExam({{ $exam->class_id }})" data-bs-target="#editExamModal"><i
                     class="bi bi-pencil-fill"></i></button>
-            <button class="btn btn-danger btn-sm delete-btn" onclick="deleteExam({{ $exam->id }})">
+            {{-- <button class="btn btn-danger btn-sm delete-btn" onclick="deleteExam({{ $exam->id }})">
                 <i class="bi bi-trash3-fill"></i>
-            </button>
+            </button> --}}
         </div>
     </div>
     <div class="card-body">
@@ -63,7 +63,7 @@
                             <tr>
                                 <th scope="col">S.N</th>
                                 <th scope="col">Name</th>
-                                <th scope="col">Action</th>
+                                {{-- <th scope="col">Action</th> --}}
                             </tr>
                         </thead>
                         <tbody>
@@ -72,14 +72,14 @@
                                 <tr>
                                     <th scope="row">{{ $count++ }}</th>
                                     <td>{{ $child_exam->name }}</td>
-                                    <td>
+                                    {{-- <td>
                                         <div>
                                             <button class="btn btn-danger btn-sm delete-btn"
                                                 onclick="deleteExam({{ $child_exam->id }})">
                                                 <i class="bi bi-trash3-fill"></i>
                                             </button>
                                         </div>
-                                    </td>
+                                    </td> --}}
                                 </tr>
                             @endforeach
                         </tbody>
@@ -101,7 +101,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="editExamModalLabel">{{ get_phrase('Add Exam') }}</h1>
+                <h1 class="modal-title fs-5" id="editExamModalLabel">{{ get_phrase('Edit Exam') }}</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="{{ route('admin.exam.updateExam') }}" method="post">
