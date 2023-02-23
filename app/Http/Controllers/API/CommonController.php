@@ -88,14 +88,14 @@ class CommonController extends Controller
         try{
             $enrolled_students = DB::select("Select e.id,e.user_id,e.class_id,e.section_id,e.school_id,e.session_id,e.roll_no,u.name, exam_id, th_marks, 
                                                     pr_marks, comment, attendance
-                                                from enrollments e
+                                                from enrollments        e
                                                 left join users         u ON e.user_id = u.id and e.session_id = $session_id and e.class_id = $class_id and e.section_id = $section_id
                                                 left join gradebooks    gb on gb.session_id = e.session_id and gb.user_id = u.id and e.class_id = gb.class_id 
-                                                    and e.section_id = gb.section_id and e.school_id = gb.school_id and gb.subject_id = $subject_id and gb.school_id = $school_id 
-                                                    and gb.exam_id = $exam_id
+                                                                        and e.section_id = gb.section_id and e.school_id = gb.school_id and gb.subject_id = $subject_id 
+                                                                        and gb.school_id = $school_id and gb.exam_id = $exam_id
                                                 where name is not null ");
 
-            return response()->json(["success" => true, "data"=> $enrolled_students, "msg" => "Event created successfully"]);
+            return response()->json(["success" => true, "data"=> $enrolled_students, "msg" => "Student marks fetched successfully"]);
 
         }catch(Exception $exp){
             return response()->json(["success" => false, "msg" => $exp->getMesssage()]);
@@ -105,12 +105,22 @@ class CommonController extends Controller
 
     public function getExamDetails($school_id, $class_id, $subject_id, $exam_id){
         $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
-        $exam_details = ExamMarkSetup::where('school_id','=', $school_id)
+
+        try{
+            $exam_details = ExamMarkSetup::where('school_id','=', $school_id)
                         ->where('session_id','=', $session_id)
                         ->where('class_id','=', $class_id)
                         ->where('subject_id','=', $subject_id)
                         ->where('exam_id','=', $exam_id)->first();
-        return $exam_details;
+        
+                
+            return response()->json(["success" => true, "data"=>$exam_details,  "msg" => "Exam mark setup data fetched successfully"]);    
+            
+        }catch(Exception $exp){
+            return response()->json(["success" => false, "msg" => $exp->getMesssage()]);
+        }
+
+        
     }
     
     public function getStudentMarksByClassSection($school_id, $class_id, $section_id, $subject_id, $exam_id){
