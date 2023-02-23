@@ -50,7 +50,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
-
+use App\Exports\TeacherDataExport;
+use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AdminController extends Controller
 {
@@ -274,23 +276,35 @@ class AdminController extends Controller
     public function teacherList(Request $request)
     {
         $search = $request['search'] ?? "";
-
-        if ($search != "") {
-
-            $teachers = User::where(function ($query) use ($search) {
-                $query->where('name', 'LIKE', "%{$search}%")
-                    ->where('school_id', auth()->user()->school_id)
-                    ->where('role_id', 3);
-            })->orWhere(function ($query) use ($search) {
-                $query->where('email', 'LIKE', "%{$search}%")
-                    ->where('school_id', auth()->user()->school_id)
-                    ->where('role_id', 3);
-            })->paginate(10);
-        } else {
-            $teachers = User::where('role_id', 3)->where('school_id', auth()->user()->school_id)->paginate(10);
+        $class_id = $request['class_id'] ?? "";
+        $school_id = auth()->user()->school_id;
+        $query = User::where('users.role_id', 3)->where('users.school_id', $school_id);
+        if ($search !== "") {
+            $query->orWhere('users.name', 'LIKE', "%{$search}%")
+                ->orWhere('users.email', 'LIKE', "%{$search}%");
         }
+        if ($class_id !== "") {
+            $query->join('routines', 'users.id', 'routines.teacher_id')
+                ->where('routines.class_id', $class_id);
+        }
+        $teachers = $query->paginate(10);
+        $classes = (new Classes)->getClassBySchool($school_id);
 
-        return view('admin.teacher.teacher_list', compact('teachers', 'search'));
+        // if ($search != "") {
+        //     $teachers_query = User::where(function ($query) use ($search) {
+        //         $query->where('name', 'LIKE', "%{$search}%")
+        //             ->where('school_id', auth()->user()->school_id)
+        //             ->where('role_id', 3);
+        //     })->orWhere(function ($query) use ($search) {
+        //         $query->where('email', 'LIKE', "%{$search}%")
+        //             ->where('school_id', auth()->user()->school_id)
+        //             ->where('role_id', 3);
+        //     })->paginate(10);
+        // } else {
+        //     $teachers = User::where('role_id', 3)->where('school_id', auth()->user()->school_id)->paginate(10);
+        // }
+
+        return view('admin.teacher.teacher_list', compact('teachers', 'search', 'class_id', 'classes'));
     }
 
     public function updateLoginCredentials(Request $request, $id)
@@ -366,7 +380,7 @@ class AdminController extends Controller
         } catch (Exception  $e) {
             echo "<pre>";
             print_r($e->geMessage());
-            die;			
+            die;
 
             return redirect()->back()->with('error', "Teacher couldn't be updated");
         }
@@ -376,6 +390,18 @@ class AdminController extends Controller
     {
         (new Teacher)->deleteTeacher($id);
         return redirect()->route('admin.teacher')->with('message', 'You have successfully deleted teacher.');
+    }
+    public function downloadTeacherReport(Request $request)
+    {
+        $class_id = NULL;
+        if (isset($request->class_id)) {
+            $class_id = $request->class_id;
+        }
+        $time = (Carbon::now())->format('Y_m_d_H_i_s');
+        if ($request->format == 'excel') {
+            $file_name = "TeacherReport_" . $time . ".xlsx";
+            return Excel::download(new TeacherDataExport($class_id), $file_name);
+        }
     }
 
     /**
@@ -641,7 +667,7 @@ class AdminController extends Controller
     public function parentCreate(Request $request)
     {
         $data = $request->all();
-        $data['username']=(new User)->createUsername(6);
+        $data['username'] = (new User)->createUsername(6);
         if (!empty($data['photo'])) {
 
             $imageName = time() . '.' . $data['photo']->extension();
@@ -807,11 +833,11 @@ class AdminController extends Controller
         $students = $users->join('enrollments', 'users.id', '=', 'enrollments.user_id')->select('enrollments.*')->paginate(10);
 
         $classes = Classes::get();
-        
+
         return view('admin.student.student_list', compact('students', 'search', 'classes', 'class_id', 'section_id'));
     }
 
-    
+
 
     public function createStudentModal()
     {
@@ -1261,7 +1287,7 @@ class AdminController extends Controller
 
         // $exams = Exam::get()->where('exam_type', 'offline')->where('school_id', auth()->user()->school_id);
         $exams = Exam::join('classes', 'classes.id', '=', 'exams.class_id')
-            
+
             ->where('exams.school_id', $school_id)
             ->where('exams.session_id', $active_session)
             ->select('exams.*',  'classes.name as class')->get();
@@ -1349,16 +1375,16 @@ class AdminController extends Controller
         echo $options;
     }
 
-    
+
     // public function classWiseExams($class_id){
     //     $exams = (new ExamController)->classWiseExams($class_id);
-        
+
     //     $options = '<option value="">' . 'Select exam' . '</option>';
     //     foreach ($exams as $exam) :
     //         $options .= '<option value="' . $exam['id'] . '">' . $exam['name'] . '</option>';
     //     endforeach;
     //     echo $options;
-        
+
     // }
 
 
@@ -1375,7 +1401,7 @@ class AdminController extends Controller
             'total_marks' => $data['total_marks'],
             'status' => 'pending',
             'class_id' => $data['class_id'],
-            
+
             'school_id' => auth()->user()->school_id,
             'session_id' => $active_session,
             'pass_marks' => $data['pass_marks'],
@@ -1433,7 +1459,7 @@ class AdminController extends Controller
     public function setupOfflineExam($id)
     {
         $exam = Exam::find($id);
-        
+
         $school_id = auth()->user()->school_id;
         $class_id = $exam['class_id'];
         $session_id = $exam['session_id'];
@@ -1441,9 +1467,9 @@ class AdminController extends Controller
         $subjects = (new GradeSubject)->getSubjectByClass($session_id, $school_id, $class_id);
         //dd($subjects);
         $exam_categories = ExamCategory::where('school_id', auth()->user()->school_id)->get();
-        $exam_marks_setup = ExamMarkSetup::where('exam_id','=',$id)->get();
+        $exam_marks_setup = ExamMarkSetup::where('exam_id', '=', $id)->get();
         $marks_setup = [];
-        foreach($exam_marks_setup as $exam_marks){
+        foreach ($exam_marks_setup as $exam_marks) {
             $marks_setup[$exam_marks->subject_id]['id'] = $exam_marks->id;
             $marks_setup[$exam_marks->subject_id]['th_fm'] = $exam_marks->th_fm;
             $marks_setup[$exam_marks->subject_id]['th_pm'] = $exam_marks->th_pm;
@@ -1453,35 +1479,36 @@ class AdminController extends Controller
             $marks_setup[$exam_marks->subject_id]['pr_fm'] = $exam_marks->pr_fm;
         }
         //dd($marks_setup);
-        return view('admin.examination.setup_offline_exam', ['exam' => $exam, 'classes' => $classes, 'subjects' => $subjects,'exam_marks_setup' => $marks_setup]);
+        return view('admin.examination.setup_offline_exam', ['exam' => $exam, 'classes' => $classes, 'subjects' => $subjects, 'exam_marks_setup' => $marks_setup]);
     }
 
-    public function setupOfflineExamSave(Request $request){
+    public function setupOfflineExamSave(Request $request)
+    {
         $data = $request->all();
         $exam_id = $data['exam_id'];
         $session_id = $data['session_id'];
         $class_id = $data['class_id'];
         $school_id = auth()->user()->school_id;
 
-        foreach($data['exam_marks_setup'] as $value){
-            if($value['marks_setup_id'] == 0){
+        foreach ($data['exam_marks_setup'] as $value) {
+            if ($value['marks_setup_id'] == 0) {
                 $exam_marks_setup = new ExamMarkSetup();
-            } else{
+            } else {
                 $exam_marks_setup = ExamMarkSetup::find($value['marks_setup_id']);
             }
-            
+
             $exam_marks_setup->exam_id = $exam_id;
             $exam_marks_setup->session_id = $session_id;
             $exam_marks_setup->class_id = $class_id;
             $exam_marks_setup->school_id = $school_id;
 
             $exam_marks_setup->subject_id = $value['subject_id'];
-            $exam_marks_setup->th_fm = isset($value['th_fm'])? $value['th_fm']: 0;
-            $exam_marks_setup->th_pm = isset($value['th_pm'])? $value['th_pm']: 0;
-            $exam_marks_setup->th_ch = isset($value['th_ch'])? $value['th_ch']: 0;
-            $exam_marks_setup->pr_fm = isset($value['pr_fm'])? $value['pr_fm']: 0;
-            $exam_marks_setup->pr_pm = isset($value['pr_pm'])? $value['pr_pm']: 0;
-            $exam_marks_setup->pr_ch = isset($value['pr_ch'])? $value['pr_ch']: 0;
+            $exam_marks_setup->th_fm = isset($value['th_fm']) ? $value['th_fm'] : 0;
+            $exam_marks_setup->th_pm = isset($value['th_pm']) ? $value['th_pm'] : 0;
+            $exam_marks_setup->th_ch = isset($value['th_ch']) ? $value['th_ch'] : 0;
+            $exam_marks_setup->pr_fm = isset($value['pr_fm']) ? $value['pr_fm'] : 0;
+            $exam_marks_setup->pr_pm = isset($value['pr_pm']) ? $value['pr_pm'] : 0;
+            $exam_marks_setup->pr_ch = isset($value['pr_ch']) ? $value['pr_ch'] : 0;
             $exam_marks_setup->save();
         }
         return redirect()->back()->with('message', 'You have successfully update exam.');
@@ -2025,27 +2052,27 @@ class AdminController extends Controller
         $page_data['subject_name'] = Subject::find($data['subject_id'])->name;
 
         $enroll_students = Enrollment::where('class_id', $page_data['class_id'])
-                            ->where('section_id', $page_data['section_id'])
-                            ->where('session_id', $session_id)
-                            ->where('school_id', $school_id)
-                            ->get();
+            ->where('section_id', $page_data['section_id'])
+            ->where('session_id', $session_id)
+            ->where('school_id', $school_id)
+            ->get();
 
         $mark_setups = ExamMarkSetup::where('class_id', $page_data['class_id'])
-                                        ->where('session_id', $session_id)
-                                        ->where('school_id', $school_id)
-                                        ->where('exam_id', $data['exam_id'])
-                                        ->where('subject_id', $page_data['subject_id'])
-                                        ->select('th_fm', 'pr_fm')
-                                        ->first(); 
-                                        
-        if(!empty($mark_setups)){
-            $page_data['th_fm'] = (isset($mark_setups->th_fm))? $mark_setups->th_fm: 0;
-            $page_data['pr_fm'] = (isset($mark_setups->pr_fm))? $mark_setups->pr_fm: 0;
-            $page_data['is_mark_set'] = true;  
-        }else{
+            ->where('session_id', $session_id)
+            ->where('school_id', $school_id)
+            ->where('exam_id', $data['exam_id'])
+            ->where('subject_id', $page_data['subject_id'])
+            ->select('th_fm', 'pr_fm')
+            ->first();
+
+        if (!empty($mark_setups)) {
+            $page_data['th_fm'] = (isset($mark_setups->th_fm)) ? $mark_setups->th_fm : 0;
+            $page_data['pr_fm'] = (isset($mark_setups->pr_fm)) ? $mark_setups->pr_fm : 0;
+            $page_data['is_mark_set'] = true;
+        } else {
             $page_data['is_mark_set'] = false;
         }
-        
+
         $page_data['exam_categories'] = ExamCategory::where('school_id', $school_id)->get();
         $page_data['classes'] = (new Classes)->getClassBySchool($school_id);
 
@@ -2123,17 +2150,18 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function createExamAttendance(){
+    public function createExamAttendance()
+    {
         $school_id = auth()->user()->school_id;
         $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
         $classes = (new Classes)->getClassBySchool($school_id);
-        
-        return view('admin.exam_attendance.index', ['classes' => $classes]);
 
+        return view('admin.exam_attendance.index', ['classes' => $classes]);
     }
 
-    
-    public function examAttendanceFilter(Request $request){
+
+    public function examAttendanceFilter(Request $request)
+    {
         $pageData   = $request->all();
         $school_id  = auth()->user()->school_id;
         $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
@@ -2146,28 +2174,28 @@ class AdminController extends Controller
         // print_r($data);
         // die;
 
-        return view('admin.exam_attendance.exam_attendance_list', ['data'=>$data, 'page_data'=> $pageData]);
-        
+        return view('admin.exam_attendance.exam_attendance_list', ['data' => $data, 'page_data' => $pageData]);
     }
 
 
-    public function updateExamAttendance(Request $request){
+    public function updateExamAttendance(Request $request)
+    {
 
-            $data = $request->all();
-            // echo "<pre>";
-            // print_r($data);
-            // die;
-            $enrollment_id  = $data['enrollment_id']; 
-            $user_id        = $data['user_id'];  
-            $exam_id        = $data['exam_id'];  
-            $present_day    = $data['present_day'];  
-            $working_day    = $data['working_day']; 
-    
-            (new ExamAttendance)->updateExamAttendance($enrollment_id, $user_id, $exam_id, $present_day, $working_day);
+        $data = $request->all();
+        // echo "<pre>";
+        // print_r($data);
+        // die;
+        $enrollment_id  = $data['enrollment_id'];
+        $user_id        = $data['user_id'];
+        $exam_id        = $data['exam_id'];
+        $present_day    = $data['present_day'];
+        $working_day    = $data['working_day'];
 
+        (new ExamAttendance)->updateExamAttendance($enrollment_id, $user_id, $exam_id, $present_day, $working_day);
     }
 
-    public function bulkUpdateExamAttendance(Request $request){
+    public function bulkUpdateExamAttendance(Request $request)
+    {
         $data           = $request->all();
         $working_day    = $data['total-working-days'];
         $user_list      = $data['user_id'];
@@ -2178,49 +2206,50 @@ class AdminController extends Controller
         // echo "<pre>";
         // print_r($data);
 
-        for( $i = 0; $i <= count($user_list)-1; $i++){
-            $enrollment_id  = $enrollment_list[$i]; 
-            $user_id        = $user_list[$i];  
-            $exam_id        = $exam_list[$i];  
-            $present_day    = $presentday_list[$i];  
-            $working_day    = $working_day; 
+        for ($i = 0; $i <= count($user_list) - 1; $i++) {
+            $enrollment_id  = $enrollment_list[$i];
+            $user_id        = $user_list[$i];
+            $exam_id        = $exam_list[$i];
+            $present_day    = $presentday_list[$i];
+            $working_day    = $working_day;
 
             (new ExamAttendance)->updateExamAttendance($enrollment_id, $user_id, $exam_id, $present_day, $working_day);
-
-        }   
+        }
 
         // return redirect()->back()->with('message', 'Exam attendance updated.');
-        return view('admin.exam_attendance.exam_attendance_list', ['data'=>$data, 'page_data'=> $pageData]);
+        return view('admin.exam_attendance.exam_attendance_list', ['data' => $data, 'page_data' => $pageData]);
         // die;
 
     }
 
 
-    public function examRoutine(){
+    public function examRoutine()
+    {
         $school_id = auth()->user()->school_id;
         $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
         $classes = (new Classes)->getClassBySchool($school_id);
-        
+
         return view('admin.exam_routine.index', ['classes' => $classes]);
     }
 
-    public function examRoutineFilter(Request $request){
+    public function examRoutineFilter(Request $request)
+    {
         $data = $request->all();
 
         $school_id  = auth()->user()->school_id;
         $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
         $class_id   = $data['class_id'];
         $exam_id    = $data['exam_id'];
-        
-        $exam_routines = (new ExamRoutine)->index( $session_id, $school_id, $class_id, $exam_id);
 
-        return view('admin.exam_routine.exam_routine_list', ['exam_routines' => $exam_routines, 'page_data'=> $data]);
+        $exam_routines = (new ExamRoutine)->index($session_id, $school_id, $class_id, $exam_id);
 
+        return view('admin.exam_routine.exam_routine_list', ['exam_routines' => $exam_routines, 'page_data' => $data]);
     }
 
-    public function examRoutineUpdate(Request $request){
+    public function examRoutineUpdate(Request $request)
+    {
         $data = $request->all();
-      
+
 
         $school_id  = auth()->user()->school_id;
         $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
@@ -2244,21 +2273,21 @@ class AdminController extends Controller
 
         // die;
 
-        for( $i = 0; $i <= count($subject_list)-1; $i++){
-            $subject_id = $subject_list[$i]; 
-            $exam_date  = $exam_date_list[$i];  
-            $start_time = $start_time_list[$i];  
-            $end_time   = $end_time_list[$i];  
+        for ($i = 0; $i <= count($subject_list) - 1; $i++) {
+            $subject_id = $subject_list[$i];
+            $exam_date  = $exam_date_list[$i];
+            $start_time = $start_time_list[$i];
+            $end_time   = $end_time_list[$i];
 
             (new ExamRoutine)->updateExamRoutine($session_id, $school_id, $class_id, $exam_id, $subject_id, $exam_date, $start_time, $end_time);
         }
 
         return view('admin.exam_routine.index', ['classes' => $classes]);
-    }   
+    }
 
 
 
-        
+
     /**
      * Show the promotion list.
      *
@@ -2364,8 +2393,8 @@ class AdminController extends Controller
             'session_id' => $active_session,
             'subject_id' => $data['subject_id'],
             'sequence' => $data['sequence'],
-            'conduct_exam' => isset($data['conduct_exam'])? $data['conduct_exam'] : 0,
-            'elective_name_id'=> $data['elective_name_id'],
+            'conduct_exam' => isset($data['conduct_exam']) ? $data['conduct_exam'] : 0,
+            'elective_name_id' => $data['elective_name_id'],
             'modified_by' => $user_id
         ]);
 
@@ -2388,8 +2417,8 @@ class AdminController extends Controller
             'class_id' => $data['class_id'],
             'subject_id' => $data['subject_id'],
             'sequence' => $data['sequence'],
-            'conduct_exam' => isset($data['conduct_exam'])? $data['conduct_exam'] : 0,
-            'elective_name_id'=> $data['elective_name_id'],
+            'conduct_exam' => isset($data['conduct_exam']) ? $data['conduct_exam'] : 0,
+            'elective_name_id' => $data['elective_name_id'],
             'modified_by' => $user_id
         ]);
 
@@ -3156,7 +3185,7 @@ class AdminController extends Controller
     {
         $data = $request->all();
         $book_title = $request->string('name')->trim();
-        
+
         $duplicate_book_check = Book::get()->where('name', $book_title);
 
         if (count($duplicate_book_check) == 0) {
@@ -4146,10 +4175,10 @@ class AdminController extends Controller
     {
         $school_id = auth()->user()->school_id;
         $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
-       
+
         $classes = (new Classes)->getClassBySchool($school_id);
-        
-        return view('admin.elective_enrollment.index', [ 'classes' => $classes]);
+
+        return view('admin.elective_enrollment.index', ['classes' => $classes]);
     }
 
     public function electiveEnrollmentFilter(Request $request)
@@ -4164,14 +4193,14 @@ class AdminController extends Controller
 
         $page_data['class_name'] = Classes::find($data['class_id'])->name;
         $page_data['section_name'] = Section::find($data['section_id'])->name;
-       
+
         $enroll_students = Enrollment::where('class_id', $page_data['class_id'])
-                            ->where('section_id', $page_data['section_id'])
-                            ->where('session_id', $session_id)
-                            ->where('school_id', $school_id)
-                            ->get();
-        
-        
+            ->where('section_id', $page_data['section_id'])
+            ->where('session_id', $session_id)
+            ->where('school_id', $school_id)
+            ->get();
+
+
         $page_data['classes'] = (new Classes)->getClassBySchool($school_id);
         $elective_subjects = $this->get_elective_subjects($page_data['class_id'], $session_id, $school_id);
         $page_data['elective_subjects'] = $elective_subjects;
@@ -4179,20 +4208,21 @@ class AdminController extends Controller
         return view('admin.elective_enrollment.students_list', ['enroll_students' => $enroll_students, 'page_data' => $page_data]);
     }
 
-    public function get_elective_subjects($class_id, $session_id, $school_id){
+    public function get_elective_subjects($class_id, $session_id, $school_id)
+    {
         $elective_subjects = GradeSubject::where('class_id', $class_id)
-                ->where('session_id', $session_id)
-                ->where('school_id', $school_id)
-                ->where('elective_name_id', '!=', 0)
-                ->whereNotNull('elective_name_id')
-                ->get();
+            ->where('session_id', $session_id)
+            ->where('school_id', $school_id)
+            ->where('elective_name_id', '!=', 0)
+            ->whereNotNull('elective_name_id')
+            ->get();
         $elective_subjects_list = [];
 
-        foreach($elective_subjects as $elective_subject){
-           
+        foreach ($elective_subjects as $elective_subject) {
+
             $subject = Subject::find($elective_subject->subject_id);
             $elective_subjects_list[$elective_subject->elective_name_id][$elective_subject->subject_id] = $subject->name;
-        }   
+        }
         return $elective_subjects_list;
     }
 }

@@ -30,8 +30,8 @@
             <div class="eSection-wrap-2">
                 <div
                     class="search-filter-area d-flex justify-content-md-between justify-content-center align-items-center flex-wrap gr-15">
-                    <form action="{{ route('admin.teacher') }}">
-                        <div class="search-input d-flex justify-content-start align-items-center">
+                    <form action="{{ route('admin.teacher') }}" class="d-flex">
+                        <div class="search-input d-flex justify-content-start align-items-center me-4">
                             <span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
                                     <path id="Search_icon" data-name="Search icon"
@@ -42,10 +42,22 @@
                             <input type="text" id="search" name="search" value="{{ $search }}"
                                 placeholder="Search user" class="form-control" />
                         </div>
+                        <select name="class_id" id="class_id"
+                            class="form-select eForm-select eChoice-multiple-with-remove">
+                            <option value="">Select Class</option>
+                            @foreach ($classes as $class)
+                                <option value="{{ $class->id }}" {{ $class->id == $class_id ? 'selected' : '' }}>
+                                    {{ $class->name }}</option>
+                            @endforeach
+                        </select>
+                        <button class="eBtn btn btn-secondary mx-3 " type="submit">
+                            Filter
+                        </button>
                     </form>
                     <!-- Export Button -->
+
                     @if (count($teachers) > 0)
-                        <div class="position-relative">
+                        <div class="d-flex">
                             <button class="eBtn-3 dropdown-toggle" type="button" id="defaultDropdown"
                                 data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
                                 <span class="pr-10">
@@ -59,6 +71,10 @@
                                 {{ get_phrase('Export') }}
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end eDropdown-menu-2">
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="{{ route('admin.downloadTeacherReport', ['format' => 'excel', 'class_id' => $class_id ?? '']) }}">{{ get_phrase('Excel') }}</a>
+                                </li>
                                 <li>
                                     <a class="dropdown-item" id="pdf" href="javascript:;"
                                         onclick="Export()">{{ get_phrase('PDF') }}</a>
