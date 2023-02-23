@@ -324,6 +324,8 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
     Route::post('admin/manage/exam/moveNodeDown', [ExamController::class, 'moveNodeDown'])->name('admin.exam.moveNodeDown');
     Route::post('admin/manage/exam/deleteExam', [ExamController::class, 'deleteExam'])->name('admin.exam.deleteExam');
     Route::post('admin/manage/exam/updateExam', [ExamController::class, 'updateExam'])->name('admin.exam.updateExam');
+    Route::get('admin/manage/exam/exam_dropdown', [ExamController::class, 'exam_dropdown'])->name('admin.exam.exam_dropdown');
+
 
     //Attendance routes
     Route::get('admin/attendance', 'dailyAttendance')->name('admin.daily_attendance');

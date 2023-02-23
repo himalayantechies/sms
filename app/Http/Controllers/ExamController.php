@@ -37,6 +37,9 @@ class ExamController extends Controller
         $data = $request->all();
         $school_id = auth()->user()->school_id;
         $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
+        if ($request->session_id) {
+            $session_id = $request->session_id;
+        }
 
         $page_data['exam_id']       = $data['exam_id'];
         $page_data['class_id']      = $data['class_id'];
@@ -73,10 +76,13 @@ class ExamController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $school_id = auth()->user()->school_id;
         $active_session = get_school_settings($school_id)->value('running_session');
+        if ($request->active_session) {
+            $active_session = $request->active_session;
+        }
         $this->_data['classes'] = (new Classes)->getClassBySchool($school_id);
         $this->_data['exam_categories'] = ExamCategory::where('school_id', $school_id)->where('session_id', $active_session)->get(['name', 'id']);
         return view('admin.exam.index', $this->_data);
@@ -85,6 +91,9 @@ class ExamController extends Controller
     {
         $school_id = auth()->user()->school_id;
         $active_session = get_school_settings($school_id)->value('running_session');
+        if ($request->active_session) {
+            $active_session = $request->active_session;
+        }
         $this->_data['random_number'] = rand(10, 100);
         $this->_data['exams'] = Exam::withDepth()
             ->where('exams.session_id', $active_session)
@@ -97,6 +106,9 @@ class ExamController extends Controller
     {
         $school_id = auth()->user()->school_id;
         $active_session = get_school_settings($school_id)->value('running_session');
+        if ($request->active_session) {
+            $active_session = $request->active_session;
+        }
         $exam = Exam::find($request->exam_id);
         $this->_data['exam'] = $exam;
         $this->_data['exam_categories'] = ExamCategory::where('school_id', $school_id)->where('session_id', $active_session)->get(['name', 'id']);
@@ -116,16 +128,56 @@ class ExamController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         $school_id = auth()->user()->school_id;
         $active_session = get_school_settings($school_id)->value('running_session');
+        if ($request->active_session) {
+            $active_session = $request->active_session;
+        }
         $this->_data['classes'] = (new Classes)->getClassBySchool($school_id);
         $this->_data['exams'] = Exam::withDepth()
             ->get()
             ->toTree();
         $this->_data['exam_categories'] = ExamCategory::where('school_id', $school_id)->where('session_id', $active_session)->get(['name', 'id']);
         return view('admin.exam.store', $this->_data);
+    }
+
+    public function exam_dropdown(Request $request)
+    {
+        $school_id = auth()->user()->school_id;
+        $active_session = get_school_settings($school_id)->value('running_session');
+        if ($request->active_session) {
+            $active_session = $request->active_session;
+        }
+        $exams = Exam::withDepth()
+            ->where('exams.session_id', $active_session)
+            ->where('class_id', $request->class_id)
+            ->get()
+            ->toTree();
+        $exam_dropdown = [];
+        // Iterate through each exam and add all descendants to the array
+        foreach ($exams as $exam) {
+            $this->addDescendantsToArray($exam, $exam_dropdown);
+        }
+        $this->_data['exams'] = $exam_dropdown;
+        return view('admin.exam.examDropdown', $this->_data);
+    }
+    // Recursive function to add all descendants of an exam to the array
+    function addDescendantsToArray($exam, &$array, $depth = 0)
+    {
+        // Determine the number of arrows to prepend based on the depth
+        $arrows = str_repeat('>', $depth);
+
+        // Add the current exam to the array with arrows prepended to the name
+        array_push($array, (object)(["name" => $arrows . ' ' . $exam->name, "id" => $exam->id]));
+
+        // Recursively add all descendants of the current exam
+        if (count($exam->children) > 0) {
+            foreach ($exam->children as $child_exam) {
+                $this->addDescendantsToArray($child_exam, $array, $depth + 1);
+            }
+        }
     }
 
     /**
@@ -144,7 +196,7 @@ class ExamController extends Controller
             'class_id' => $request->class_id,
             'starting_time' => $request->starting_time,
             'ending_time' => $request->ending_time,
-            'status' => $request->status,
+            'status' => '1',
             'weightage' => $request->weightage,
             'is_end_leaf' => '1',
             'school_id' => $school_id,
