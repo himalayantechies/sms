@@ -305,8 +305,7 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
     Route::post('admin/offline_exam/{id}', 'offlineExamUpdate')->name('admin.offline_exam.update');
     Route::get('admin/offline_exam/delete/{id}', 'offlineExamDelete')->name('admin.offline_exam.delete');
     Route::get('admin/exam_list_by_class/{id}', 'classWiseOfflineExam')->name('admin.class_wise_exam_list');
-    Route::get('admin/offline_exam/setup/{id}', 'setupOfflineExam')->name('admin.setup.offline_exam');
-    Route::post('admin/offline_exam/setupSave/{id}', 'setupOfflineExamSave')->name('admin.setup.offline_exam.save');
+
 
     Route::get('admin/elective_enrollment', 'electiveEnrollment')->name('admin.electiveEnrollment');
     Route::get('admin/student_list', 'electiveEnrollmentFilter')->name('admin.electiveEnrollment.list');
@@ -325,7 +324,8 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
     Route::post('admin/manage/exam/deleteExam', [ExamController::class, 'deleteExam'])->name('admin.exam.deleteExam');
     Route::post('admin/manage/exam/updateExam', [ExamController::class, 'updateExam'])->name('admin.exam.updateExam');
     Route::get('admin/manage/exam/exam_dropdown', [ExamController::class, 'exam_dropdown'])->name('admin.exam.exam_dropdown');
-
+    Route::get('admin/manage/exam/offline_exam/setup/{id}', 'setupOfflineExam')->name('admin.setup.offline_exam');
+    Route::post('admin/manage/exam/offline_exam/setupSave/{id}', 'setupOfflineExamSave')->name('admin.setup.offline_exam.save');
 
     //Attendance routes
     Route::get('admin/attendance', 'dailyAttendance')->name('admin.daily_attendance');

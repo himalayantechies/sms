@@ -14,7 +14,6 @@
                         <ul class="d-flex align-items-center eBreadcrumb-2">
                             <li><a href="#">{{ get_phrase('Home') }}</a></li>
                             <li><a href="#">{{ get_phrase('Exam') }}</a></li>
-                            <li><a href="#">{{ get_phrase('Offline Exam') }}</a></li>
                             <li><a href="#">{{ get_phrase('Exam Marks Setup') }}</a></li>
                         </ul>
                     </div>
