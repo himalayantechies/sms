@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\AuthController;
-// use App\Http\Controllers\API\EventController;
+use App\Http\Controllers\API\EventController;
 use App\Http\Controllers\API\NoticeBoardController;
 use App\Http\Controllers\API\RoutineController;
 use App\Http\Controllers\API\CommonController;
