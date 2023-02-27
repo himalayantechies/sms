@@ -313,10 +313,18 @@
 @endsection
 
 @section('scripts')
+<script src="https://unpkg.com/nepali-date-picker@2.0.1/dist/jquery.nepaliDatePicker.min.js" crossorigin="anonymous">
+</script>
+<link rel="stylesheet" href="https://unpkg.com/nepali-date-picker@2.0.1/dist/nepaliDatePicker.min.css"
+    crossorigin="anonymous" />
     <script type="text/javascript">
         "use strict";
         $(document).ready(function() {
             $(".eChoice-multiple-with-remove").select2();
+            $('#dob').nepaliDatePicker({
+                dateFormat: "%y-%m-%d",
+                closeOnDateSelect: true
+            });
         });
 
         $(function() {
