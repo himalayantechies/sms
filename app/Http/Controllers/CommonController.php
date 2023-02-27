@@ -56,7 +56,7 @@ class CommonController extends Controller
 
         $enrol_data['code'] = $student->code;
         $enrol_data['user_id'] = $id;
-        $enrol_data['parent_name'] = $parent_details->name??"";
+        $enrol_data['parent_name'] = $parent_details->name ?? "";
         $enrol_data['name'] = $student->name;
         $enrol_data['email'] = $student->email;
 
@@ -66,7 +66,7 @@ class CommonController extends Controller
         $enrol_data['phone'] = $info->phone;
         $enrol_data['birthday'] = $info->birthday;
         $enrol_data['gender'] = $info->gender;
-        $enrol_data['blood_group'] = $info->blood_group??"";
+        $enrol_data['blood_group'] = $info->blood_group ?? "";
         $enrol_data['photo'] = get_user_image($id);
 
         $enrol_data['class_name'] = $class_details->name;
@@ -98,8 +98,8 @@ class CommonController extends Controller
 
         $enrol_data['class_name'] = $class_details->name;
         $enrol_data['class_id'] = $class_details->id;
-        $enrol_data['section_name'] = $section_details->name;
-        $enrol_data['section_id'] = $section_details->id;
+        $enrol_data['section_name'] = $section_details->name ?? '';
+        $enrol_data['section_id'] = $section_details->id ?? '';
 
         return $enrol_data;
     }
@@ -122,7 +122,7 @@ class CommonController extends Controller
         $school_id = auth()->user()->school_id;
         $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
         $subjects = (new GradeSubject)->getSubjectByClass($session_id, $school_id, $id);
-        
+
         $options = '<option value="">' . 'Select a subject' . '</option>';
         foreach ($subjects as $subject) :
             $options .= '<option value="' . $subject->id . '">' . $subject->name . '</option>';
@@ -141,15 +141,15 @@ class CommonController extends Controller
         echo $options;
     }
 
-    public function classWiseExams($class_id){
+    public function classWiseExams($class_id)
+    {
         $exams = (new ExamController)->classWiseExams($class_id);
-        
+
         $options = '<option value="">' . 'Select exam' . '</option>';
         foreach ($exams as $exam) :
             $options .= '<option value="' . $exam['id'] . '">' . $exam['name'] . '</option>';
         endforeach;
         echo $options;
-        
     }
 
 
@@ -178,9 +178,9 @@ class CommonController extends Controller
             ->where('school_id', $data['school_id'])
             ->where('session_id', $data['session_id'])
             ->first();
-        $enrollment = Enrollment::where('user_id','=',$data['user_id'])
-                    ->where('session_id','=',$data['session_id'])
-                    ->where('school_id','=',$data['school_id'])->first();
+        $enrollment = Enrollment::where('user_id', '=', $data['user_id'])
+            ->where('session_id', '=', $data['session_id'])
+            ->where('school_id', '=', $data['school_id'])->first();
         // dd($enrollment);
         if (!empty($query) && $query->count() > 0) {
             $query->th_marks = $data['th_marks'];
@@ -201,44 +201,40 @@ class CommonController extends Controller
     public function elective_subjectUpdate(Request $request)
     {
         $data = $request->all();
-        
-        foreach($data['elective'] as $key => $value){
-            $elective = ElectiveSubject::where('user_id', '=',$data['user_id'] )
-                    ->where('class_id','=',$data['class_id'])
-                    ->where('section_id','=',$data['section_id'])
-                    ->where('elective_group','=',$key)->first();
-            if($elective == null){
+
+        foreach ($data['elective'] as $key => $value) {
+            $elective = ElectiveSubject::where('user_id', '=', $data['user_id'])
+                ->where('class_id', '=', $data['class_id'])
+                ->where('section_id', '=', $data['section_id'])
+                ->where('elective_group', '=', $key)->first();
+            if ($elective == null) {
                 $elective = new ElectiveSubject();
             }
             $elective->session_id = get_school_settings(auth()->user()->school_id)->value('running_session');;
             $elective->user_id = $data['user_id'];
             $elective->class_id = $data['class_id'];
             $elective->section_id = $data['section_id'];
-            $elective->subject_id = isset($value)? $value: 0;
-            $elective->elective_group = isset($key)? $key: 0;
-            
+            $elective->subject_id = isset($value) ? $value : 0;
+            $elective->elective_group = isset($key) ? $key : 0;
+
             $elective->modified_by = auth()->user()->id;
             $elective->save();
         }
-        
-       
-        return response()->json(['msg' => 'Saved Successfully'], 200); 
-       
+
+
+        return response()->json(['msg' => 'Saved Successfully'], 200);
     }
 
-    public function get_user_by_id_from_user_table($id){
+    public function get_user_by_id_from_user_table($id)
+    {
         $user = User::find($id);
 
         return $user;
     }
 
-    public function idWiseUserName($id='')
+    public function idWiseUserName($id = '')
     {
         $result =  User::where('id', $id)->value('name');
         return $result;
     }
-
-
-  
-
 }
