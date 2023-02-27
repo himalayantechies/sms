@@ -1,5 +1,9 @@
 @extends('admin.navigation')
-
+@section('styles')
+    .nepali-date-picker .drop-down-content {
+    width:auto !important;
+    }
+@endsection
 @section('content')
     <div class="mainSection-title">
         <div class="row">
@@ -42,13 +46,7 @@
             action="{{ route('admin.teacher.create') }}">
             @csrf
             <div class="container">
-                {{-- <div class="row">
-                    <div class="col-md-6 col-sm-12 mt-2">
-                        <label for="username" class="eForm-label form-label">{{ get_phrase('Username') }}*</label>
-                        <input type="text" class="form-control eForm-control" id="username" name="username" required
-                            value="{{ $teacher_username }}">
-                    </div>
-                </div> --}}
+
                 <div class="row">
                     <div class="col-md-6 col-sm-12 mt-2">
                         <label for="name" class="eForm-label form-label">{{ get_phrase('Name') }}*</label>
@@ -147,27 +145,24 @@
                             <input type="text" class="form-control eForm-control" id="citizenship_no"
                                 name="citizenship_no" placeholder="Enter Citizenship No">
                         </div>
-                            @php $districts = district_list(); @endphp
+                        @php $districts = district_list(); @endphp
                         <div class="col-md-6 col-sm-12 mt-2">
                             <label for="issuing_district"
                                 class="eForm-label">{{ get_phrase('Issuing District') }}</label>
                             <select name="issuing_district" id="issuing_district"
                                 class="form-select eForm-select eChoice-multiple-with-remove">
                                 <option value="">{{ get_phrase('Select Issuing District') }}</option>
-                                @php
-                                foreach($districts as $key=>$value){
-                                @endphp
-                                    <option value="{{$key}}">{{ $value }}</option>
-                                @php
-                                }
-                                @endphp
+                                @foreach ($districts as $key => $value)
+                                    <option value="{{ $key }}">{{ $value }}</option>
+                                @endforeach
+
                             </select>
                         </div>
                         <div class="col-md-6 col-sm-12 mt-2">
                             <label for="dob"
                                 class="eForm-label form-label">{{ get_phrase('Date of Birth') }}</label>
                             <input type="text" class="form-control eForm-control" id="dob" name="dob"
-                                placeholder="Enter Date of Birth">
+                                data-single="true" placeholder="Enter Date of Birth">
                         </div>
                     </div>
                     <div class="row my-3">
@@ -282,6 +277,10 @@
 @endsection
 
 @section('scripts')
+    <script src="https://unpkg.com/nepali-date-picker@2.0.1/dist/jquery.nepaliDatePicker.min.js" crossorigin="anonymous">
+    </script>
+    <link rel="stylesheet" href="https://unpkg.com/nepali-date-picker@2.0.1/dist/nepaliDatePicker.min.css"
+        crossorigin="anonymous" />
     <script type="text/javascript">
         "use strict";
         $(document).ready(function() {
@@ -292,6 +291,10 @@
                 } else {
                     $('#additional_details').addClass('d-none');
                 }
+            });
+            $('#dob').nepaliDatePicker({
+                dateFormat: "%y-%m-%d",
+                closeOnDateSelect: true
             });
         });
 

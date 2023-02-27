@@ -1,5 +1,9 @@
 @extends('admin.navigation')
-
+@section('styles')
+    .nepali-date-picker .drop-down-content {
+    width:auto !important;
+    }
+@endsection
 @section('content')
     <div class="mainSection-title">
         <div class="row">
@@ -140,8 +144,9 @@
                     <div class="col-md-6 col-sm-12 mt-2">
                         <label for="dob_bs"
                             class="form-label col-eForm-label">{{ get_phrase('Date of Birth(BS)') }}</label>
-                        <input type="date" class="form-control eForm-control" id="dob_bs" name="dob_bs"
-                            value="{{ $data['student']['dob_bs'] }}" />
+                        <input type="text" class="form-control eForm-control" id="dob_bs" name="dob_bs"
+                            value="{{ $data['student']['dob_bs'] }}"
+                            placeholder="{{ get_phrase('Enter the date of birth') }}" />
                     </div>
                     <div class="col-md-6 col-sm-12 mt-2">
                         <label for="dob_ad"
@@ -304,6 +309,10 @@
     </div>
 @endsection
 @section('scripts')
+    <script src="https://unpkg.com/nepali-date-picker@2.0.1/dist/jquery.nepaliDatePicker.min.js" crossorigin="anonymous">
+    </script>
+    <link rel="stylesheet" href="https://unpkg.com/nepali-date-picker@2.0.1/dist/nepaliDatePicker.min.css"
+        crossorigin="anonymous" />
     <script type="text/javascript">
         function classWiseSection(classId) {
             let url = "{{ route('admin.class_wise_sections', ['id' => ':classId']) }}";
@@ -336,6 +345,18 @@
                 } else {
                     $('#enable_change_password').html('');
                 }
+            });
+            $('#dob_bs').nepaliDatePicker({
+                dateFormat: "%y-%m-%d",
+                closeOnDateSelect: true
+            });
+            $("#dob_bs").on("dateSelect", function(event) {
+                const date = new Date(event.datePickerData.adDate);
+                const year = date.getFullYear(); // get the year (yyyy)
+                const month = String(date.getMonth() + 1).padStart(2, '0'); // get the month (mm)
+                const day = String(date.getDate()).padStart(2, '0'); // get the day (dd)
+                const formattedDate = `${year}-${month}-${day}`;
+                $('#dob_ad').val(formattedDate);
             });
         });
     </script>
