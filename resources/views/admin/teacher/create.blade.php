@@ -75,8 +75,8 @@
                         <select name="teacher_type" id="teacher_type"
                             class="form-select eForm-select eChoice-multiple-with-remove">
                             <option value="">{{ get_phrase('Select teacher type') }}</option>
-                            <option value="full-time">{{ get_phrase('Full Time') }}</option>
-                            <option value="part-time">{{ get_phrase('Part Time') }}</option>
+                            <option value="Full Time">{{ get_phrase('Full Time') }}</option>
+                            <option value="Part Time">{{ get_phrase('Part Time') }}</option>
                         </select>
                     </div>
                 </div>
