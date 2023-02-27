@@ -1,5 +1,9 @@
 @extends('admin.navigation')
-
+@section('styles')
+    .nepali-date-picker .drop-down-content {
+    width:auto !important;
+    }
+@endsection
 @section('content')
     <div class="mainSection-title">
         <div class="row">
@@ -87,6 +91,10 @@
 </script>
 
 @section('scripts')
+    <script src="https://unpkg.com/nepali-date-picker@2.0.1/dist/jquery.nepaliDatePicker.min.js" crossorigin="anonymous">
+    </script>
+    <link rel="stylesheet" href="https://unpkg.com/nepali-date-picker@2.0.1/dist/nepaliDatePicker.min.css"
+        crossorigin="anonymous" />
     <script>
         $(document).ready(function() {
             $('#additional_details_checkbox').click(function() {
@@ -95,6 +103,18 @@
                 } else {
                     $('#additional_details').addClass('d-none');
                 }
+            });
+            $('#dob_bs').nepaliDatePicker({
+                dateFormat: "%y-%m-%d",
+                closeOnDateSelect: true
+            });
+            $("#dob_bs").on("dateSelect", function(event) {
+                const date = new Date(event.datePickerData.adDate);
+                const year = date.getFullYear(); // get the year (yyyy)
+                const month = String(date.getMonth() + 1).padStart(2, '0'); // get the month (mm)
+                const day = String(date.getDate()).padStart(2, '0'); // get the day (dd)
+                const formattedDate = `${year}-${month}-${day}`;
+                $('#dob_ad').val(formattedDate);
             });
         });
     </script>

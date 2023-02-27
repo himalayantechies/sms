@@ -1,5 +1,9 @@
 @extends('admin.navigation')
-
+@section('styles')
+    .nepali-date-picker .drop-down-content {
+    width:auto !important;
+    }
+@endsection
 @section('content')
     <div class="mainSection-title">
         <div class="row">

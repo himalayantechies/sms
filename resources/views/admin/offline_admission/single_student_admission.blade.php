@@ -69,7 +69,8 @@
             <div class="row my-3">
                 <div class="col-md-6 col-sm-12 mt-2">
                     <label for="dob_bs" class="form-label eForm-label">{{ get_phrase('Date of Birth(BS)') }}</label>
-                    <input type="date" class="form-control eForm-control" id="dob_bs" name="dob_bs" />
+                    <input type="text" class="form-control eForm-control" id="dob_bs" name="dob_bs"
+                        placeholder="{{ get_phrase('Enter the date of birth') }}" />
                 </div>
                 <div class="col-md-6 col-sm-12 mt-2">
                     <label for="dob_ad" class="form-label eForm-label">{{ get_phrase('Date of Birth(AD)') }}</label>
