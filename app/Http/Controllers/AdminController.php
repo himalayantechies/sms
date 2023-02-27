@@ -46,6 +46,7 @@ use App\Models\Teacher;
 use App\Models\ExamMarkSetup;
 use App\Models\ExamAttendance;
 use App\Models\ExamRoutine;
+use App\Models\StudentSubjectElective;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -2080,7 +2081,10 @@ class AdminController extends Controller
 
         $page_data['class_name'] = Classes::find($data['class_id'])->name;
         $page_data['section_name'] = Section::find($data['section_id'])->name;
-        $page_data['subject_name'] = Subject::find($data['subject_id'])->name;
+        $subject = Subject::find($data['subject_id']);
+        $page_data['subject_name'] = $subject->name;
+        $class_id = $data['class_id'];
+        $subject_id = $data['subject_id'];
 
         $enroll_students = Enrollment::where('class_id', $page_data['class_id'])
             ->where('section_id', $page_data['section_id'])
@@ -2088,6 +2092,21 @@ class AdminController extends Controller
             ->where('school_id', $school_id)
             ->get();
 
+        //Check if the subject is elective
+        $grade_subject = GradeSubject::where('school_id','=',$school_id)
+                                        ->where('session_id','=',$session_id)
+                                        ->where('subject_id','=',$data['subject_id'])
+                                        ->where('class_id','=',$data['class_id'])
+                                        ->first();
+       
+        if($grade_subject->elective_name_id !== null){
+            $enroll_students_list = $enroll_students->pluck('user_id');
+            //Filter Enrolled Students
+            $student_subject_electives_list = StudentSubjectElective::where('subject_id','=',$subject_id)
+                                                ->whereIn('user_id', $enroll_students_list)->get(['user_id']);
+            $enroll_students = Enrollment::whereIN('user_id', $student_subject_electives_list)->get();
+        }  
+        
         $mark_setups = ExamMarkSetup::where('class_id', $page_data['class_id'])
             ->where('session_id', $session_id)
             ->where('school_id', $school_id)
