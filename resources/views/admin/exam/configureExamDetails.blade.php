@@ -2,6 +2,10 @@
     <div class="card-header d-flex justify-content-between">Configure {{ $exam->name }}
         <div>
 
+            <button class="btn btn-info" onclick="moveNodeUp({{ $exam->id }})">Move <i
+                    class="bi bi-chevron-double-up"></i></button>
+            <button class="btn btn-info" onclick="moveNodeDown({{ $exam->id }})">Move <i
+                    class="bi bi-chevron-double-down"></i></button>
             <a class="btn btn-sm btn-warning text-dark mx-2"
                 href="{{ route('admin.setup.offline_exam', ['id' => $exam->id]) }}"><i class="bi bi-gear-fill"></i>
                 {{ get_phrase('Setup Marks') }}</a>
@@ -11,9 +15,9 @@
             <button type="button" class="btn btn-secondary btn-sm text-white mx-2" data-bs-toggle="modal"
                 onclick="editModalConfigureExam({{ $exam->class_id }})" data-bs-target="#editExamModal"><i
                     class="bi bi-pencil-fill"></i> Edit Exam </button>
-            {{-- <button class="btn btn-danger btn-sm delete-btn" onclick="deleteExam({{ $exam->id }})">
+            <button class="btn btn-danger btn-sm delete-btn" onclick="deleteExam({{ $exam->id }})">
                 <i class="bi bi-trash3-fill"></i>
-            </button> --}}
+            </button>
         </div>
     </div>
     <div class="card-body">

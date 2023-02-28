@@ -98,6 +98,7 @@ class ExamController extends Controller
         $this->_data['exams'] = Exam::withDepth()
             ->where('exams.session_id', $active_session)
             ->where('class_id', $request->class_id)
+            ->orderBy('lft')
             ->get()
             ->toTree();
         return view('admin.exam.exam', $this->_data);
@@ -137,6 +138,7 @@ class ExamController extends Controller
         }
         $this->_data['classes'] = (new Classes)->getClassBySchool($school_id);
         $this->_data['exams'] = Exam::withDepth()
+            ->orderBy('lft')
             ->get()
             ->toTree();
         $this->_data['exam_categories'] = ExamCategory::where('school_id', $school_id)->where('session_id', $active_session)->get(['name', 'id']);
@@ -153,6 +155,7 @@ class ExamController extends Controller
         $exams = Exam::withDepth()
             ->where('exams.session_id', $active_session)
             ->where('class_id', $request->class_id)
+            ->orderBy('lft')
             ->get()
             ->toTree();
         $exam_dropdown = [];
