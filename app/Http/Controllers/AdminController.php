@@ -2092,21 +2092,25 @@ class AdminController extends Controller
             ->where('school_id', $school_id)
             ->get();
 
+        // echo "<pre>";
+        // print_r($enroll_students->toArray());
+        
+
         //Check if the subject is elective
         $grade_subject = GradeSubject::where('school_id','=',$school_id)
                                         ->where('session_id','=',$session_id)
                                         ->where('subject_id','=',$data['subject_id'])
                                         ->where('class_id','=',$data['class_id'])
                                         ->first();
-       
-        if($grade_subject->elective_name_id !== null){
+        
+        if($grade_subject->elective_name_id !== null and  $grade_subject->elective_name_id > 0){
             $enroll_students_list = $enroll_students->pluck('user_id');
             //Filter Enrolled Students
             $student_subject_electives_list = StudentSubjectElective::where('subject_id','=',$subject_id)
                                                 ->whereIn('user_id', $enroll_students_list)->get(['user_id']);
             $enroll_students = Enrollment::whereIN('user_id', $student_subject_electives_list)->get();
         }  
-        
+
         $mark_setups = ExamMarkSetup::where('class_id', $page_data['class_id'])
             ->where('session_id', $session_id)
             ->where('school_id', $school_id)
