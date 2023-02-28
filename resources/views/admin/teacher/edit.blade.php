@@ -142,17 +142,16 @@
                     <div class="col-md-6 col-sm-12 mt-2">
                         <label for="join_date" class="eForm-label">{{ get_phrase('Join Date') }}</label>
                         <input type="text" class="form-control eForm-control" id="join_date"
-                            value="{{ $user->join_date }}" name="join_date">
+                            placeholder="{{ get_phrase('Enter the joining date') }}">
+                        <input type="hidden" id="join_date_english" value="{{ $user->join_date }}" name="join_date">
                     </div>
                     <div class="col-md-6 col-sm-12 mt-2">
                         <label for="leaving_date" class="eForm-label">{{ get_phrase('Leaving Date') }}</label>
                         <input type="text" class="form-control eForm-control" id="leaving_date"
-                            value="{{ $user->leaving_date }}" name="leaving_date">
+                            placeholder="{{ get_phrase('Enter the leaving date') }}">
+                        <input type="hidden" id="leaving_date_english" value="{{ $user->leaving_date }}"
+                            name="leaving_date">
                     </div>
-
-
-
-
                 </div>
                 <div class="row my-3">
                     <div class="col-md-6 col-sm-12 mt-2">
@@ -176,25 +175,23 @@
                             name="citizenship_no" placeholder="Enter Citizenship No"
                             value="{{ $user->citizenship_no }}">
                     </div>
-                     @php $districts = district_list(); @endphp
+                    @php $districts = district_list(); @endphp
                     <div class="col-md-6 col-sm-12 mt-2">
                         <label for="issuing_district" class="eForm-label">{{ get_phrase('Issuing District') }}</label>
                         <select name="issuing_district" id="issuing_district"
                             class="form-select eForm-select eChoice-multiple-with-remove">
                             <option value="">{{ get_phrase('Select Issuing District') }}</option>
-                            @php
-                            foreach($districts as $key=>$value){
-                            @endphp
-                                <option value="{{$key}}" {{ ($user->issuing_district == $key)? 'selected': '' }}>{{ $value }}</option>
-                            @php
-                            }
-                            @endphp
+                            @foreach ($districts as $key => $value)
+                                <option value="{{ $key }}"
+                                    {{ $user->issuing_district == $key ? 'selected' : '' }}>{{ $value }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-md-6 col-sm-12 mt-2">
                         <label for="dob" class="eForm-label form-label">{{ get_phrase('Date of Birth') }}</label>
-                        <input type="text" class="form-control eForm-control" id="dob" name="dob"
-                            placeholder="Enter Date of Birth" value="{{ $user->dob }}">
+                        <input type="text" class="form-control eForm-control" id="dob"
+                            placeholder="Enter Date of Birth">
+                        <input type="hidden" id="dob_english" name="dob" value="{{ $user->dob }}">
                     </div>
 
                 </div>
@@ -317,19 +314,79 @@
 @endsection
 
 @section('scripts')
-<script src="https://unpkg.com/nepali-date-picker@2.0.1/dist/jquery.nepaliDatePicker.min.js" crossorigin="anonymous">
-</script>
-<link rel="stylesheet" href="https://unpkg.com/nepali-date-picker@2.0.1/dist/nepaliDatePicker.min.css"
-    crossorigin="anonymous" />
+    <script src="https://unpkg.com/nepali-date-picker@2.0.1/dist/jquery.nepaliDatePicker.min.js" crossorigin="anonymous">
+    </script>
+    <link rel="stylesheet" href="https://unpkg.com/nepali-date-picker@2.0.1/dist/nepaliDatePicker.min.css"
+        crossorigin="anonymous" />
     <script type="text/javascript">
         "use strict";
         $(document).ready(function() {
             $(".eChoice-multiple-with-remove").select2();
+            var english_dob = $('#dob_english').val();
+            nepali_date = '';
+            if (english_dob) {
+                var nepali_date = englishBStoNepali(english_dob);
+            }
+            $('#dob').val(nepali_date);
+
+            var english_join_date = $('#join_date_english').val();
+            nepali_date = '';
+            if (english_join_date) {
+                var nepali_date = englishBStoNepali(english_join_date);
+            }
+            $('#join_date').val(nepali_date);
+            var english_leaving_date = $('#leaving_date_english').val();
+            nepali_date = '';
+            if (english_leaving_date) {
+                var nepali_date = englishBStoNepali(english_leaving_date);
+            }
+            $('#leaving_date').val(nepali_date);
+
             $('#dob').nepaliDatePicker({
                 dateFormat: "%y-%m-%d",
                 closeOnDateSelect: true
             });
+            $('#join_date').nepaliDatePicker({
+                dateFormat: "%y-%m-%d",
+                closeOnDateSelect: true
+            });
+            $('#leaving_date').nepaliDatePicker({
+                dateFormat: "%y-%m-%d",
+                closeOnDateSelect: true
+            });
+            $("#dob").on("dateSelect", function(event) {
+                var nepaliDate = event.datePickerData.formattedDate;
+                var formattedDate = nepaliBStoEnglish(nepaliDate);
+                $('#dob_english').val(formattedDate);
+            });
+            $("#join_date").on("dateSelect", function(event) {
+                var nepaliDate = event.datePickerData.formattedDate;
+                var formattedDate = nepaliBStoEnglish(nepaliDate);
+                $('#join_date_english').val(formattedDate);
+            });
+            $("#leaving_date").on("dateSelect", function(event) {
+                var nepaliDate = event.datePickerData.formattedDate;
+                var formattedDate = nepaliBStoEnglish(nepaliDate);
+                $('#leaving_date_english').val(formattedDate);
+            });
+
         });
+
+        function nepaliBStoEnglish(nepaliDate) {
+            var [nepaliYear, nepaliMonth, nepaliDay] = nepaliDate.split('-').map(calendarFunctions
+                .getNumberByNepaliNumber);
+            var date = new Date(nepaliYear, nepaliMonth - 1, nepaliDay);
+            var year = date.getFullYear(); // get the year (yyyy)
+            var month = String(date.getMonth() + 1).padStart(2, '0'); // get the month (mm)
+            var day = String(date.getDate()).padStart(2, '0'); // get the day (dd)
+            return `${year}-${month}-${day}`;
+        }
+
+        function englishBStoNepali(english_dob) {
+            var [englishYear, englishMonth, englishDay] = english_dob.split('-');
+            return calendarFunctions.bsDateFormat("%y-%m-%d", Number(englishYear), Number(englishMonth),
+                Number(englishDay));
+        }
 
         $(function() {
             $('.inputDate').daterangepicker({

@@ -119,12 +119,15 @@
                         </div>
                         <div class="col-md-6 col-sm-12 mt-2">
                             <label for="join_date" class="eForm-label">{{ get_phrase('Join Date') }}</label>
-                            <input type="text" class="form-control eForm-control" id="join_date" name="join_date">
+                            <input type="text" class="form-control eForm-control" id="join_date"
+                                placeholder="{{ get_phrase('Enter the joining date') }}">
+                            <input type="hidden" name="join_date" id="join_date_english">
                         </div>
                         <div class="col-md-6 col-sm-12 mt-2">
                             <label for="leaving_date" class="eForm-label">{{ get_phrase('Leaving Date') }}</label>
                             <input type="text" class="form-control eForm-control" id="leaving_date"
-                                name="leaving_date">
+                                placeholder="{{ get_phrase('Enter the leaving date') }}" name="leaving_date">
+                            <input type="hidden" name="leaving_date" id="leaving_date_english">
                         </div>
 
                     </div>
@@ -161,8 +164,9 @@
                         <div class="col-md-6 col-sm-12 mt-2">
                             <label for="dob"
                                 class="eForm-label form-label">{{ get_phrase('Date of Birth') }}</label>
-                            <input type="text" class="form-control eForm-control" id="dob" name="dob"
-                                data-single="true" placeholder="Enter Date of Birth">
+                            <input type="text" class="form-control eForm-control" id="dob" data-single="true"
+                                placeholder="{{ get_phrase('Enter Date of Birth') }}">
+                            <input type="hidden" id="dob_english" name="dob">
                         </div>
                     </div>
                     <div class="row my-3">
@@ -296,6 +300,31 @@
                 dateFormat: "%y-%m-%d",
                 closeOnDateSelect: true
             });
+            $('#join_date').nepaliDatePicker({
+                dateFormat: "%y-%m-%d",
+                closeOnDateSelect: true
+            });
+            $('#leaving_date').nepaliDatePicker({
+                dateFormat: "%y-%m-%d",
+                closeOnDateSelect: true
+            });
+
+
+            $("#dob").on("dateSelect", function(event) {
+                var nepaliDate = event.datePickerData.formattedDate;
+                var formattedDate = nepaliBStoEnglish(nepaliDate);
+                $('#dob_english').val(formattedDate);
+            });
+            $("#join_date").on("dateSelect", function(event) {
+                var nepaliDate = event.datePickerData.formattedDate;
+                var formattedDate = nepaliBStoEnglish(nepaliDate);
+                $('#join_date_english').val(formattedDate);
+            });
+            $("#leaving_date").on("dateSelect", function(event) {
+                var nepaliDate = event.datePickerData.formattedDate;
+                var formattedDate = nepaliBStoEnglish(nepaliDate);
+                $('#leaving_date_english').val(formattedDate);
+            });
         });
 
         $(function() {
@@ -310,5 +339,15 @@
                 }
             );
         });
+
+        function nepaliBStoEnglish(nepaliDate) {
+            var [nepaliYear, nepaliMonth, nepaliDay] = nepaliDate.split('-').map(calendarFunctions
+                .getNumberByNepaliNumber);
+            var date = new Date(nepaliYear, nepaliMonth - 1, nepaliDay);
+            var year = date.getFullYear(); // get the year (yyyy)
+            var month = String(date.getMonth() + 1).padStart(2, '0'); // get the month (mm)
+            var day = String(date.getDate()).padStart(2, '0'); // get the day (dd)
+            return `${year}-${month}-${day}`;
+        }
     </script>
 @endsection

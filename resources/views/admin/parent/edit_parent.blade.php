@@ -119,8 +119,9 @@
 
                     <div class="col-md-6 col-sm-12 mt-2">
                         <label for="birthdatepicker" class="eForm-label">{{ get_phrase('Date of Birth') }}</label>
-                        <input type="date" class="form-control eForm-control" id="birthday" name="birthday"
-                            value="{{ $info->birthday }}" />
+                        <input type="text" class="form-control eForm-control" id="dob" data-single="true"
+                            placeholder="{{ get_phrase('Enter Date of Birth') }}">
+                        <input type="hidden" id="dob_english" name="birthday" value="{{ $info->birthday }}">
                     </div>
                 </div>
 
@@ -255,6 +256,12 @@
             </div>
         </form>
     </div>
+@endsection
+@section('scripts')
+    <script src="https://unpkg.com/nepali-date-picker@2.0.1/dist/jquery.nepaliDatePicker.min.js" crossorigin="anonymous">
+    </script>
+    <link rel="stylesheet" href="https://unpkg.com/nepali-date-picker@2.0.1/dist/nepaliDatePicker.min.css"
+        crossorigin="anonymous" />
     <script type="text/javascript">
         "use strict";
 
@@ -272,8 +279,38 @@
                     $('#additional_details').addClass('d-none');
                 }
             });
+            var english_dob = $('#dob_english').val();
+            nepali_date = '';
+            if (english_dob) {
+                var nepali_date = englishBStoNepali(english_dob);
+            }
+            $('#dob').val(nepali_date);
+            $('#dob').nepaliDatePicker({
+                dateFormat: "%y-%m-%d",
+                closeOnDateSelect: true
+            });
+            $("#dob").on("dateSelect", function(event) {
+                var nepaliDate = event.datePickerData.formattedDate;
+                var formattedDate = nepaliBStoEnglish(nepaliDate);
+                $('#dob_english').val(formattedDate);
+            });
         });
 
+        function nepaliBStoEnglish(nepaliDate) {
+            var [nepaliYear, nepaliMonth, nepaliDay] = nepaliDate.split('-').map(calendarFunctions
+                .getNumberByNepaliNumber);
+            var date = new Date(nepaliYear, nepaliMonth - 1, nepaliDay);
+            var year = date.getFullYear(); // get the year (yyyy)
+            var month = String(date.getMonth() + 1).padStart(2, '0'); // get the month (mm)
+            var day = String(date.getDate()).padStart(2, '0'); // get the day (dd)
+            return `${year}-${month}-${day}`;
+        }
+
+        function englishBStoNepali(english_dob) {
+            var [englishYear, englishMonth, englishDay] = english_dob.split('-');
+            return calendarFunctions.bsDateFormat("%y-%m-%d", Number(englishYear), Number(englishMonth),
+                Number(englishDay));
+        }
         $(function() {
             $('.inputDate').daterangepicker({
                     singleDatePicker: true,
@@ -358,6 +395,4 @@
             $(elem).closest('.child_existing_row').remove();
         }
     </script>
-
-
 @endsection

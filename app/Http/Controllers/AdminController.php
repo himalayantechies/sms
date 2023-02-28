@@ -2063,7 +2063,6 @@ class AdminController extends Controller
         // $exam = Exam::where(['school_id'=>$school_id , 'session_id'=> $session]);
         $classes = (new Classes)->getClassBySchool($school_id);
         // $classes = Classes::where('school_id', auth()->user()->school_id)->get();
-
         return view('admin.marks.index', ['exam_categories' => $exam_categories, 'classes' => $classes]);
     }
 
@@ -2106,8 +2105,8 @@ class AdminController extends Controller
         if($grade_subject->elective_name_id !== null and  $grade_subject->elective_name_id > 0){
             $enroll_students_list = $enroll_students->pluck('user_id');
             //Filter Enrolled Students
-            $student_subject_electives_list = StudentSubjectElective::where('subject_id','=',$subject_id)
-                                                ->whereIn('user_id', $enroll_students_list)->get(['user_id']);
+            $student_subject_electives_list = StudentSubjectElective::where('subject_id', '=', $subject_id)
+                ->whereIn('user_id', $enroll_students_list)->get(['user_id']);
             $enroll_students = Enrollment::whereIN('user_id', $student_subject_electives_list)->get();
         }  
 
