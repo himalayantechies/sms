@@ -2093,22 +2093,22 @@ class AdminController extends Controller
 
         // echo "<pre>";
         // print_r($enroll_students->toArray());
-        
+
 
         //Check if the subject is elective
-        $grade_subject = GradeSubject::where('school_id','=',$school_id)
-                                        ->where('session_id','=',$session_id)
-                                        ->where('subject_id','=',$data['subject_id'])
-                                        ->where('class_id','=',$data['class_id'])
-                                        ->first();
-        
-        if($grade_subject->elective_name_id !== null and  $grade_subject->elective_name_id > 0){
+        $grade_subject = GradeSubject::where('school_id', '=', $school_id)
+            ->where('session_id', '=', $session_id)
+            ->where('subject_id', '=', $data['subject_id'])
+            ->where('class_id', '=', $data['class_id'])
+            ->first();
+
+        if ($grade_subject->elective_name_id !== null and  $grade_subject->elective_name_id > 0) {
             $enroll_students_list = $enroll_students->pluck('user_id');
             //Filter Enrolled Students
             $student_subject_electives_list = StudentSubjectElective::where('subject_id', '=', $subject_id)
                 ->whereIn('user_id', $enroll_students_list)->get(['user_id']);
             $enroll_students = Enrollment::whereIN('user_id', $student_subject_electives_list)->get();
-        }  
+        }
 
         $mark_setups = ExamMarkSetup::where('class_id', $page_data['class_id'])
             ->where('session_id', $session_id)
@@ -2719,7 +2719,9 @@ class AdminController extends Controller
     {
         $data = $request->all();
         // {{ DB::table('schools')->where('id', auth()->user()->school_id)->value('title') }}
-
+        if (!isset($data['section_id'])) {
+            return redirect()->back()->with('error', 'No section selected');
+        }
         $section_id = $data['section_id'];
         $section_name = $data['name'];
         $school_id = auth()->user()->school_id;
@@ -2754,7 +2756,7 @@ class AdminController extends Controller
             }
         }
 
-        return redirect()->back()->with('message', 'You have successfully update sections.');
+        return redirect()->back()->with('message', 'You have successfully updated sections.');
     }
 
     public function classDelete($id)

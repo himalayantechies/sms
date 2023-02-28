@@ -1,7 +1,7 @@
 <?php use App\Models\Section; ?>
 
 @extends('admin.navigation')
-   
+
 @section('content')
 <div class="mainSection-title">
     <div class="row">
@@ -120,7 +120,7 @@
                                         <?php $sections = Section::get()->where('class_id', $class_list['id']); ?>
                                         @foreach($sections as $section)
                                             @if ($section->school_id == auth()->user()->school_id or $section->school_id == null)
-                                              <li>{{ $section->name }}</li>  
+                                              <li>{{ $section->name }}</li>
                                             @endif
                                         @endforeach
                                     </ul>
