@@ -199,7 +199,7 @@
                     </div>
                     <!-- Attendance table -->
                     <div class="att-table" id="pdf_table">
-                        <div class="att-title">
+                        <div class="att-title py-4">
                             <h4 class="att-title-header"> {{ ucfirst('Student') }} / {{ get_phrase('Date') }}</h4>
                             <ul class="att-stuName-items">
                                 <?php foreach(array_slice($attendance_of_students, 0, $no_of_users) as $attendance_of_student ):  ?>
@@ -215,7 +215,7 @@
                                 <?php endforeach;  ?>
                             </ul>
                         </div>
-                        <div class="att-content">
+                        <div class="py-4" style="overflow-y:hidden; max-width:1440px">
                             <div class="att-dayWeek">
                                 <div class="att-wDay d-flex">
                                     <?php
