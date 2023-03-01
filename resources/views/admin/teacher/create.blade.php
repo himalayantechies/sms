@@ -58,9 +58,9 @@
                         <select name="gender" id="gender" class="form-select eForm-select eChoice-multiple-with-remove"
                             required>
                             <option value="">{{ get_phrase('Select gender') }}</option>
-                            <option value="Male">{{ get_phrase('Male') }}</option>
-                            <option value="Female">{{ get_phrase('Female') }}</option>
-                            <option value="Others">{{ get_phrase('Others') }}</option>
+                            @foreach ($gender as $item)
+                                <option value="{{ $item }}">{{ get_phrase($item) }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-md-6 col-sm-12 mt-2">
@@ -73,8 +73,9 @@
                         <select name="teacher_type" id="teacher_type"
                             class="form-select eForm-select eChoice-multiple-with-remove">
                             <option value="">{{ get_phrase('Select teacher type') }}</option>
-                            <option value="Full Time">{{ get_phrase('Full Time') }}</option>
-                            <option value="Part Time">{{ get_phrase('Part Time') }}</option>
+                            @foreach ($teacher_type as $item)
+                                <option value="{{ $item }}">{{ get_phrase($item) }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -97,20 +98,14 @@
                             <select name="teaching_medium" id="teaching_medium"
                                 class="form-select eForm-select eChoice-multiple-with-remove">
                                 <option value="">{{ get_phrase('Select Teaching Medium') }}</option>
-                                <option value="nepali">{{ get_phrase('Nepali') }}</option>
-                                <option value="english">{{ get_phrase('English') }}</option>
-                                <option value="nepal bhasa">{{ get_phrase('Nepal Bhasa') }}</option>
-                                <option value="hindi">{{ get_phrase('Hindi') }}</option>
-                                <option value="maithali">{{ get_phrase('Maithali') }}</option>
-                                <option value="bhojpuri">{{ get_phrase('Bhojpuri') }}</option>
-                                <option value="tamang">{{ get_phrase('Tamang') }}</option>
-                                <option value="sanskrit">{{ get_phrase('Sanskrit') }}</option>
+                                @foreach ($teaching_medium as $item)
+                                    <option value="{{ $item }}">{{ get_phrase($item) }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-6 col-sm-12 mt-2">
                             <label for="designation" class="eForm-label">{{ get_phrase('Designation') }}</label>
-                            <input type="text" class="form-control eForm-control" id="designation"
-                                name="designation">
+                            <input type="text" class="form-control eForm-control" id="designation" name="designation">
                         </div>
                         <div class="col-md-6 col-sm-12 mt-2">
                             <label for="responsibility" class="eForm-label">{{ get_phrase('Responsibility') }}</label>
@@ -137,9 +132,9 @@
                             <select name="nationality" id="nationality"
                                 class="form-select eForm-select eChoice-multiple-with-remove">
                                 <option value="">{{ get_phrase('Select Nationality') }}</option>
-                                <option value="Nepali">{{ get_phrase('Nepali') }}</option>
-                                <option value="Indian">{{ get_phrase('Indian') }}</option>
-                                <option value="Others">{{ get_phrase('Others') }}</option>
+                                @foreach ($nationality as $item)
+                                    <option value="{{ $item }}">{{ get_phrase($item) }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-6 col-sm-12 mt-2">
@@ -186,9 +181,9 @@
                             <select name="marital_status" id="marital_status"
                                 class="form-select eForm-select eChoice-multiple-with-remove">
                                 <option value="">{{ get_phrase('Select Marital Status') }}</option>
-                                <option value="single">{{ get_phrase('Single') }}</option>
-                                <option value="married">{{ get_phrase('Married') }}</option>
-                                <option value="divorced">{{ get_phrase('Divorced') }}</option>
+                                @foreach ($marital_status as $item)
+                                    <option value="{{ $item }}">{{ get_phrase($item) }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-6 col-sm-12 mt-2">
@@ -220,14 +215,9 @@
                             <select name="mother_tongue" id="mother_tongue"
                                 class="form-select eForm-select eChoice-multiple-with-remove">
                                 <option value="">{{ get_phrase('Select Mother Tongue') }}</option>
-                                <option value="nepali">{{ get_phrase('Nepali') }}</option>
-                                <option value="english">{{ get_phrase('English') }}</option>
-                                <option value="nepal bhasa">{{ get_phrase('Nepal Bhasa') }}</option>
-                                <option value="hindi">{{ get_phrase('Hindi') }}</option>
-                                <option value="maithali">{{ get_phrase('Maithali') }}</option>
-                                <option value="bhojpuri">{{ get_phrase('Bhojpuri') }}</option>
-                                <option value="tamang">{{ get_phrase('Tamang') }}</option>
-                                <option value="sanskrit">{{ get_phrase('Sanskrit') }}</option>
+                                @foreach ($mother_tongue as $item)
+                                    <option value="{{ $item }}">{{ get_phrase($item) }}</option>
+                                @endforeach
                             </select>
                         </div>
 

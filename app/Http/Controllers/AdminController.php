@@ -335,8 +335,13 @@ class AdminController extends Controller
     {
         $this->_data['departments'] = Department::get()->where('school_id', auth()->user()->school_id);
         $this->_data['caste'] = ['brahmin/chhetri', 'dalit', 'janjati', 'others'];
-        // $this->_data['teacher_username'] = (new User)->createUsername(3);
         $this->_data['disability'] = ['n/a', 'physical', 'mental', 'deaf', 'blind', 'low vision', 'deaf and blind', 'speech impairment', 'multiple disability'];
+        $this->_data['gender'] = ['Male', 'Female', 'Others'];
+        $this->_data['nationality'] = ['Nepali', 'Indian', 'Others'];
+        $this->_data['teacher_type'] = ['Full Time', 'Part Time'];
+        $this->_data['marital_status'] = ['Single', 'Married', 'Divorced'];
+        $this->_data['teaching_medium'] = ['Nepali', 'English', 'Nepal Bhasa', 'Hindi', 'Maithali', 'Bhojpuri', 'Tamang', 'Sanskrit'];
+        $this->_data['mother_tongue'] = ['Nepali', 'English', 'Nepal Bhasa', 'Hindi', 'Maithali', 'Bhojpuri', 'Tamang', 'Sanskrit'];
         return view('admin.teacher.create', $this->_data);
     }
 
