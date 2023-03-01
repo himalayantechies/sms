@@ -38,25 +38,28 @@ class ExamController extends Controller
     public function marks_update(Request $request)
     {
         $data = $request->data;
+        
         $err_flag = 0;
         foreach($data as $student_marks){
-            $id = $student_marks['id'] ?? '';
-            $enrollment_id = $student_marks['enrollment_id'] ?? '';
+            $id             = $student_marks['id'] ?? '';
+            $enrollment_id  = $student_marks['enrollment_id'] ?? '';
             if($enrollment_id == ''){
                 return response()->json(["success" => false, "msg" => 'Enrollment Id Missing'], 400);
             }
+
             $user_id = $student_marks['user_id'] ?? '';
             if($user_id == ''){
                 return response()->json(["success" => false, "msg" => 'User Id Missing'], 400);
             }
+
             $exam_id = $student_marks['exam_id'] ?? '';
             if($exam_id == ''){
                 return response()->json(["success" => false, "msg" => 'Exam Id Missing'], 400);
             }
 
-            $th_marks = $student_marks['th_marks'] ?? 0;
-            $pr_marks = $student_marks['pr_marks'] ?? 0;
-            $comment = $student_marks['comment'] ?? '';
+            $th_marks   = $student_marks['th_marks'] ?? null;
+            $pr_marks   = $student_marks['pr_marks'] ?? null;
+            $comment    = $student_marks['comment'] ?? '';
             $attendance = $student_marks['attendance'] ?? 0;
             $section_id = $student_marks['section_id'] ?? 0;
             //Get data from Logged In User
@@ -69,41 +72,17 @@ class ExamController extends Controller
             }
             
             $class_id = $exam_mark_setup->class_id ?? 0;
-            $subject_id = $exam_mark_setup->subject_id ?? 0;
+            // $subject_id = $exam_mark_setup->subject_id ?? 0;
             $session_id = $exam_mark_setup->session_id ?? 0;
-    
-            $result = (new GradeBook)->updateGradeBook($session_id, $school_id, $user_id, $class_id, $section_id, $exam_id, $subject_id, $th_marks, $pr_marks, $enrollment_id);
-            
+            $subject_id = $student_marks['subject_id']; 
 
-            // if($id == ''){
-            //     $gradebook = new GradeBook();
-            // } else {
-            //     $gradebook = GradeBook::find($id);
-            // }
-    
-            // $gradebook->session_id = $session_id;
-            // $gradebook->user_id = $user_id;
-            // $gradebook->enrollment_id = $user_id;
-            // $gradebook->exam_id = $exam_id;
-            // $gradebook->th_marks = $th_marks;
-            // $gradebook->pr_marks = $pr_marks;
-            // $gradebook->comment = $comment;
-            // $gradebook->attendance = $attendance;
-            // $gradebook->school_id = $school_id;
-            // $gradebook->class_id = $class_id;
-            // $gradebook->section_id = $section_id;
-            // $gradebook->subject_id = $subject_id;
-            // $gradebook->session_id = $session_id;
-            // $gradebook->timestamp = Carbon::now()->timestamp;
-            
-            // //Validation success
-            // if ( ! $gradebook->save()) {
-            //     $err_flag = 1;
-            // } 
+            $result = (new GradeBook)->updateGradeBook($session_id, $school_id, $user_id, $class_id, $section_id, $exam_id, $subject_id, $th_marks, $pr_marks, $enrollment_id);
+        
         }
         if($err_flag == 0){
             return response()->json(["success" => true, "msg" => "Marks updated successfully"]);
         } 
+        
         return response()->json(["success" => false, "error" => "Marks could not be updated for some / all students. Please try again later."], 400);
 
     }
