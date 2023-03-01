@@ -298,4 +298,34 @@ class ExamController extends Controller
         }
         return redirect()->back()->with('returned_class_id', $request->class_id);
     }
+    public function markSheetIndex(Request $request)
+    {
+        $school_id = auth()->user()->school_id;
+        $active_session = get_school_settings($school_id)->value('running_session');
+        if ($request->active_session) {
+            $active_session = $request->active_session;
+        }
+        $this->_data['classes'] = (new Classes)->getClassBySchool($school_id);
+
+        return view('admin.exam_report.marksheet_index', $this->_data);
+    }
+    public function loadStudentList(Request $request)
+    {
+        $class_id = $request['class_id'] ?? "";
+        $section_id = $request['section_id'] ?? "";
+        $this->_data['students'] =  User::where('users.school_id', auth()->user()->school_id)
+            ->join('students', 'students.user_id', '=', 'users.id')
+            ->join('enrollments', 'users.id', '=', 'enrollments.user_id')
+            ->where('users.role_id', 7)
+            ->where('section_id', $section_id)
+            ->where('class_id', $class_id)
+            ->get([
+                'users.name',
+                'students.gender',
+                'students.registration_no',
+                'enrollments.roll_no'
+            ]);
+
+        return view('admin.exam_report.studentList', $this->_data);
+    }
 }

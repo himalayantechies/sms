@@ -169,7 +169,7 @@
             </li>
 
             <li
-                class="nav-links-li {{ request()->is('admin/exam_category*') || request()->is('admin/offline_exam*') || request()->is('admin/marks') ||  request()->is('admin/exam_attendance_create*') || request()->is('admin/grade') || request()->is('admin/promotion*')||request()->is('admin/manage/exam/*')||request()->is('admin/manage/exam') ? 'showMenu' : '' }}">
+                class="nav-links-li {{ request()->is('admin/exam_category*') || request()->is('admin/offline_exam*') || request()->is('admin/marks') ||  request()->is('admin/exam_attendance_create*') || request()->is('admin/grade') || request()->is('admin/promotion*')||request()->is('admin/manage/exam/*')||request()->is('admin/manage/exam')||request()->is('admin/exam/reports/*') ? 'showMenu' : '' }}">
                 <div class="iocn-link">
                     <a href="#">
                         <div class="sidebar_icon">
@@ -224,6 +224,10 @@
                     <li>
                         <a class="{{ request()->is('admin/promotion*') ? 'active' : '' }}"
                             href="{{ route('admin.promotion') }}"><span>{{ get_phrase('Promotion') }}</span></a>
+                    </li>
+                    <li>
+                        <a class="{{ request()->is('admin/exam/reports/marksheet') ? 'active' : '' }}"
+                            href="{{ route('admin.exam.reports.marksheet.index') }}"><span>{{ get_phrase('Marksheet') }}</span></a>
                     </li>
                 </ul>
             </li>
