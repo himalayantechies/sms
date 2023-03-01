@@ -3617,8 +3617,8 @@ class AdminController extends Controller
         $data = $request->all();
 
         $active_session = get_school_settings(auth()->user()->school_id)->value('running_session');
-
-        $data['timestamp'] = strtotime($data['timestamp']);
+        date_default_timezone_set('Asia/Kathmandu');
+        $data['timestamp'] = strtotime($data['timestamp'] . " 00:00:00");
         $data['school_id'] = auth()->user()->school_id;
         $data['session_id'] = $active_session;
         $data['created_by'] = auth()->user()->id;
