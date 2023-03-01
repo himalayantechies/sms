@@ -53,6 +53,7 @@ class ExamController extends Controller
             if($exam_id == ''){
                 return response()->json(["success" => false, "msg" => 'Exam Id Missing'], 400);
             }
+
             $th_marks = $student_marks['th_marks'] ?? 0;
             $pr_marks = $student_marks['pr_marks'] ?? 0;
             $comment = $student_marks['comment'] ?? '';
@@ -71,31 +72,34 @@ class ExamController extends Controller
             $subject_id = $exam_mark_setup->subject_id ?? 0;
             $session_id = $exam_mark_setup->session_id ?? 0;
     
-            if($id == ''){
-                $gradebook = new GradeBook();
-            } else {
-                $gradebook = GradeBook::find($id);
-            }
-    
-            $gradebook->session_id = $session_id;
-            $gradebook->user_id = $user_id;
-            $gradebook->enrollment_id = $user_id;
-            $gradebook->exam_id = $exam_id;
-            $gradebook->th_marks = $th_marks;
-            $gradebook->pr_marks = $pr_marks;
-            $gradebook->comment = $comment;
-            $gradebook->attendance = $attendance;
-            $gradebook->school_id = $school_id;
-            $gradebook->class_id = $class_id;
-            $gradebook->section_id = $section_id;
-            $gradebook->subject_id = $subject_id;
-            $gradebook->session_id = $session_id;
-            $gradebook->timestamp = Carbon::now()->timestamp;
+            $result = (new GradeBook)->updateGradeBook($session_id, $school_id, $user_id, $class_id, $section_id, $exam_id, $subject_id, $th_marks, $pr_marks, $enrollment_id);
             
-            //Validation success
-            if ( ! $gradebook->save()) {
-                $err_flag = 1;
-            } 
+
+            // if($id == ''){
+            //     $gradebook = new GradeBook();
+            // } else {
+            //     $gradebook = GradeBook::find($id);
+            // }
+    
+            // $gradebook->session_id = $session_id;
+            // $gradebook->user_id = $user_id;
+            // $gradebook->enrollment_id = $user_id;
+            // $gradebook->exam_id = $exam_id;
+            // $gradebook->th_marks = $th_marks;
+            // $gradebook->pr_marks = $pr_marks;
+            // $gradebook->comment = $comment;
+            // $gradebook->attendance = $attendance;
+            // $gradebook->school_id = $school_id;
+            // $gradebook->class_id = $class_id;
+            // $gradebook->section_id = $section_id;
+            // $gradebook->subject_id = $subject_id;
+            // $gradebook->session_id = $session_id;
+            // $gradebook->timestamp = Carbon::now()->timestamp;
+            
+            // //Validation success
+            // if ( ! $gradebook->save()) {
+            //     $err_flag = 1;
+            // } 
         }
         if($err_flag == 0){
             return response()->json(["success" => true, "msg" => "Marks updated successfully"]);
