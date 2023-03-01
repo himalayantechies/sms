@@ -98,6 +98,7 @@ class ExamController extends Controller
         $this->_data['exams'] = Exam::withDepth()
             ->where('exams.session_id', $active_session)
             ->where('class_id', $request->class_id)
+            ->orderBy('lft')
             ->get()
             ->toTree();
         return view('admin.exam.exam', $this->_data);
@@ -137,6 +138,7 @@ class ExamController extends Controller
         }
         $this->_data['classes'] = (new Classes)->getClassBySchool($school_id);
         $this->_data['exams'] = Exam::withDepth()
+            ->orderBy('lft')
             ->get()
             ->toTree();
         $this->_data['exam_categories'] = ExamCategory::where('school_id', $school_id)->where('session_id', $active_session)->get(['name', 'id']);
@@ -153,13 +155,16 @@ class ExamController extends Controller
         $exams = Exam::withDepth()
             ->where('exams.session_id', $active_session)
             ->where('class_id', $request->class_id)
+            ->orderBy('lft')
             ->get()
             ->toTree();
         $exam_dropdown = [];
         // Iterate through each exam and add all descendants to the array
+
         foreach ($exams as $exam) {
             $this->addDescendantsToArray($exam, $exam_dropdown);
         }
+        $this->_data['only_leaf_node'] = $request->only_leaf_node ?? 0;
         $this->_data['exams'] = $exam_dropdown;
         return view('admin.exam.examDropdown', $this->_data);
     }
@@ -170,13 +175,38 @@ class ExamController extends Controller
         $arrows = str_repeat('>', $depth);
 
         // Add the current exam to the array with arrows prepended to the name
-        array_push($array, (object)(["name" => $arrows . ' ' . $exam->name, "id" => $exam->id]));
+        array_push($array, (object)(["name" => $arrows . ' ' . $exam->name, "id" => $exam->id, "is_end_leaf" => $exam->is_end_leaf]));
 
         // Recursively add all descendants of the current exam
         if (count($exam->children) > 0) {
             foreach ($exam->children as $child_exam) {
                 $this->addDescendantsToArray($child_exam, $array, $depth + 1);
             }
+        }
+    }
+    function getLeafExamHierarchyStrings($exam, $depth = 0, &$result = [])
+    {
+        // Determine the number of arrows to prepend based on the depth
+        $arrows = str_repeat('>', $depth);
+
+        // Concatenate the current exam name and arrows into a string
+        $exam_string = $arrows . ' ' . $exam->name;
+
+        // Recursively concatenate the hierarchy strings of all descendants of the current exam
+        if (count($exam->children) > 0) {
+            foreach ($exam->children as $child_exam) {
+                $this->getLeafExamHierarchyStrings($child_exam, $depth + 1, $result);
+            }
+        } else {
+            // If this exam has no children, add its ID and full hierarchy string to the result array
+            $full_hierarchy_string = $exam_string;
+            $parent_exam = $exam->parent;
+            while ($parent_exam) {
+                $parent_exam_model = Exam::find($parent_exam);
+                $full_hierarchy_string = $parent_exam_model->name . ' > ' . $full_hierarchy_string;
+                $parent_exam = $parent_exam_model->parent;
+            }
+            array_push($result, (object)(["name" => $full_hierarchy_string, "id" => $exam->id]));
         }
     }
 
