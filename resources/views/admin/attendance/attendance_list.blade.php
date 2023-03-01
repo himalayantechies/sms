@@ -29,6 +29,11 @@
             background-color: white !important;
 
         }
+
+        p {
+            margin: 0px !important;
+            padding: 0px !important;
+        }
     </style>
 
     <div class="mainSection-title">
