@@ -75,7 +75,7 @@
     function list_routine() {
         var class_id = $('#class_id').val();
         var exam_id = $('#exam_id').val();
-        var url = '{{ route('admin.exam_routine.list') }}'
+        var url = '{{ route("admin.exam_routine.list") }}';
 
         if (class_id != "" && exam_id) {
             $.ajax({
