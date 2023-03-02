@@ -326,6 +326,9 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
     Route::get('admin/manage/exam/offline_exam/setup/{id}', 'setupOfflineExam')->name('admin.setup.offline_exam');
     Route::post('admin/manage/exam/offline_exam/setupSave/{id}', 'setupOfflineExamSave')->name('admin.setup.offline_exam.save');
 
+    // Lock unlock exams
+    Route::get('admin/lock/exam', 'lockExams')->name('admin.lock.exams');
+    Route::get('admin/unlock/exam', 'unlockExams')->name('admin.unlock.exams');
     // Exam Reports
     Route::get('admin/exam/reports/marksheet', [ExamController::class, 'markSheetIndex'])->name('admin.exam.reports.marksheet.index');
     Route::get('admin/exam/reports/studentList', [ExamController::class, 'loadStudentList'])->name('admin.exam.reports.studentList');
@@ -566,6 +569,7 @@ Route::controller(TeacherController::class)->middleware('teacher', 'auth')->grou
     Route::get('teacher/offline_exam/export/{id}', 'offlineExamExport')->name('teacher.offline_exam.export');
     Route::get('teacher/exam_list_by_class/{id}', 'classWiseOfflineExam')->name('teacher.class_wise_exam_list');
 
+    Route::get('teacher/exam/exam_dropdown', [ExamController::class, 'exam_dropdown'])->name('teacher.exam.exam_dropdown');
 
     //Routine routes
     Route::get('teacher/routine', 'routine')->name('teacher.routine');

@@ -116,7 +116,6 @@
     //             $('#exam_id').html(response);
     //         }
     //     });
-
     // }
     function classWiseExam(classId) {
         let url = "{{ route('admin.exam.exam_dropdown') }}";

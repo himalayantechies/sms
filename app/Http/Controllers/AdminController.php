@@ -2134,10 +2134,22 @@ class AdminController extends Controller
 
         $page_data['exam_categories'] = ExamCategory::where('school_id', $school_id)->get();
         $page_data['classes'] = (new Classes)->getClassBySchool($school_id);
-        // $exam_lock = ExamLock::where('session_id');
-        return view('admin.marks.marks_list', ['enroll_students' => $enroll_students, 'page_data' => $page_data, 'mark_setups' => $mark_setups]);
+        $exam_lock = ExamLock::where('session_id', $session_id)
+            ->where('class_id', $class_id)
+            ->where('section_id', $data['section_id'])
+            ->where('exam_id', $data['exam_id'])
+            ->where('subject_id',   $data['subject_id'])
+            ->first('id');
+        return view('admin.marks.marks_list', ['enroll_students' => $enroll_students, 'page_data' => $page_data, 'mark_setups' => $mark_setups, 'exam_lock' => $exam_lock]);
     }
-
+    public function lockExams(Request $request)
+    {
+        (new ExamLock)->lockExams($request);
+    }
+    public function unlockExams(Request $request)
+    {
+        (new ExamLock)->unlockExams($request->id);
+    }
     /**
      * Show the grade list.
      *

@@ -4,7 +4,7 @@ use App\Models\User;
 use App\Models\Subject;
 use App\Models\Gradebook;
 use App\Models\Grade;
-
+$lock = isset($exam_lock->id) ? 1 : 0;
 ?>
 
 <div class="att-report-banner d-flex justify-content-center justify-content-md-between align-items-center flex-wrap">
@@ -132,17 +132,21 @@ use App\Models\Grade;
                                 value="{{ $comment }}">
                         </td>
                         <td class="text-center">
-                            <button class="btn btn-success individual_mark_update_button"
-                                onclick="mark_update('{{ $enroll_student->user_id }}')"><i
-                                    class="bi bi-check2-circle"></i></button>
+                            @if ($lock == 0)
+                                <button class="btn btn-success individual_mark_update_button"
+                                    onclick="mark_update('{{ $enroll_student->user_id }}')"><i
+                                        class="bi bi-check2-circle"></i></button>
+                            @endif
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
         <div class="d-flex justify-content-end">
-            <button type="button" class="eBtn eBtn btn-success form-control" id="all_marks_update_button"><i
-                    class="bi bi-check2-circle"></i> {{ get_phrase('Update all') }}</button>
+            @if ($lock == 0)
+                <button type="button" class="eBtn eBtn btn-success form-control" id="all_marks_update_button"><i
+                        class="bi bi-check2-circle"></i> {{ get_phrase('Update all') }}</button>
+            @endif
         </div>
     </div>
 @else

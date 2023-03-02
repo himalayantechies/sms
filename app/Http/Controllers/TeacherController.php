@@ -35,6 +35,7 @@ use App\Models\ExamMarkSetup;
 use Illuminate\Foundation\Auth\User as AuthUser;
 use Illuminate\Support\Facades\Auth;
 use Stripe\Exception\PermissionException;
+use App\Models\ExamLock;
 
 class TeacherController extends Controller
 {
@@ -60,7 +61,7 @@ class TeacherController extends Controller
         $school_id = auth()->user()->school_id;
         $classes = (new Classes)->getClassBySchool($school_id);
         $exam_categories = ExamCategory::where('school_id', $school_id)->get();
-        
+
         return view('teacher.marks.index', ['exam_categories' => $exam_categories, 'classes' => $classes]);
     }
 
@@ -69,7 +70,7 @@ class TeacherController extends Controller
         $data = $request->all();
         $school_id = auth()->user()->school_id;
         $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
-        
+
         $page_data['exam_id']       = $data['exam_id'];
         $page_data['class_id']      = $data['class_id'];
         $page_data['section_id']    = $data['section_id'];
@@ -81,37 +82,41 @@ class TeacherController extends Controller
         $page_data['subject_name'] = Subject::find($data['subject_id'])->name;
 
         $enroll_students = Enrollment::where('class_id', $page_data['class_id'])
-                                ->where('section_id', $page_data['section_id'])
-                                ->where('session_id', $session_id)
-                                ->where('school_id', $school_id)
-                                ->get();    
+            ->where('section_id', $page_data['section_id'])
+            ->where('session_id', $session_id)
+            ->where('school_id', $school_id)
+            ->get();
 
         $mark_setups = ExamMarkSetup::where('class_id', $page_data['class_id'])
-                                ->where('session_id', $session_id)
-                                ->where('school_id', $school_id)
-                                ->where('exam_id', $data['exam_id'])
-                                ->where('subject_id', $page_data['subject_id'])
-                                ->select('th_fm', 'pr_fm')
-                                ->first(); 
-                                
-        if(!empty($mark_setups)){
-            $page_data['th_fm'] = (isset($mark_setups->th_fm))? $mark_setups->th_fm: 0;
-            $page_data['pr_fm'] = (isset($mark_setups->pr_fm))? $mark_setups->pr_fm: 0;
-            $page_data['is_mark_set'] = true;  
-        }else{
+            ->where('session_id', $session_id)
+            ->where('school_id', $school_id)
+            ->where('exam_id', $data['exam_id'])
+            ->where('subject_id', $page_data['subject_id'])
+            ->select('th_fm', 'pr_fm')
+            ->first();
+
+        if (!empty($mark_setups)) {
+            $page_data['th_fm'] = (isset($mark_setups->th_fm)) ? $mark_setups->th_fm : 0;
+            $page_data['pr_fm'] = (isset($mark_setups->pr_fm)) ? $mark_setups->pr_fm : 0;
+            $page_data['is_mark_set'] = true;
+        } else {
             $page_data['is_mark_set'] = false;
         }
 
         $page_data['exam_categories'] = ExamCategory::where('school_id', auth()->user()->school_id)->get();
         $page_data['classes'] = (new Classes)->getClassBySchool($school_id);
-
+        $exam_lock = ExamLock::where('session_id', $session_id)
+            ->where('class_id', $data['class_id'])
+            ->where('section_id', $data['section_id'])
+            ->where('exam_id', $data['exam_id'])
+            ->where('subject_id',   $data['subject_id'])
+            ->first('id');
         // $role_id = auth()->user()->role_id;
         // echo "<pre>";
         // print_r(auth()->user()->toArray());
         // echo $role_id;
         // die;
-
-        return view('teacher.marks.marks_list', ['enroll_students' => $enroll_students, 'page_data' => $page_data]);
+        return view('teacher.marks.marks_list', ['enroll_students' => $enroll_students, 'page_data' => $page_data, 'exam_lock' => $exam_lock]);
     }
 
     /**
@@ -186,9 +191,9 @@ class TeacherController extends Controller
      */
     public function subjectList(Request $request)
     {
-        
+
         $school_id = auth()->user()->school_id;
-        $classes = (new Classes)->getClassBySchool($school_id); 
+        $classes = (new Classes)->getClassBySchool($school_id);
 
         if (count($request->all()) > 0 && $request->class_id != '') {
 
@@ -225,19 +230,19 @@ class TeacherController extends Controller
 
             $data = $request->all();
 
-            $filter_list = DB::select ("
+            $filter_list = DB::select("
                         select gradebooks.student_id, users.name as student, json_agg(row_to_json(row(gradebooks.subject_id, gradebooks.marks))) as subject_marks
-                        from gradebooks 
-                        inner join subjects on subjects.id = gradebooks.subject_id 
-                        inner join users on users.id = gradebooks.student_id 
-                        where gradebooks.class_id = ? and gradebooks.section_id = ? and gradebooks.exam_category_id = ? 
+                        from gradebooks
+                        inner join subjects on subjects.id = gradebooks.subject_id
+                        inner join users on users.id = gradebooks.student_id
+                        where gradebooks.class_id = ? and gradebooks.section_id = ? and gradebooks.exam_category_id = ?
                                 and gradebooks.school_id = ? and gradebooks.session_id = ?
-                        group by gradebooks.student_id, users.name", [$data['class_id'], $data['section_id'], $data['exam_category_id'],  $school_id, $active_session ]);
+                        group by gradebooks.student_id, users.name", [$data['class_id'], $data['section_id'], $data['exam_category_id'],  $school_id, $active_session]);
 
             $class_id = $data['class_id'];
             $section_id = $data['section_id'];
             $exam_category_id = $data['exam_category_id'];
-            $subjects =  (new GradeSubject)->getSubjectByClass($active_session,$school_id, $class_id);
+            $subjects =  (new GradeSubject)->getSubjectByClass($active_session, $school_id, $class_id);
         } else {
             $filter_list = [];
             $class_id = '';
@@ -302,7 +307,7 @@ class TeacherController extends Controller
         echo "<pre>";
         print_r($section_details);
         print_r($permitted_sections);
-        
+
         $options = '<option value="">' . 'Select a section' . '</option>';
         foreach ($permitted_sections as $section) :
             $options .= '<option value="' . $section['id'] . '">' . $section['name'] . '</option>';
@@ -384,13 +389,13 @@ class TeacherController extends Controller
         $this->_data['teaching_medium'] = ['Nepali', 'English', 'Nepal Bhasa', 'Hindi', 'Maithali', 'Bhojpuri', 'Tamang', 'Sanskrit'];
         $this->_data['mother_tongue'] = ['Nepali', 'English', 'Nepal Bhasa', 'Hindi', 'Maithali', 'Bhojpuri', 'Tamang', 'Sanskrit'];
         $this->_data['user'] = (new Teacher)->specificTeacherDetail(Auth::id());
-        
+
         return view('teacher.profile.view', $this->_data);
     }
 
     function profile_update(Request $request)
     {
-        $data_raw = $request->except('_token','teacher_id');
+        $data_raw = $request->except('_token', 'teacher_id');
         $teacher = Teacher::find($request->teacher_id);
         $teacher->fill($data_raw);
         $teacher->save();

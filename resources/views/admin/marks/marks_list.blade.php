@@ -4,7 +4,7 @@ use App\Models\User;
 use App\Models\Subject;
 use App\Models\Gradebook;
 use App\Models\Grade;
-
+$lock = isset($exam_lock->id) ? 1 : 0;
 ?>
 
 <div class="att-report-banner d-flex justify-content-center justify-content-md-between align-items-center flex-wrap">
@@ -32,13 +32,22 @@ use App\Models\Grade;
             </span>
             {{ get_phrase('Export') }}
         </button>
-        <button class="eBtn-3 dropdown-toggle float-end mb-4 mx-3" type="button" id="defaultDropdown"
-            data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
-            <span class="pr-10">
-                <i class="bi bi-lock"></i>
-            </span>
-            {{ get_phrase('Lock Marks') }}
-        </button>
+        @if ($lock == 0)
+            <button class="eBtn-3 dropdown-toggle float-end mb-4 mx-3" type="button" onclick="lock_exams()">
+                <span class="pr-10">
+                    <i class="bi bi-lock"></i>
+                </span>
+                {{ get_phrase('Lock Marks') }}
+            </button>
+        @else
+            <button class="eBtn-3 dropdown-toggle float-end mb-4 mx-3" type="button"
+                onclick="unlock_exams({{ $exam_lock->id }})">
+                <span class="pr-10">
+                    <i class="bi bi-unlock"></i>
+                </span>
+                {{ get_phrase('Unlock Marks') }}
+            </button>
+        @endif
         <ul class="dropdown-menu dropdown-menu-end eDropdown-menu-2">
             <li>
                 <a class="dropdown-item" id="pdf" href="javascript:;"
@@ -144,19 +153,22 @@ use App\Models\Grade;
                                 value="{{ $comment }}">
                         </td>
                         <td class="text-center">
-
-                            <button class="btn btn-success individual_mark_update_button"
-                                onclick="mark_update('{{ $enroll_student->user_id }}')"><i
-                                    class="bi bi-check2-circle"></i></button>
+                            @if ($lock == 0)
+                                <button class="btn btn-success individual_mark_update_button"
+                                    onclick="mark_update('{{ $enroll_student->user_id }}')"><i
+                                        class="bi bi-check2-circle"></i></button>
+                            @endif
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
-        <div class="d-flex justify-content-end">
-            <button type="button" class="eBtn eBtn btn-success form-control" id="all_marks_update_button"><i
-                    class="bi bi-check2-circle"></i> {{ get_phrase('Update all') }}</button>
-        </div>
+        @if ($lock == 0)
+            <div class="d-flex justify-content-end">
+                <button type="button" class="eBtn eBtn btn-success form-control" id="all_marks_update_button"><i
+                        class="bi bi-check2-circle"></i> {{ get_phrase('Update all') }}</button>
+            </div>
+        @endif
     </div>
 @else
     <div class="empty_box center">
@@ -250,5 +262,53 @@ use App\Models\Grade;
         window.print();
 
         document.body.innerHTML = originalContents;
+    }
+
+    function lock_exams() {
+        var exam_id = $('#exam_id').val();
+        var class_id = $('#class_id').val();
+        var section_id = $('#section_id').val();
+        var subject_id = $('#subject_id').val();
+        if (exam_id != "" && class_id != "" && section_id != "" && subject_id != "") {
+            let url = "{{ route('admin.lock.exams') }}";
+            $.ajax({
+                url: url,
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    exam_id: exam_id,
+                    class_id: class_id,
+                    section_id: section_id,
+                    subject_id: subject_id
+                },
+                success: function(response) {
+                    getFilteredMarks();
+                }
+            });
+        }
+    }
+
+    function unlock_exams(id) {
+        var exam_id = $('#exam_id').val();
+        var class_id = $('#class_id').val();
+        var section_id = $('#section_id').val();
+        var subject_id = $('#subject_id').val();
+        if (exam_id != "" && class_id != "" && section_id != "" && subject_id != "") {
+            let url = "{{ route('admin.unlock.exams') }}";
+            $.ajax({
+                url: url,
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    id: id
+                },
+                success: function(response) {
+                    getFilteredMarks();
+                }
+            });
+        }
+
     }
 </script>
