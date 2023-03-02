@@ -1,5 +1,5 @@
 @extends('teacher.navigation')
-   
+
 @section('content')
 <div class="mainSection-title">
     <div class="row">
@@ -25,7 +25,7 @@
         <div class="eSection-wrap">
              <div class="row">
                 <div class="row justify-content-md-center">
-                    
+
                     <div class="col-md-2">
                         <select name="class_id" id="class_id" class="form-select eForm-select eChoice-multiple-with-remove" required onchange="classWiseSection(this.value)">
                             <option value="">{{ get_phrase('Select class') }}</option>
@@ -139,6 +139,9 @@
                 data: {exam_id: exam_id, class_id : class_id, section_id : section_id, subject_id: subject_id},
                 success: function(response){
                     $('.marks_content').html(response);
+                    $('#all_marks_update_button').on('click', function() {
+                        $('.individual_mark_update_button').click();
+                    });
                 }
             });
         }
