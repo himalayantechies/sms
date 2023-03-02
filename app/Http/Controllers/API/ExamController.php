@@ -11,7 +11,6 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
-
 class ExamController extends Controller
 {
     //
