@@ -19,7 +19,6 @@ use App\Models\Grade;
         <img src="{{ asset('public/assets/images/attendance-report-banner.png') }}" alt="" />
     </div>
 </div>
-
 @if (count($enroll_students) > 0)
     <div class="export position-relative">
         <button class="eBtn-3 dropdown-toggle float-end mb-4" type="button" id="defaultDropdown"
@@ -138,13 +137,18 @@ use App\Models\Grade;
                                 value="{{ $comment }}">
                         </td>
                         <td class="text-center">
-                            <button class="btn btn-success" onclick="mark_update('{{ $enroll_student->user_id }}')"><i
+                            <button class="btn btn-success individual_mark_update_button"
+                                onclick="mark_update('{{ $enroll_student->user_id }}')"><i
                                     class="bi bi-check2-circle"></i></button>
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
+        <div class="d-flex justify-content-end">
+            <button type="button" class="eBtn eBtn btn-success form-control" id="all_marks_update_button"><i
+                    class="bi bi-check2-circle"></i> {{ get_phrase('Update all') }}</button>
+        </div>
     </div>
 @else
     <div class="empty_box center">

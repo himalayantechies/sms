@@ -165,7 +165,9 @@
                 },
                 success: function(response) {
                     $('.marks_content').html(response);
-
+                    $('#all_marks_update_button').on('click', function() {
+                        $('.individual_mark_update_button').click();
+                    });
                 }
             });
         }
