@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\ExamRoutine;
-use App\Models\GradeBook;
+use App\Models\Gradebook;
 use App\Models\ExamMarkSetup;
 
 use Illuminate\Http\Request;
@@ -75,7 +75,7 @@ class ExamController extends Controller
             $session_id = $exam_mark_setup->session_id ?? 0;
             $subject_id = $student_marks['subject_id']; 
 
-            $result = (new GradeBook)->updateGradeBook($session_id, $school_id, $user_id, $class_id, $section_id, $exam_id, $subject_id, $th_marks, $pr_marks, $enrollment_id);
+            $result = (new Gradebook)->updateGradeBook($session_id, $school_id, $user_id, $class_id, $section_id, $exam_id, $subject_id, $th_marks, $pr_marks, $enrollment_id);
         
         }
         if($err_flag == 0){
