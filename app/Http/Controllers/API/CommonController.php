@@ -103,7 +103,7 @@ class CommonController extends Controller
 
     }
 
-    public function getExamDetails($school_id, $class_id, $subject_id, $exam_id){
+    public function getExamDetails($school_id, $class_id, $subject_id, $exam_id,$section_id){
         $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
 
         try{
@@ -114,6 +114,16 @@ class CommonController extends Controller
                         ->where('exam_id','=', $exam_id)->first();
 
 
+            $exam_lock = ExamLock::where('session_id', $session_id)
+                ->where('school_id',$school_id)
+                ->where('class_id', $class_id)
+                ->where('section_id', $section_id)
+                ->where('exam_id', $exam_id)
+                ->where('subject_id',   $subject_id)
+                ->first('id');
+                $lock_status=isset($exam_lock->id)? 1 : 0;
+                // 1 when locked and 0 when unlocked
+            $exam_details->lock_status=$lock_status;
             return response()->json(["success" => true, "data"=>$exam_details,  "msg" => "Exam mark setup data fetched successfully"]);
 
         }catch(Exception $exp){
