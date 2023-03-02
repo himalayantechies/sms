@@ -14,13 +14,15 @@ class ExamLock extends Model
     ];
     public function lockExams($request)
     {
-        $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
+        $school_id = auth()->user()->school_id;
+        $session_id = get_school_settings($school_id)->value('running_session');
         $exam_lock = new ExamLock();
         $exam_lock->session_id = $session_id;
         $exam_lock->class_id = $request->class_id;
         $exam_lock->section_id = $request->section_id;
         $exam_lock->exam_id = $request->exam_id;
         $exam_lock->subject_id = $request->subject_id;
+        $exam_lock->school_id = $school_id;
         $exam_lock->save();
     }
     public function unlockExams($id)
