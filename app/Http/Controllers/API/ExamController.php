@@ -107,7 +107,7 @@ class ExamController extends Controller
                 and e.section_id = $section_id
         ");
         foreach($enrolled_students as $student){
-            $grade = GradeBook::where('user_id','=',$student->user_id)
+            $grade = Gradebook::where('user_id','=',$student->user_id)
                                 ->where('enrollment_id','=',$student->id)
                                 ->where('exam_id','=',$exam_id)
                                 ->where('subject_id','=',$subject_id)

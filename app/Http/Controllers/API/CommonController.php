@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Classes;
 use App\Models\Enrollment;
 use App\Models\ExamMarkSetup;
-use App\Models\GradeBook;
+use App\Models\Gradebook;
 
 use Illuminate\Support\Facades\DB;
 

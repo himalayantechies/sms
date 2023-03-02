@@ -22,7 +22,7 @@ class Gradebook extends Model
     public function updateGradeBook($session_id, $school_id, $user_id, $class_id, $section_id, $exam_id, $subject_id, $th_marks, $pr_marks, $enrollment_id){
  
         try{
-            GradeBook::updateOrCreate(
+            Gradebook::updateOrCreate(
                 ['session_id'=>$session_id, 'school_id' => $school_id, 'user_id' => $user_id, 'class_id' => $class_id, 'exam_id' => $exam_id, 
                 'subject_id' =>$subject_id, 'enrollment_id' =>$enrollment_id],
                 ['session_id'=>$session_id, 'school_id' => $school_id, 'user_id' => $user_id, 'class_id' => $class_id, 'exam_id' => $exam_id, 
