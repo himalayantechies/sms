@@ -29,32 +29,32 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/events/{id}', [EventController::class, 'show']);
     Route::post('/events/update/{id}', [EventController::class, 'update']);
     Route::post('/events/delete/{id}', [EventController::class, 'destroy']);
-    
-    
+
+
     // Noticeboard Route
     Route::get('/noticeboards', [NoticeBoardController::class,'index']);
 
     // Classroutine Route
-    
+
     Route::get('/classroutine/{class_id}/{section_id}',[RoutineController::class, 'index'] );
-    
+
     // Exam Routine Route
     Route::get('/examroutine/{class_id}/{exam_id}',[RoutineController::class, 'getExamRoutine'] );
-    
+
     // Class Section Route
     Route::get('/classSection/{school_id}',[CommonController::class, 'getClassSectionList'] );
 
     // Class Exam Route
     Route::get('/classExams/{school_id}',[CommonController::class, 'getClassExamList'] );
-    
+
     //Class Subjects
     Route::get('/classSubjects/{school_id}',[CommonController::class, 'getClassSubjectsList'] );
 
     //Get Enrolled Students
     Route::get('/enrolledStudents/{school_id}/{class_id}/{section_id}/{subject_id}/{exam_id}',[CommonController::class, 'getEnrolledStudents'] );
-    
+
     //Get Exam Details
-    Route::get('/getExamDetails/{school_id}/{class_id}/{subject_id}/{exam_id}',[CommonController::class, 'getExamDetails'] );
+    Route::get('/getExamDetails/{school_id}/{class_id}/{subject_id}/{exam_id}/{section_id}',[CommonController::class, 'getExamDetails'] );
 
     //Exam Marks Update
     Route::post('/exam/marks/update',[ExamController::class, 'marks_update'] );
