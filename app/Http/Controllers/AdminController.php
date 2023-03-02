@@ -52,6 +52,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use App\Exports\TeacherDataExport;
+use App\Models\ExamLock;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -2133,7 +2134,7 @@ class AdminController extends Controller
 
         $page_data['exam_categories'] = ExamCategory::where('school_id', $school_id)->get();
         $page_data['classes'] = (new Classes)->getClassBySchool($school_id);
-
+        // $exam_lock = ExamLock::where('session_id');
         return view('admin.marks.marks_list', ['enroll_students' => $enroll_students, 'page_data' => $page_data, 'mark_setups' => $mark_setups]);
     }
 

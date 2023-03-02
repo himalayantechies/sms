@@ -32,6 +32,13 @@ use App\Models\Grade;
             </span>
             {{ get_phrase('Export') }}
         </button>
+        <button class="eBtn-3 dropdown-toggle float-end mb-4 mx-3" type="button" id="defaultDropdown"
+            data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
+            <span class="pr-10">
+                <i class="bi bi-lock"></i>
+            </span>
+            {{ get_phrase('Lock Marks') }}
+        </button>
         <ul class="dropdown-menu dropdown-menu-end eDropdown-menu-2">
             <li>
                 <a class="dropdown-item" id="pdf" href="javascript:;"
@@ -137,6 +144,7 @@ use App\Models\Grade;
                                 value="{{ $comment }}">
                         </td>
                         <td class="text-center">
+
                             <button class="btn btn-success individual_mark_update_button"
                                 onclick="mark_update('{{ $enroll_student->user_id }}')"><i
                                     class="bi bi-check2-circle"></i></button>
