@@ -8,6 +8,7 @@ use App\Models\Classes;
 use App\Models\Enrollment;
 use App\Models\ExamMarkSetup;
 use App\Models\Gradebook;
+use App\Models\ExamLock;
 
 use Illuminate\Support\Facades\DB;
 
