@@ -110,6 +110,7 @@ class TeacherController extends Controller
             ->where('section_id', $data['section_id'])
             ->where('exam_id', $data['exam_id'])
             ->where('subject_id',   $data['subject_id'])
+            ->where('school_id',$school_id)
             ->first('id');
         // $role_id = auth()->user()->role_id;
         // echo "<pre>";

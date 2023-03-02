@@ -2139,6 +2139,7 @@ class AdminController extends Controller
             ->where('section_id', $data['section_id'])
             ->where('exam_id', $data['exam_id'])
             ->where('subject_id',   $data['subject_id'])
+            ->where('school_id',$school_id)
             ->first('id');
         return view('admin.marks.marks_list', ['enroll_students' => $enroll_students, 'page_data' => $page_data, 'mark_setups' => $mark_setups, 'exam_lock' => $exam_lock]);
     }
