@@ -114,17 +114,22 @@ class CommonController extends Controller
                         ->where('subject_id','=', $subject_id)
                         ->where('exam_id','=', $exam_id)->first();
 
-
-            $exam_lock = ExamLock::where('session_id', $session_id)
-                ->where('school_id',$school_id)
-                ->where('class_id', $class_id)
-                ->where('section_id', $section_id)
-                ->where('exam_id', $exam_id)
-                ->where('subject_id',   $subject_id)
-                ->first('id');
+            if(isset($exam_details)){
+                $exam_lock = ExamLock::where('session_id', $session_id)
+                    ->where('school_id',$school_id)
+                    ->where('class_id', $class_id)
+                    ->where('section_id', $section_id)
+                    ->where('exam_id', $exam_id)
+                    ->where('subject_id',   $subject_id)
+                    ->first('id');
                 $lock_status=isset($exam_lock->id)? 1 : 0;
+                $lock_id=isset($exam_lock->id)?$exam_lock->id:NULL;
                 // 1 when locked and 0 when unlocked
-            $exam_details->lock_status=$lock_status;
+                $exam_details->lock_status=$lock_status;
+                $exam_details->lock_id=$lock_id;
+                $exam_details->section_id=$section_id;
+            }        
+            
             return response()->json(["success" => true, "data"=>$exam_details,  "msg" => "Exam mark setup data fetched successfully"]);
 
         }catch(Exception $exp){
