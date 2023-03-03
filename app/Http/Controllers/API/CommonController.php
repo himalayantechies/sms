@@ -127,6 +127,7 @@ class CommonController extends Controller
                 // 1 when locked and 0 when unlocked
                 $exam_details->lock_status=$lock_status;
                 $exam_details->lock_id=$lock_id;
+                $exam_details->section_id=$section_id;
             }        
             
             return response()->json(["success" => true, "data"=>$exam_details,  "msg" => "Exam mark setup data fetched successfully"]);
