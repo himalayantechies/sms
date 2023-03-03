@@ -325,7 +325,7 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
     Route::get('admin/manage/exam/exam_dropdown', [ExamController::class, 'exam_dropdown'])->name('admin.exam.exam_dropdown');
     Route::get('admin/manage/exam/offline_exam/setup/{id}', 'setupOfflineExam')->name('admin.setup.offline_exam');
     Route::post('admin/manage/exam/offline_exam/setupSave/{id}', 'setupOfflineExamSave')->name('admin.setup.offline_exam.save');
-
+    Route::get('admin/manage/exam/clone_exams', 'clone_exams')->name('admin.clone_exams');
     // Lock unlock exams
     Route::get('admin/lock/exam', 'lockExams')->name('admin.lock.exams');
     Route::get('admin/unlock/exam', 'unlockExams')->name('admin.unlock.exams');
