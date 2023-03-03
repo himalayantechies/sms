@@ -49,6 +49,9 @@
                             <button type="button" class="eBtn eBtn btn-secondary form-control"
                                 id="filter-button">{{ get_phrase('Filter') }}</button>
                         </div>
+                        <div class="col-xl-2 mb-3">
+                        <a href="{{route('admin.clone_exams')}}">{{ get_phrase('Clone') }}</a>
+                        </div>
                     </div>
                 </div>
             </div>

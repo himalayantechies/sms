@@ -2151,6 +2151,60 @@ class AdminController extends Controller
     {
         (new ExamLock)->unlockExams($request->id);
     }
+
+    public function clone_exams(){
+        $school_id = auth()->user()->school_id;
+        $session_id = 6;//get_school_settings(auth()->user()->school_id)->value('running_session');
+        $previous_session = Session::where('school_id',"=", $school_id)
+                                ->where('id','<',$session_id)
+                                ->orderBy('id','Desc')->first();
+        $previous_session_id = $previous_session->id;
+        $classes = Classes::where("school_id","=", $school_id)->orWhereNull("school_id")->get();
+        foreach($classes as $class){
+            $this->clone_exams_class($school_id, $class->id, $session_id, $previous_session_id);
+        }
+    }
+
+    public function clone_exams_class($school_id,$class_id, $session_id, $previous_session_id){
+        
+        $exams_previous_session = Exam::where("school_id","=", $school_id)
+                                        ->where("session_id","=", $previous_session_id)
+                                        ->where("class_id","=", $class_id)
+                                        ->get();
+        $exams_current_session = Exam::where("school_id","=", $school_id)
+                                        ->where("session_id","=", $session_id)
+                                        ->where("class_id","=", $class_id)
+                                        ->get();
+         
+        foreach($exams_current_session as $exam){
+            
+            $exam_previous_session = $exams_previous_session->firstWhere('name',$exam->name);
+            $exam_previous_session_id = $exam_previous_session->id;
+            $exam_previous_session_lft_id = $exam_previous_session->lft;
+            $exam_previous_session_rght_id = $exam_previous_session->rght;
+            $exam_previous_session_parent_id = $exam_previous_session->parent;
+
+            $exam_previous_session_lft = $exams_previous_session->firstWhere('id',$exam_previous_session_lft_id);
+            $exam_current_session_lft = $exams_current_session->firstWhere('name',$exam_previous_session_lft->name);
+            $exam->lft = $exam_current_session_lft->id;
+
+            $exam_previous_session_rght = $exams_previous_session->firstWhere('id',$exam_previous_session_rght_id);
+            $exam_current_session_rght = $exams_current_session->firstWhere('name',$exam_previous_session_rght->name);
+            $exam->rght = $exam_current_session_rght->id;
+
+            $exam_previous_session_parent = $exams_previous_session->firstWhere('id',$exam_previous_session_parent_id);
+            if($exam_previous_session_parent !== null){
+                $exam_current_session_parent = $exams_current_session->firstWhere('name',$exam_previous_session_parent->name);
+                $exam->parent = $exam_current_session_parent->id;
+            }
+            
+
+            $exam->save();
+            // dd($exam);
+
+        }
+        dd("DONE");
+    }
     /**
      * Show the grade list.
      *
