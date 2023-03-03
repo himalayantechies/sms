@@ -1549,7 +1549,7 @@ class AdminController extends Controller
             $exam_marks_setup->pr_ch = isset($value['pr_ch']) ? $value['pr_ch'] : 0;
             $exam_marks_setup->save();
         }
-        return redirect()->back()->with('message', 'You have successfully update exam.');
+        return redirect()->back()->with('message', 'You have successfully updated exam setups.');
     }
     /**
      * Show the grade daily attendance.
@@ -1625,7 +1625,8 @@ class AdminController extends Controller
         $data['school_id'] = auth()->user()->school_id;
         $data['session_id'] = $active_session;
 
-        $check_data = DailyAttendances::where(['timestamp' => $data['timestamp'], 'class_id' => $data['class_id'], 'section_id' => $data['section_id'], 'session_id' => $active_session, 'school_id' => auth()->user()->school_id])->get();
+        $check_data = DailyAttendances::where(['timestamp' => $data['timestamp'], 'class_id' => $data['class_id'], 
+        'section_id' => $data['section_id'], 'session_id' => $active_session, 'school_id' => auth()->user()->school_id])->get();
         if (count($check_data) > 0) {
             foreach ($students as $key => $student) :
                 $data['status'] = $att_data['status-' . $student];
