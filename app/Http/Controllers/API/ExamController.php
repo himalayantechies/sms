@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ExamRoutine;
 use App\Models\Gradebook;
 use App\Models\ExamMarkSetup;
+use App\Models\ExamLock;
 
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -120,4 +121,16 @@ class ExamController extends Controller
         } 
         return response()->json(["success" => false, "error" => "Could not fetch Student Marks"], 400);
     }
+
+    public function lockExams(Request $request)
+    {
+        (new ExamLock)->lockExams($request);
+        return response()->json(["success" => true,"msg" => "Exam has been locked"]);
+    }
+    public function unlockExams(Request $request)
+    {
+        (new ExamLock)->unlockExams($request->id);
+        return response()->json(["success" => true, "msg" => "Exam unlocked"]);
+    }
+
 }

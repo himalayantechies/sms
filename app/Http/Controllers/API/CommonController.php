@@ -123,9 +123,10 @@ class CommonController extends Controller
                     ->where('subject_id',   $subject_id)
                     ->first('id');
                 $lock_status=isset($exam_lock->id)? 1 : 0;
-
+                $lock_id=isset($exam_lock->id)?$exam_lock->id:NULL;
                 // 1 when locked and 0 when unlocked
                 $exam_details->lock_status=$lock_status;
+                $exam_details->lock_id=$lock_id;
             }        
             
             return response()->json(["success" => true, "data"=>$exam_details,  "msg" => "Exam mark setup data fetched successfully"]);

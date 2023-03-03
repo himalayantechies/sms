@@ -64,4 +64,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/exam/marks/{school_id}/{class_id}/{section_id}/{subject_id}/{exam_id}', [CommonController::class, 'getStudentMarksByClassSection']);
     // $school_id, $class_id, $section_id, $subject_id, $exam_id
+    Route::get('admin/lock/exam', [ExamController::class,'lockExams']);
+    Route::get('admin/unlock/exam', [ExamController::class,'unlockExams']);
 });
