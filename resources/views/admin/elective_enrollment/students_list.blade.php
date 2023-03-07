@@ -72,7 +72,7 @@ use App\Models\ElectiveSubject;
                 ?>
                 <tr id="student_{{$enroll_student->user_id}}">
                 
-                    <td>{{ $enroll_student->user_id }}</td>
+                    <td>{{ $enroll_student->roll_no }}</td>
                     <td>{{ $student_details->name }}</td>
                     @foreach($page_data['elective_subjects'] as $key => $elective_subject)
                     <td>
