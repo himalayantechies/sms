@@ -4327,6 +4327,7 @@ class AdminController extends Controller
             ->where('section_id', $page_data['section_id'])
             ->where('session_id', $session_id)
             ->where('school_id', $school_id)
+            ->orderBy('roll_no')
             ->get();
 
 
