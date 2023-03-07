@@ -311,21 +311,115 @@ class ExamController extends Controller
     }
     public function loadStudentList(Request $request)
     {
-        $class_id = $request['class_id'] ?? "";
-        $section_id = $request['section_id'] ?? "";
+        $this->_data['class_id'] = $request['class_id'] ?? "";
+        $this->_data['section_id'] = $request['section_id'] ?? "";
         $this->_data['students'] =  User::where('users.school_id', auth()->user()->school_id)
             ->join('students', 'students.user_id', '=', 'users.id')
             ->join('enrollments', 'users.id', '=', 'enrollments.user_id')
             ->where('users.role_id', 7)
-            ->where('section_id', $section_id)
-            ->where('class_id', $class_id)
+            ->where('section_id', $this->_data['section_id'])
+            ->where('class_id', $this->_data['class_id'])
             ->get([
                 'users.name',
                 'students.gender',
                 'students.registration_no',
-                'enrollments.roll_no'
+                'enrollments.roll_no',
+                'enrollments.id as enrollment_id'
             ]);
+        $this->_data['exam_id'] = $request->exam_id;
 
         return view('admin.exam_report.studentList', $this->_data);
+    }
+    public function bulk_generate_report_card(Request $request)
+    {
+        $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
+        if ($request->session_id) {
+            $session_id = $request->session_id;
+        }
+        $school_id = auth()->user()->school_id;
+        $exam_id = $request->exam_id;
+        $class_id = $request->class_id;
+        $section_id = $request->section_id;
+        DB::statement("CALL usp_bulk_generate_report_card('$session_id', '$school_id', '$exam_id', '$class_id', '$section_id') ");
+    }
+    public function generate_individual_result(Request $request)
+    {
+        $user = auth()->user();
+        $session_id = get_school_settings($user->school_id)->value('running_session');
+        if ($request->session_id) {
+            $session_id = $request->session_id;
+        }
+        $grading_type = $request->grading_type;
+        $school_id = $user->school_id;
+        $exam_id = $request->exam_id;
+        $class_id = $request->class_id;
+        $enrollment_id = $request->enrollment_id;
+        $var_sql = (DB::select("Select fnc_result_header('$grading_type','$session_id','$school_id','$exam_id','$class_id','$enrollment_id')"))[0]->fnc_result_header;
+        $this->_data['data'] = DB::Select($var_sql);
+        $this->_data['user_details'] = Enrollment::join('classes', 'enrollments.class_id', 'classes.id')
+            ->join('sections', 'enrollments.section_id', 'sections.id')
+            ->join('users', 'enrollments.user_id', 'users.id')
+            ->where('enrollments.id', $enrollment_id)->first([
+                'classes.name as class_name',
+                'sections.name as section_name',
+                'enrollments.roll_no',
+                'users.name'
+            ]);
+        $this->_data['exam_details'] = Exam::where('id', $exam_id)->first(['name']);
+        // dd($this->_data['data']);
+        $examClassificationArray = array_diff(
+            array_keys((array) $this->_data['data'][0]),
+            ["credit_hour", "enrollment_id", "subject", "Grade Point", "display", $this->_data['exam_details']->name]
+        );
+        // Initialize an empty result array
+        $examClassificationArray = [
+
+            "Final Term->First Term->Internal",
+            "Final Term->First Term->Term I->TH",
+            "Final Term->First Term->Term I->PR",
+            "Final Term->Second Term->Internal",
+            "Final Term->Second Term->Term I->TH",
+            "Final Term->Second Term->Term I->PR",
+            "Final Term->Third Term->Internal"
+        ];
+        $this->_data['exam_header_array'] = $this->generateMarkStructure($examClassificationArray);
+
+
+
+        // Output the result array
+        // ["First Term" => ["Internal", "Term I" => ["TH", "PR"]]];
+
+        // return $resultArray;
+
+        // dd($this->_data['exam_header_array']);
+        return view('admin.exam_report.individualMarksheet', $this->_data);
+    }
+    function generateMarkStructure(array $originalArray): array
+    {
+        $resultArray = [];
+        $count = 0;
+        foreach ($originalArray as $value) {
+            $parts = explode("->", $value);
+            $assessment = end($parts);
+            array_pop($parts);
+            $newKey = implode("->", $parts);
+            $nestedArray = &$resultArray;
+
+            foreach ($parts as $key) {
+                if (!isset($nestedArray[$key])) {
+                    $nestedArray[$key] = [];
+                }
+                $nestedArray = &$nestedArray[$key];
+            }
+
+            if (!isset($nestedArray[$assessment])) {
+                $nestedArray[$assessment] = [];
+            }
+            if ($nestedArray[$assessment] == []) {
+                $count++;
+            }
+        }
+        $resultArray['exam_colspan_count'] = $count + 2;
+        return $resultArray;
     }
 }

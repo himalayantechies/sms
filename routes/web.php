@@ -332,6 +332,12 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
     // Exam Reports
     Route::get('admin/exam/reports/marksheet', [ExamController::class, 'markSheetIndex'])->name('admin.exam.reports.marksheet.index');
     Route::get('admin/exam/reports/studentList', [ExamController::class, 'loadStudentList'])->name('admin.exam.reports.studentList');
+
+    // Report card generation
+    Route::get('admin/reportCard/generateBulk', [ExamController::class, 'bulk_generate_report_card'])->name('admin.bulk_generate_report_card');
+    Route::get('admin/reportCard/individual/get', [ExamController::class, 'generate_individual_result'])->name('admin.generate_individual_result');
+
+
     //Attendance routes
     Route::get('admin/attendance', 'dailyAttendance')->name('admin.daily_attendance');
     Route::get('admin/take_attendance', 'takeAttendance')->name('admin.take_attendance.open_modal');

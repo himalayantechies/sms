@@ -112,19 +112,20 @@
             var class_id = $('#class_id').val();
             var section_id = $('#section_id').val();
             if (exam_id != "" && class_id != "" && section_id != "") {
-                getFilteredStudents(class_id, section_id);
+                getFilteredStudents(class_id, section_id, exam_id);
             } else {
                 toastr.error('{{ get_phrase('Please select all the fields') }}');
             }
         }
 
-        function getFilteredStudents(class_id, section_id) {
+        function getFilteredStudents(class_id, section_id, exam_id) {
             let url = "{{ route('admin.exam.reports.studentList') }}";
             $.ajax({
                 url: url,
                 data: {
                     class_id: class_id,
-                    section_id: section_id
+                    section_id: section_id,
+                    exam_id: exam_id
                 },
                 success: function(response) {
                     $('#studentList').html(response);

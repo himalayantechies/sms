@@ -19,7 +19,7 @@
                     <th>{{ get_phrase('Grade') }}</th>
                     <th>{{ get_phrase('Section') }}</th>
                     <th>{{ get_phrase('Gender') }}</th>
-                    {{-- <th>{{ get_phrase('View') }}</th> --}}
+                    <th>{{ get_phrase('View') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -31,7 +31,10 @@
                         <td class="grade"></td>
                         <td class="section"></td>
                         <td>{{ $student->gender ?? '-' }}</td>
-                        {{-- <td></td> --}}
+                        <td>
+                            <a href="{{ route('admin.generate_individual_result', ['grading_type' => '2', 'exam_id' => $exam_id, 'class_id' => $class_id, 'enrollment_id' => $student->enrollment_id]) }}">View</a>
+
+                        </td>
                     </tr>
                 @empty
                     <tr>
