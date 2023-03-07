@@ -73,33 +73,48 @@
                                         </div>
                                     </div>
 
-
                                     <!-- Start Mark Sheet -->
                                     <div class="table-responsive" id="tabs-1">
                                         <table class="table table-striped table-bordered table-hover">
                                             <thead>
                                                 <tr class="result_header">
-                                                    <th rowspan="3" class="text-center"> S.N. </th>
-                                                    <th rowspan="3"> Subjects</th>
-                                                    <th rowspan="3" class="text-center"> Credit<br> Hours</th>
-                                                    <th colspan={{ $exam_header_array['exam_colspan_count'] }}
+                                                    <th rowspan="{{ $exam_header_array['max_depth'] }}"
+                                                        class="text-center"> S.N. </th>
+                                                    <th rowspan="{{ $exam_header_array['max_depth'] }}"> Subjects</th>
+                                                    <th rowspan="{{ $exam_header_array['max_depth'] }}"
+                                                        class="text-center"> Credit<br> Hours</th>
+                                                    <th colspan={{ $exam_header_array_count[key($exam_header_array)]['__count'] + 2 }}
                                                         class="text-center" style="font-weight:bold;">
                                                         {{ key($exam_header_array) }} </th>
                                                 </tr>
                                                 <tr>
-                                                    <th class="text-center" rowspan="2">
-                                                        Internal</th>
-                                                    <th class="text-center" colspan="2">
-                                                        Term I</th>
-                                                    <th rowspan="2">Grade</th>
-                                                    <th rowspan="2">Grade Point </th>
+                                                    @foreach ($exam_header_array[key($exam_header_array)] as $key => $top_exam)
+                                                        <th class="text-center"
+                                                            {{ count($top_exam) > 0 ? 'colspan=' . $exam_header_array_count[key($exam_header_array)][$key]['__count'] : 'rowspan=' . $exam_header_array_count[key($exam_header_array)][$key]['__count'] + 1 }}>
+                                                            {{ $key }}</th>
+                                                    @endforeach
+                                                    <th rowspan='{{ $exam_header_array['exam_colspan_count'] - 1 }}'>Grade
+                                                    </th>
+                                                    <th rowspan='{{ $exam_header_array['exam_colspan_count'] - 1 }}'>Grade
+                                                        Point </th>
                                                 </tr>
+
                                                 <tr>
-                                                    <th>TH</th>
-                                                    <th>PR</th>
+                                                    @foreach ($exam_header_array[key($exam_header_array)] as $key => $top_exam)
+                                                        @if (count($top_exam) > 0)
+                                                            @foreach ($top_exam as $key2 => $item)
+                                                                <td
+                                                                    {{ count($item) > 0 ? 'colspan=' . $exam_header_array_count[key($exam_header_array)][$key][$key2]['__count'] : 'rowspan=' . $exam_header_array_count[key($exam_header_array)][$key][$key2]['__count'] + 1 }}>
+                                                                    {{ $key2 }}
+                                                                </td>
+                                                            @endforeach
+                                                        @endif
+                                                    @endforeach
+
                                                 </tr>
 
                                             </thead>
+
 
 
                                             <tbody>
@@ -110,17 +125,21 @@
                                                         </td>
                                                         <td class="alignCenter">
                                                             {{ $item->credit_hour }} </td>
-                                                        <td class="alignCenter">
-                                                            A+ </td>
-                                                        <td class="alignCenter">
-                                                            A+ </td>
-                                                        <td class="alignCenter">
-                                                            A+ </td>
-                                                        <td class="alignCenter">
-                                                            NG </td>
-                                                        <td class="alignCenter">
-                                                            0.00 </td>
+                                                        @foreach ($examClassificationArray as $exam_key)
+                                                            <td class="alignCenter">
+                                                                {{ $item->$exam_key }}
+                                                            </td>
+                                                        @endforeach
 
+                                                        <td class="alignCenter">
+                                                            <?php
+                                                            $my_data = (array) $item;
+                                                            ?>
+                                                            {{$my_data[$exam_details->name]}}
+                                                        </td>
+                                                        <td class="alignCenter">
+
+                                                            {{ $my_data['Grade Point'] }} </td>
                                                     </tr>
                                                 @endforeach
                                                 <tr>

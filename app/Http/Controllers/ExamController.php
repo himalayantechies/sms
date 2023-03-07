@@ -356,6 +356,7 @@ class ExamController extends Controller
         $enrollment_id = $request->enrollment_id;
         $var_sql = (DB::select("Select fnc_result_header('$grading_type','$session_id','$school_id','$exam_id','$class_id','$enrollment_id')"))[0]->fnc_result_header;
         $this->_data['data'] = DB::Select($var_sql);
+        // dd($this->_data['data']);
         $this->_data['user_details'] = Enrollment::join('classes', 'enrollments.class_id', 'classes.id')
             ->join('sections', 'enrollments.section_id', 'sections.id')
             ->join('users', 'enrollments.user_id', 'users.id')
@@ -372,34 +373,70 @@ class ExamController extends Controller
             ["credit_hour", "enrollment_id", "subject", "Grade Point", "display", $this->_data['exam_details']->name]
         );
         // Initialize an empty result array
-        $examClassificationArray = [
-
-            "Final Term->First Term->Internal",
-            "Final Term->First Term->Term I->TH",
-            "Final Term->First Term->Term I->PR",
-            "Final Term->Second Term->Internal",
-            "Final Term->Second Term->Term I->TH",
-            "Final Term->Second Term->Term I->PR",
-            "Final Term->Third Term->Internal"
-        ];
-        $this->_data['exam_header_array'] = $this->generateMarkStructure($examClassificationArray);
-
-
-
-        // Output the result array
-        // ["First Term" => ["Internal", "Term I" => ["TH", "PR"]]];
-
-        // return $resultArray;
-
-        // dd($this->_data['exam_header_array']);
+        // $examClassificationArray = [
+        //     "Final Term->First Term->Internal",
+        //     "Final Term->First Term->Term I->TH",
+        //     "Final Term->First Term->Term I->PR",
+        //     "Final Term->Second Term->Internal",
+        //     "Final Term->Second Term->Term I->TH",
+        //     "Final Term->Second Term->Term I->PR",
+        //     "Final Term->Third Term->Internal->TH",
+        //     "Final Term->Third Term->Internal->PR",
+        //     "Final Term->Fourth Term->Internal->TH",
+        //     "Final Term->Fourth Term->Internal->PR"
+        // ];
+        $this->_data['examClassificationArray'] = $examClassificationArray;
+        $exam_header_array = $this->generateMarkStructure($examClassificationArray);
+        $exam_header_array_count = $this->generateMarkStructureCount($examClassificationArray);
+        $this->_data['exam_header_array'] = $exam_header_array;
+        $this->_data['exam_header_array_count'] = $exam_header_array_count;
         return view('admin.exam_report.individualMarksheet', $this->_data);
+    }
+    function generateMarkStructureCount(array $originalArray): array
+    {
+        $resultArray = [];
+        $overall_count = 0;
+        foreach ($originalArray as $value) {
+            $depth = 0;
+            $parts = explode("->", $value);
+            if (count($parts) > $depth) {
+                $depth = count($parts);
+            }
+            $assessment = end($parts);
+            array_pop($parts);
+            $newKey = implode("->", $parts);
+            $nestedArray = &$resultArray;
+
+            foreach ($parts as $key) {
+                if (!isset($nestedArray[$key])) {
+                    $nestedArray[$key] = ['__count' => 0];
+                }
+                $nestedArray[$key]['__count']++;
+                $nestedArray = &$nestedArray[$key];
+            }
+
+            if (!isset($nestedArray[$assessment])) {
+                $nestedArray[$assessment] = ['__count' => 0];
+            }
+            // if ($nestedArray[$assessment] == []) {
+            //     $overall_count++;
+            // }
+            $nestedArray[$assessment]['__count']++;
+        }
+        // $resultArray['exam_colspan_count'] = $overall_count + 2;
+        $resultArray['max_depth'] = $depth + 1;
+        return $resultArray;
     }
     function generateMarkStructure(array $originalArray): array
     {
         $resultArray = [];
-        $count = 0;
+        $overall_count = 0;
         foreach ($originalArray as $value) {
+            $depth = 0;
             $parts = explode("->", $value);
+            if (count($parts) > $depth) {
+                $depth = count($parts);
+            }
             $assessment = end($parts);
             array_pop($parts);
             $newKey = implode("->", $parts);
@@ -416,10 +453,11 @@ class ExamController extends Controller
                 $nestedArray[$assessment] = [];
             }
             if ($nestedArray[$assessment] == []) {
-                $count++;
+                $overall_count++;
             }
         }
-        $resultArray['exam_colspan_count'] = $count + 2;
+        $resultArray['exam_colspan_count'] = $overall_count + 2;
+        $resultArray['max_depth'] = $depth + 1;
         return $resultArray;
     }
 }
