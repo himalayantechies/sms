@@ -14,6 +14,7 @@ use App\Models\Gradebook;
 use App\Models\Section;
 use App\Models\Enrollment;
 use App\Models\ExamCategory;
+use App\Models\ResultRemarks;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -459,5 +460,93 @@ class ExamController extends Controller
         $resultArray['exam_colspan_count'] = $overall_count + 2;
         $resultArray['max_depth'] = $depth + 1;
         return $resultArray;
+    }
+
+    public function exam_remarks(Request $request)
+    {
+        $school_id = auth()->user()->school_id;
+        $active_session = get_school_settings($school_id)->value('running_session');
+        if ($request->active_session) {
+            $active_session = $request->active_session;
+        }
+        $this->_data['classes'] = (new Classes)->getClassBySchool($school_id);
+
+        return view('admin.exam_report.remarks_index', $this->_data);
+    }
+    
+    public function loadStudentList_exam_remarks(Request $request)
+    {
+        $school_id = auth()->user()->school_id;
+        $active_session = get_school_settings($school_id)->value('running_session');
+        $this->_data['class_id'] = $request['class_id'] ?? "";
+        $this->_data['section_id'] = $request['section_id'] ?? "";
+        $students =  User::where('users.school_id', auth()->user()->school_id)
+            ->join('students', 'students.user_id', '=', 'users.id')
+            ->join('enrollments', 'users.id', '=', 'enrollments.user_id')
+            
+            ->where('users.role_id', 7)
+            ->where('section_id', $this->_data['section_id'])
+            ->where('class_id', $this->_data['class_id'])
+            ->get([
+                'users.name',
+                'students.gender',
+                'students.registration_no',
+                'enrollments.roll_no',
+                'enrollments.id as enrollment_id'
+                
+            ]);
+        
+        $this->_data['students'] = $students;
+        //dd($this->_data['students']);
+        $this->_data['exam_id'] = $request->exam_id;
+
+        return view('admin.exam_report.studentList_exam_remarks', $this->_data);
+    }
+
+    public function exam_remarks_store(Request $request){
+        $school_id = auth()->user()->school_id;
+        $active_session = get_school_settings($school_id)->value('running_session');
+        $class_id = $request->class_id;
+        $section_id = $request->section_id;
+        $exam_id = $request->exam_id;
+        $enrollment_id = $request->enrollment_id;
+        $remarks = $request->remarks;
+
+        $result_remark = ResultRemarks::where('school_id','=',$school_id)
+                                        ->where('session_id','=',$active_session)
+                                        ->where('class_id','=',$request->class_id)
+                                        ->where('section_id','=',$request->section_id)
+                                        ->where('exam_id','=',$request->exam_id)
+                                        ->where('enrollment_id','=',$enrollment_id)->first();
+
+        if($result_remark == null){
+            $result_remark = new ResultRemarks();
+            $result_remark->school_id = $school_id;
+            $result_remark->session_id = $active_session;
+            $result_remark->class_id = $class_id;
+            $result_remark->section_id = $section_id;
+            $result_remark->exam_id = $exam_id;
+            $result_remark->enrollment_id = $enrollment_id;
+        }
+        $result_remark->remarks = $remarks;
+        $result_remark->modified_by = auth()->user()->id;
+        $result_remark->save();
+    }
+
+    public function exam_remarks_get(Request $request){
+        $school_id = auth()->user()->school_id;
+        $active_session = get_school_settings($school_id)->value('running_session');
+        $class_id = $request->class_id;
+        $section_id = $request->section_id;
+        $exam_id = $request->exam_id;
+        $enrollment_id = $request->enrollment_id;
+        
+        $result_remarks = ResultRemarks::where('school_id','=',$school_id)
+                                            ->where('session_id','=',$active_session)
+                                            ->where('class_id','=',$request->class_id)
+                                            ->where('section_id','=',$request->section_id)
+                                            ->where('exam_id','=',$request->exam_id)
+                                            ->where('enrollment_id','=',$enrollment_id)->first();
+        return $result_remarks;
     }
 }

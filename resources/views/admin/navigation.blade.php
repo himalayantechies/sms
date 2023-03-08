@@ -229,6 +229,10 @@
                         <a class="{{ request()->is('admin/exam/reports/marksheet') ? 'active' : '' }}"
                             href="{{ route('admin.exam.reports.marksheet.index') }}"><span>{{ get_phrase('Marksheet') }}</span></a>
                     </li>
+                    <li>
+                        <a class="{{ request()->is('admin/exam/exam_remarks') ? 'active' : '' }}"
+                            href="{{ route('admin.exam.exam_remarks') }}"><span>{{ get_phrase('Individual Remarks Entry') }}</span></a>
+                    </li>
                 </ul>
             </li>
 
