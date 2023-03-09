@@ -115,12 +115,11 @@
 
                                             </thead>
 
-
-
                                             <tbody>
+                                                <?php $key = 0; ?>
                                                 @foreach ($data as $item)
                                                     <tr>
-                                                        <td class="alignCenter">1</td>
+                                                        <td class="alignCenter">{{ $loop->iteration }}</td>
                                                         <td>{{ $item->subject }}
                                                         </td>
                                                         <td class="alignCenter">
@@ -135,7 +134,7 @@
                                                             <?php
                                                             $my_data = (array) $item;
                                                             ?>
-                                                            {{$my_data[$exam_details->name]}}
+                                                            {{ $my_data[$exam_details->name] }}
                                                         </td>
                                                         <td class="alignCenter">
 
@@ -153,7 +152,7 @@
                                                         GPA </td>
 
                                                     <td class="alignRight">
-                                                        0.40 </td>
+                                                        {{ $GPA }} </td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -161,17 +160,17 @@
                                     <div class="row result-elements" style="margin-top: 15px;">
                                         <div class="col-md-3">
                                             <label>GPA: </label>
-                                            <strong>0.4</strong>
+                                            <strong>{{ $GPA }}</strong>
                                         </div>
                                         <div class="col-md-3">
                                             <label>Rank :</label>
                                             <strong>
-                                                11 </strong>
+                                            </strong>
                                         </div>
                                     </div>
                                     <div class="row result-elements">
                                         <div class="col-md-3">
-                                            <label>Result : </label> <strong> Fail </strong>
+                                            <label>Result : </label> <strong> </strong>
                                         </div>
                                         <!-- Start Exam wise attendance -->
                                         <div class="col-md-3">
@@ -308,18 +307,14 @@
                                                     <td class="alignLeft">
                                                         Very Insufficient </td>
                                                 </tr>
-
-
                                             </tbody>
                                         </table>
                                     </div>
                                     <!--End    CCE Result Section-->
                                 </div>
-
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

@@ -358,7 +358,6 @@ class ExamController extends Controller
         $var_sql = (DB::select("Select fnc_result_header('$grading_type','$session_id','$school_id','$exam_id','$class_id','$enrollment_id')"))[0]->fnc_result_header;
         //dd($var_sql);
         $this->_data['data'] = DB::Select($var_sql);
-        //dd($this->_data['data']);
         $this->_data['user_details'] = Enrollment::join('classes', 'enrollments.class_id', 'classes.id')
             ->join('sections', 'enrollments.section_id', 'sections.id')
             ->join('users', 'enrollments.user_id', 'users.id')
@@ -368,6 +367,12 @@ class ExamController extends Controller
                 'enrollments.roll_no',
                 'users.name'
             ]);
+        $totalGPA = 0;
+        $count = count($this->_data['data']);
+        for ($i = 0; $i < $count; $i++) {
+            $totalGPA += $this->_data['data'][$i]->{"Grade Point"};
+        }
+        $this->_data['GPA'] = $totalGPA / $count;
         $this->_data['exam_details'] = Exam::where('id', $exam_id)->first(['name']);
 
         $examClassificationArray = array_diff(
@@ -392,6 +397,7 @@ class ExamController extends Controller
         $exam_header_array_count = $this->generateMarkStructureCount($examClassificationArray);
         $this->_data['exam_header_array'] = $exam_header_array;
         $this->_data['exam_header_array_count'] = $exam_header_array_count;
+
         return view('admin.exam_report.individualMarksheet', $this->_data);
     }
 
@@ -515,7 +521,7 @@ class ExamController extends Controller
 
         return view('admin.exam_report.remarks_index', $this->_data);
     }
-    
+
     public function loadStudentList_exam_remarks(Request $request)
     {
         $school_id = auth()->user()->school_id;
@@ -525,7 +531,7 @@ class ExamController extends Controller
         $students =  User::where('users.school_id', auth()->user()->school_id)
             ->join('students', 'students.user_id', '=', 'users.id')
             ->join('enrollments', 'users.id', '=', 'enrollments.user_id')
-            
+
             ->where('users.role_id', 7)
             ->where('section_id', $this->_data['section_id'])
             ->where('class_id', $this->_data['class_id'])
@@ -535,9 +541,9 @@ class ExamController extends Controller
                 'students.registration_no',
                 'enrollments.roll_no',
                 'enrollments.id as enrollment_id'
-                
+
             ]);
-        
+
         $this->_data['students'] = $students;
         //dd($this->_data['students']);
         $this->_data['exam_id'] = $request->exam_id;
@@ -545,7 +551,8 @@ class ExamController extends Controller
         return view('admin.exam_report.studentList_exam_remarks', $this->_data);
     }
 
-    public function exam_remarks_store(Request $request){
+    public function exam_remarks_store(Request $request)
+    {
         $school_id = auth()->user()->school_id;
         $active_session = get_school_settings($school_id)->value('running_session');
         $class_id = $request->class_id;
@@ -554,14 +561,14 @@ class ExamController extends Controller
         $enrollment_id = $request->enrollment_id;
         $remarks = $request->remarks;
 
-        $result_remark = ResultRemarks::where('school_id','=',$school_id)
-                                        ->where('session_id','=',$active_session)
-                                        ->where('class_id','=',$request->class_id)
-                                        ->where('section_id','=',$request->section_id)
-                                        ->where('exam_id','=',$request->exam_id)
-                                        ->where('enrollment_id','=',$enrollment_id)->first();
+        $result_remark = ResultRemarks::where('school_id', '=', $school_id)
+            ->where('session_id', '=', $active_session)
+            ->where('class_id', '=', $request->class_id)
+            ->where('section_id', '=', $request->section_id)
+            ->where('exam_id', '=', $request->exam_id)
+            ->where('enrollment_id', '=', $enrollment_id)->first();
 
-        if($result_remark == null){
+        if ($result_remark == null) {
             $result_remark = new ResultRemarks();
             $result_remark->school_id = $school_id;
             $result_remark->session_id = $active_session;
@@ -575,20 +582,21 @@ class ExamController extends Controller
         $result_remark->save();
     }
 
-    public function exam_remarks_get(Request $request){
+    public function exam_remarks_get(Request $request)
+    {
         $school_id = auth()->user()->school_id;
         $active_session = get_school_settings($school_id)->value('running_session');
         $class_id = $request->class_id;
         $section_id = $request->section_id;
         $exam_id = $request->exam_id;
         $enrollment_id = $request->enrollment_id;
-        
-        $result_remarks = ResultRemarks::where('school_id','=',$school_id)
-                                            ->where('session_id','=',$active_session)
-                                            ->where('class_id','=',$request->class_id)
-                                            ->where('section_id','=',$request->section_id)
-                                            ->where('exam_id','=',$request->exam_id)
-                                            ->where('enrollment_id','=',$enrollment_id)->first();
+
+        $result_remarks = ResultRemarks::where('school_id', '=', $school_id)
+            ->where('session_id', '=', $active_session)
+            ->where('class_id', '=', $request->class_id)
+            ->where('section_id', '=', $request->section_id)
+            ->where('exam_id', '=', $request->exam_id)
+            ->where('enrollment_id', '=', $enrollment_id)->first();
         return $result_remarks;
     }
 }
