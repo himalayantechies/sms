@@ -12,6 +12,9 @@
     .table>:not(:first-child) {
     border-top: none !important;
     }
+    .table{
+    border-color: black !important;
+    }
 @endsection
 
 @section('content')
@@ -338,7 +341,7 @@
             var clonedElement = element.cloneNode(true);
 
             // change display of cloned element
-            $(clonedElement).css("display", "block");
+            // $(clonedElement).css();
 
             // Choose the clonedElement and save the PDF for our user.
             var opt = {
@@ -346,10 +349,10 @@
                 filename: 'student_list_{{ date('y-m-d') }}.pdf',
                 image: {
                     type: 'jpeg',
-                    quality: 0.98
+                    quality: 1
                 },
                 html2canvas: {
-                    scale: 2
+                    scale: 4
                 }
             };
 
