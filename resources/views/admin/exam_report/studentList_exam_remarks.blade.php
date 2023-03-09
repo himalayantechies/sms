@@ -54,6 +54,7 @@
         
     </div>
     <div class="card-body" id="student_report">
+    <a href="{{ route('admin.generate_individual_result', ['grading_type' => '2', 'exam_id' => $exam_id, 'class_id' => $class_id, 'enrollment_id' => $student->enrollment_id]) }}">View</a>
     </div>
 </div>
 
@@ -64,8 +65,10 @@
             getStudentRemarks();
             $("#enrollment_id").change(function(){
                 getStudentRemarks();
+                getStudentReportCard();
                 $('#msg').html('');
             });
+            getStudentReportCard();
         });
        
         function saveRemarks(){
@@ -121,4 +124,29 @@
                 }
             });
         }
+            function getStudentReportCard(){
+                var class_id_selected = $("#class_id_selected").val();
+                var section_id_selected = $("#section_id_selected").val();
+                var exam_id_selected = $("#exam_id_selected").val();
+                var enrollment_id = $("#enrollment_id").val();
+                
+                $.ajax({
+                    type: 'GET',
+                    url: "{{ route('admin.get_individual_result') }}",
+                    
+                    data: {
+                        "grading_type":2,
+                        "class_id": class_id_selected,
+                        "section_id": section_id_selected,
+                        "exam_id": exam_id_selected,
+                        "enrollment_id": enrollment_id
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(data) {
+                        $('#student_report').html(data);
+                    }
+                });
+            }
     </script>

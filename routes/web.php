@@ -340,6 +340,7 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
     // Report card generation
     Route::get('admin/reportCard/generateBulk', [ExamController::class, 'bulk_generate_report_card'])->name('admin.bulk_generate_report_card');
     Route::get('admin/reportCard/individual/get', [ExamController::class, 'generate_individual_result'])->name('admin.generate_individual_result');
+    Route::get('admin/reportCard/individual/getMarkSheet', [ExamController::class, 'get_individual_result'])->name('admin.get_individual_result');
 
 
     //Attendance routes

@@ -356,8 +356,9 @@ class ExamController extends Controller
         $class_id = $request->class_id;
         $enrollment_id = $request->enrollment_id;
         $var_sql = (DB::select("Select fnc_result_header('$grading_type','$session_id','$school_id','$exam_id','$class_id','$enrollment_id')"))[0]->fnc_result_header;
+        //dd($var_sql);
         $this->_data['data'] = DB::Select($var_sql);
-        // dd($this->_data['data']);
+        //dd($this->_data['data']);
         $this->_data['user_details'] = Enrollment::join('classes', 'enrollments.class_id', 'classes.id')
             ->join('sections', 'enrollments.section_id', 'sections.id')
             ->join('users', 'enrollments.user_id', 'users.id')
@@ -368,7 +369,7 @@ class ExamController extends Controller
                 'users.name'
             ]);
         $this->_data['exam_details'] = Exam::where('id', $exam_id)->first(['name']);
-        // dd($this->_data['data']);
+
         $examClassificationArray = array_diff(
             array_keys((array) $this->_data['data'][0]),
             ["credit_hour", "enrollment_id", "subject", "Grade Point", "display", $this->_data['exam_details']->name]
@@ -392,6 +393,46 @@ class ExamController extends Controller
         $this->_data['exam_header_array'] = $exam_header_array;
         $this->_data['exam_header_array_count'] = $exam_header_array_count;
         return view('admin.exam_report.individualMarksheet', $this->_data);
+    }
+
+    public function get_individual_result(Request $request)
+    {
+        $user = auth()->user();
+        $session_id = get_school_settings($user->school_id)->value('running_session');
+        if ($request->session_id) {
+            $session_id = $request->session_id;
+        }
+        $grading_type = $request->grading_type;
+        $school_id = $user->school_id;
+        $exam_id = $request->exam_id;
+        $class_id = $request->class_id;
+        $enrollment_id = $request->enrollment_id;
+        $var_sql = (DB::select("Select fnc_result_header('$grading_type','$session_id','$school_id','$exam_id','$class_id','$enrollment_id')"))[0]->fnc_result_header;
+        //dd($var_sql);
+        $this->_data['data'] = DB::Select($var_sql);
+        //dd($this->_data['data']);
+        $this->_data['user_details'] = Enrollment::join('classes', 'enrollments.class_id', 'classes.id')
+            ->join('sections', 'enrollments.section_id', 'sections.id')
+            ->join('users', 'enrollments.user_id', 'users.id')
+            ->where('enrollments.id', $enrollment_id)->first([
+                'classes.name as class_name',
+                'sections.name as section_name',
+                'enrollments.roll_no',
+                'users.name'
+            ]);
+        $this->_data['exam_details'] = Exam::where('id', $exam_id)->first(['name']);
+
+        $examClassificationArray = array_diff(
+            array_keys((array) $this->_data['data'][0]),
+            ["credit_hour", "enrollment_id", "subject", "Grade Point", "display", $this->_data['exam_details']->name]
+        );
+        
+        $this->_data['examClassificationArray'] = $examClassificationArray;
+        $exam_header_array = $this->generateMarkStructure($examClassificationArray);
+        $exam_header_array_count = $this->generateMarkStructureCount($examClassificationArray);
+        $this->_data['exam_header_array'] = $exam_header_array;
+        $this->_data['exam_header_array_count'] = $exam_header_array_count;
+        return view('admin.exam_report.individualMarksheetView', $this->_data);
     }
     function generateMarkStructureCount(array $originalArray): array
     {
@@ -432,6 +473,7 @@ class ExamController extends Controller
     {
         $resultArray = [];
         $overall_count = 0;
+        //dd($originalArray);
         foreach ($originalArray as $value) {
             $depth = 0;
             $parts = explode("->", $value);
