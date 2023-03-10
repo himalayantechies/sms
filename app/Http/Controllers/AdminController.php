@@ -2472,6 +2472,13 @@ class AdminController extends Controller
      */
     public function subjectList(Request $request)
     {
+        $electives_list = [
+            '1' => 'Elective I',
+            '2' => 'Elective II',
+            '3' => 'Elective III',
+            '4' => 'Elective IV',
+            '5' => 'Elective V'
+        ];
         $classes = Classes::get();
 
         if (count($request->all()) > 0 && $request->class_id != '') {
@@ -2484,8 +2491,8 @@ class AdminController extends Controller
             $subjects = GradeSubject::with('subject')->where('school_id', auth()->user()->school_id)->paginate(10);
             $class_id = '';
         }
-
-        return view('admin.subject.subject_list', compact('subjects', 'classes', 'class_id'));
+        // dd($subjects->subject);
+        return view('admin.subject.subject_list', compact('subjects', 'classes', 'class_id','electives_list'));
     }
 
     public function createSubject()
