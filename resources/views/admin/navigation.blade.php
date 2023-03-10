@@ -167,7 +167,7 @@
                     </a>
                 </div>
             </li>
-
+        
             <li
                 class="nav-links-li {{ request()->is('admin/exam_category*') || request()->is('admin/offline_exam*') || request()->is('admin/marks') ||  request()->is('admin/exam_attendance_create*') || request()->is('admin/grade') || request()->is('admin/promotion*')||request()->is('admin/manage/exam/*')||request()->is('admin/manage/exam')||request()->is('admin/exam/reports/*') ? 'showMenu' : '' }}">
                 <div class="iocn-link">
@@ -201,10 +201,10 @@
                         <a class="{{ request()->is('admin/exam_category*') ? 'active' : '' }}"
                             href="{{ route('admin.exam_category') }}"><span>{{ get_phrase('Exam Category') }}</span></a>
                     </li>
-                    <li>
+                    <!--  <li>
                         <a class="{{ request()->is('admin/offline_exam*') ? 'active' : '' }}"
                             href="{{ route('admin.offline_exam') }}"><span>{{ get_phrase('Offline Exam') }}</span></a>
-                    </li>
+                    </li> -->
                     <li>
                         <a class="{{ request()->is('admin/electiveEnrollment*') ? 'active' : '' }}"
                             href="{{ route('admin.electiveEnrollment') }}"><span>{{ get_phrase('Elective Enrollment') }}</span></a>

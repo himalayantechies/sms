@@ -50,9 +50,17 @@
                                     <div>
                                         <button onclick="Export()" class="btn btn-outline-dark"> Generate PDF
                                             Report</button>
+                                        {{-- <a
+                                            href="{{ route('admin.marksheet.downloadPDFMarksheet', ['grading_type' => '2', 'exam_id' => $exam_id, 'class_id' => $class_id, 'enrollment_id' => $enrollment_id]) }}">Generate PDF</a> --}}
                                     </div>
                                 </div>
-                                @include('admin.exam_report.marksheet')
+                                @if (count($data) !== 0)
+                                    {
+                                    @include('admin.exam_report.marksheet')
+                                    }
+                                @else
+                                    <h6 class="px-4 py-6">No data available.</h6>
+                                @endif
                             </div>
                         </div>
                     </div>
