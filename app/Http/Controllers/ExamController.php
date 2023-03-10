@@ -367,12 +367,15 @@ class ExamController extends Controller
                 'enrollments.roll_no',
                 'users.name'
             ]);
-        $totalGPA = 0;
+        $this->_data['GPA'] = 0;
         $count = count($this->_data['data']);
-        for ($i = 0; $i < $count; $i++) {
-            $totalGPA += $this->_data['data'][$i]->{"Grade Point"};
+        if ($count != 0) {
+            $totalGPA = 0;
+            for ($i = 0; $i < $count; $i++) {
+                $totalGPA += $this->_data['data'][$i]->{"Grade Point"};
+            }
+            $this->_data['GPA'] = $totalGPA / $count;
         }
-        $this->_data['GPA'] = $totalGPA / $count;
         $this->_data['exam_details'] = Exam::where('id', $exam_id)->first(['name']);
 
         $examClassificationArray = array_diff(
