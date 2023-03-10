@@ -377,11 +377,13 @@ class ExamController extends Controller
             $this->_data['GPA'] = $totalGPA / $count;
         }
         $this->_data['exam_details'] = Exam::where('id', $exam_id)->first(['name']);
-
-        $examClassificationArray = array_diff(
-            array_keys((array) $this->_data['data'][0]),
-            ["credit_hour", "enrollment_id", "subject", "Grade Point", "display", $this->_data['exam_details']->name]
-        );
+        $examClassificationArray = [];
+        if (!empty($this->_data['data'])) {
+            $examClassificationArray = array_diff(
+                array_keys((array) $this->_data['data'][0]),
+                ["credit_hour", "enrollment_id", "subject", "Grade Point", "display", $this->_data['exam_details']->name]
+            );
+        }
 
         $this->_data['examClassificationArray'] = $examClassificationArray;
         $exam_header_array = $this->generateMarkStructure($examClassificationArray);
@@ -475,6 +477,7 @@ class ExamController extends Controller
     {
         $resultArray = [];
         $overall_count = 0;
+        $depth = 0;
         foreach ($originalArray as $value) {
             $depth = 0;
             $parts = explode("->", $value);
@@ -510,7 +513,7 @@ class ExamController extends Controller
     {
         $resultArray = [];
         $overall_count = 0;
-        //dd($originalArray);
+        $depth = 0;
         foreach ($originalArray as $value) {
             $depth = 0;
             $parts = explode("->", $value);
