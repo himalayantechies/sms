@@ -146,8 +146,22 @@
     </div> --}}
 
     <div class="row">
-        <div class="col-md-8 offset-md-2">
+    
+            
+        
+        <div class="col-md-12">
             <div class="eSection-wrap pt-5 pb-2">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gr-15">
+                    <div class="d-flex flex-column">
+                        <ul class="d-flex align-items-center eBreadcrumb-2">
+                            <li><span>{{ get_phrase('Set up marks for:') }}</span></li>
+                            <li><span>{{ get_phrase('Class').' '.$selected_class->name }}</span></li>
+                            <li><span>{{ get_phrase('Exam'). ' - '. $exam->name }}</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
                 <form method="POST" enctype="multipart/form-data" class="d-block ajaxForm"
                     action="{{ route('admin.setup.offline_exam.save', ['id' => $exam->id]) }}">
                     @csrf

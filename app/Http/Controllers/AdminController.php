@@ -1517,8 +1517,16 @@ class AdminController extends Controller
             $marks_setup[$exam_marks->subject_id]['pr_pm'] = $exam_marks->pr_pm;
             $marks_setup[$exam_marks->subject_id]['pr_ch'] = $exam_marks->pr_ch;
         }
-        // dd($marks_setup);
-        return view('admin.examination.setup_offline_exam', ['exam' => $exam, 'classes' => $classes, 'subjects' => $subjects, 'exam_marks_setup' => $marks_setup]);
+        $selected_class = Classes::find($class_id);
+        //dd($selected_class); 
+        return view('admin.examination.setup_offline_exam', 
+                        [
+                            'exam' => $exam, 
+                            'classes' => $classes, 
+                            'subjects' => $subjects, 
+                            'exam_marks_setup' => $marks_setup,
+                            'selected_class' => $selected_class
+                        ]);
     }
 
     public function setupOfflineExamSave(Request $request)
