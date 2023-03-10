@@ -135,5 +135,18 @@
                 }
             });
         }
+
+        function calculatemarks(exam_id, class_id, section_id) {
+
+            let url = "{{ route('admin.calculate.marks') }}";
+            $.ajax({
+                url: url,
+                data: {
+                    class_id: class_id,
+                    section_id: section_id,
+                    exam_id: exam_id
+                }
+            });
+        }
     </script>
 @endsection

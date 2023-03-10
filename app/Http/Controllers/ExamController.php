@@ -454,7 +454,20 @@ class ExamController extends Controller
         $pdf->render();
         return $pdf->stream('invoice.pdf');
     }
-
+    public function calculate_marks(Request $request)
+    {
+        $user = auth()->user();
+        $session_id = get_school_settings($user->school_id)->value('running_session');
+        if ($request->session_id) {
+            $session_id = $request->session_id;
+        }
+        $school_id = $user->school_id;
+        $exam_id = $request->exam_id;
+        $class_id = $request->class_id;
+        $section_id = $request->section_id;
+        DB::statement("call usp_bulk_generate_report_card('$section_id', '$school_id', '$exam_id' , $class_id , '$section_id' )");
+        return redirect()->back();
+    }
     function generateMarkStructureCount(array $originalArray): array
     {
         $resultArray = [];

@@ -5,8 +5,12 @@
             <span class="exam mx-2"></span>]
         </div>
         <div>
-            <a href="" class="btn btn-outline-dark">Calculate marks</a>
-            <a href="" class="btn btn-outline-dark">Clear Data</a>
+            {{-- <a href="{{ route('admin.calculate.marks', ['exam_id' => $exam_id, 'class_id' => $class_id, 'section_id' => $section_id]) }}"
+                class="btn btn-outline-dark">Calculate marks</a> --}}
+            <button onclick="calculatemarks({{ $exam_id }},{{ $class_id }},{{ $section_id }})" class="btn btn-outline-dark">
+                Calculate Marks
+            </button>
+            {{-- <a href="" class="btn btn-outline-dark">Clear Data</a> --}}
         </div>
     </div>
     <div class="card-body">
@@ -32,7 +36,8 @@
                         <td class="section"></td>
                         <td>{{ $student->gender ?? '-' }}</td>
                         <td>
-                            <a href="{{ route('admin.generate_individual_result', ['grading_type' => '2', 'exam_id' => $exam_id, 'class_id' => $class_id, 'enrollment_id' => $student->enrollment_id]) }}">View</a>
+                            <a
+                                href="{{ route('admin.generate_individual_result', ['grading_type' => '2', 'exam_id' => $exam_id, 'class_id' => $class_id, 'enrollment_id' => $student->enrollment_id]) }}">View</a>
 
                         </td>
                     </tr>
