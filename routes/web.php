@@ -336,6 +336,7 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
     Route::get('admin/exam/exam_remarks/studentList', [ExamController::class, 'loadStudentList_exam_remarks'])->name('admin.exam.remarks.studentList');
     Route::post('admin/exam_remarks/save', [ExamController::class, 'exam_remarks_store'])->name('admin.exam.exam_remarks_save');
     Route::post('admin/exam_remarks/get', [ExamController::class, 'exam_remarks_get'])->name('admin.exam.exam_remarks_get');
+    Route::get('admin/download/marksheet', [ExamController::class, 'downloadPDFMarksheet'])->name('admin.marksheet.downloadPDFMarksheet');
 
     // Report card generation
     Route::get('admin/reportCard/generateBulk', [ExamController::class, 'bulk_generate_report_card'])->name('admin.bulk_generate_report_card');

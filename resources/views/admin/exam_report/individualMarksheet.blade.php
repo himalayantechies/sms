@@ -50,6 +50,8 @@
                                     <div>
                                         <button onclick="Export()" class="btn btn-outline-dark"> Generate PDF
                                             Report</button>
+                                        {{-- <a
+                                            href="{{ route('admin.marksheet.downloadPDFMarksheet', ['grading_type' => '2', 'exam_id' => $exam_id, 'class_id' => $class_id, 'enrollment_id' => $enrollment_id]) }}">Generate PDF</a> --}}
                                     </div>
                                 </div>
                                 @include('admin.exam_report.marksheet')
