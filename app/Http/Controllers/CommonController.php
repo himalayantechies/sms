@@ -225,6 +225,41 @@ class CommonController extends Controller
         return response()->json(['msg' => 'Saved Successfully'], 200);
     }
 
+    public function elective_subjectUpdateBulk(Request $request)
+    {
+        $data = $request->all();
+        $class_id = $data['class_id'];
+        $section_id = $data['section_id'];
+        $session_id = $data['session_id'];
+
+        foreach ($data['elective'] as $key => $value) {
+            $user_id = $key;
+            $elective = ElectiveSubject::where('user_id', '=', $user_id)
+                ->where('class_id', '=', $class_id)
+                ->where('section_id', '=', $section_id)
+                ->where('elective_group', '=', $key)->first();
+            if ($elective == null) {
+                $elective = new ElectiveSubject();
+            }
+            $elective->session_id = get_school_settings(auth()->user()->school_id)->value('running_session');;
+            $elective->user_id = $user_id;
+            $elective->class_id = $class_id;
+            $elective->section_id = $section_id;
+            foreach($value as $k => $v){
+                $elective->subject_id = isset($v) ? $v : 0;
+                $elective->elective_group = isset($k) ? $k : 0;
+            }
+            
+            $elective->modified_by = auth()->user()->id;
+            if($elective->subject_id !== 'Select'){
+                $elective->save();
+            }
+            
+           
+        }
+        return redirect()->back();
+    }
+
     public function get_user_by_id_from_user_table($id)
     {
         $user = User::find($id);

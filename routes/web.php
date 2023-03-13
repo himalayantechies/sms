@@ -309,6 +309,7 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
 
     Route::get('admin/elective_enrollment', 'electiveEnrollment')->name('admin.electiveEnrollment');
     Route::get('admin/student_list', 'electiveEnrollmentFilter')->name('admin.electiveEnrollment.list');
+    Route::get('admin/elective_enrollment_bulk_update', 'electiveEnrollmentBulkUpdate')->name('admin.elective_enrollment_bulk_update');
 
     // Exam Hierarchy
 
@@ -780,6 +781,7 @@ Route::controller(CommonController::class)->middleware('auth')->group(function (
     Route::get('grade/get/{exam_mark}', 'getGrade')->name('get.grade');
     Route::get('mark/update', 'markUpdate')->name('update.mark');
     Route::get('elective_subject/update', 'elective_subjectUpdate')->name('update.elective_subject');
+    Route::post('elective_subject/update_bulk', 'elective_subjectUpdateBulk')->name('update.elective_subjectUpdateBulk');
 
     Route::get('user/{id}', 'idWiseUserName')->name('id_wise_user_name');
 });
