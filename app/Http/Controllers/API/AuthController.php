@@ -28,7 +28,7 @@ class AuthController extends Controller
         if (!$authenticated) {
             return ["success" => false, "msg" => "Invalid Credentials"];
         } else {
-            $user = User::where('username', $request->username)->first();
+            $user = User::where('username', $request->username)->orWhere('email',$request->username)->first();
             $this->_data["user"] = $user;
             $token = $user->createToken('auth_token')->plainTextToken;
             if (Auth::user()->role_id == 7) {
