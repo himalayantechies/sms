@@ -24,11 +24,11 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json(["success" => false, "msg" => $validator->errors()->all()], 400);
         }
-        $authenticated =  Auth::attempt($request->only(['username', 'password']));
+        $authenticated =  Auth::attempt($request->only(['username', 'password']))||(Auth::attempt(['email' => $request->username, 'password' => $request->password]));
         if (!$authenticated) {
             return ["success" => false, "msg" => "Invalid Credentials"];
         } else {
-            $user = User::where('username', $request->username)->first();
+            $user = User::where('username', $request->username)->orWhere('email',$request->username)->first();
             $this->_data["user"] = $user;
             $token = $user->createToken('auth_token')->plainTextToken;
             if (Auth::user()->role_id == 7) {

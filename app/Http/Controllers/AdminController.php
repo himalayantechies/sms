@@ -1517,8 +1517,16 @@ class AdminController extends Controller
             $marks_setup[$exam_marks->subject_id]['pr_pm'] = $exam_marks->pr_pm;
             $marks_setup[$exam_marks->subject_id]['pr_ch'] = $exam_marks->pr_ch;
         }
-        // dd($marks_setup);
-        return view('admin.examination.setup_offline_exam', ['exam' => $exam, 'classes' => $classes, 'subjects' => $subjects, 'exam_marks_setup' => $marks_setup]);
+        $selected_class = Classes::find($class_id);
+        //dd($selected_class); 
+        return view('admin.examination.setup_offline_exam', 
+                        [
+                            'exam' => $exam, 
+                            'classes' => $classes, 
+                            'subjects' => $subjects, 
+                            'exam_marks_setup' => $marks_setup,
+                            'selected_class' => $selected_class
+                        ]);
     }
 
     public function setupOfflineExamSave(Request $request)
@@ -2472,6 +2480,13 @@ class AdminController extends Controller
      */
     public function subjectList(Request $request)
     {
+        $electives_list = [
+            '1' => 'Elective I',
+            '2' => 'Elective II',
+            '3' => 'Elective III',
+            '4' => 'Elective IV',
+            '5' => 'Elective V'
+        ];
         $classes = Classes::get();
 
         if (count($request->all()) > 0 && $request->class_id != '') {
@@ -2484,8 +2499,8 @@ class AdminController extends Controller
             $subjects = GradeSubject::with('subject')->where('school_id', auth()->user()->school_id)->paginate(10);
             $class_id = '';
         }
-
-        return view('admin.subject.subject_list', compact('subjects', 'classes', 'class_id'));
+        // dd($subjects->subject);
+        return view('admin.subject.subject_list', compact('subjects', 'classes', 'class_id','electives_list'));
     }
 
     public function createSubject()

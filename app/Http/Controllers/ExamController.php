@@ -15,7 +15,7 @@ use App\Models\Section;
 use App\Models\Enrollment;
 use App\Models\ExamCategory;
 use App\Models\ResultRemarks;
-
+use Dompdf\Dompdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -355,7 +355,7 @@ class ExamController extends Controller
         $exam_id = $request->exam_id;
         $class_id = $request->class_id;
         $enrollment_id = $request->enrollment_id;
-        $var_sql = (DB::select("Select fnc_result_header('$grading_type','$session_id','$school_id','$exam_id','$class_id','$enrollment_id')"))[0]->fnc_result_header;
+        $var_sql = (DB::select("Select * from fnc_result_header('$grading_type','$session_id','$school_id','$exam_id','$class_id','$enrollment_id')"))[0]->fnc_result_header;
         //dd($var_sql);
         $this->_data['data'] = DB::Select($var_sql);
         $this->_data['user_details'] = Enrollment::join('classes', 'enrollments.class_id', 'classes.id')
@@ -367,41 +367,42 @@ class ExamController extends Controller
                 'enrollments.roll_no',
                 'users.name'
             ]);
-        $totalGPA = 0;
+        $this->_data['GPA'] = 0;
         $count = count($this->_data['data']);
-        for ($i = 0; $i < $count; $i++) {
-            $totalGPA += $this->_data['data'][$i]->{"Grade Point"};
+        if ($count != 0) {
+            $totalGPA = 0;
+            for ($i = 0; $i < $count; $i++) {
+                $totalGPA += $this->_data['data'][$i]->{"Grade Point"};
+            }
+            $this->_data['GPA'] = $totalGPA / $count;
         }
-        $this->_data['GPA'] = $totalGPA / $count;
         $this->_data['exam_details'] = Exam::where('id', $exam_id)->first(['name']);
+        $examClassificationArray = [];
+        if (!empty($this->_data['data'])) {
+            $examClassificationArray = array_diff(
+                array_keys((array) $this->_data['data'][0]),
+                ["credit_hour", "enrollment_id", "subject", "Grade Point", "display", $this->_data['exam_details']->name]
+            );
+        }
 
-        $examClassificationArray = array_diff(
-            array_keys((array) $this->_data['data'][0]),
-            ["credit_hour", "enrollment_id", "subject", "Grade Point", "display", $this->_data['exam_details']->name]
-        );
-        // Initialize an empty result array
-        // $examClassificationArray = [
-        //     "Final Term->First Term->Internal",
-        //     "Final Term->First Term->Term I->TH",
-        //     "Final Term->First Term->Term I->PR",
-        //     "Final Term->Second Term->Internal",
-        //     "Final Term->Second Term->Term I->TH",
-        //     "Final Term->Second Term->Term I->PR",
-        //     "Final Term->Third Term->Internal->TH",
-        //     "Final Term->Third Term->Internal->PR",
-        //     "Final Term->Fourth Term->Internal->TH",
-        //     "Final Term->Fourth Term->Internal->PR"
-        // ];
         $this->_data['examClassificationArray'] = $examClassificationArray;
         $exam_header_array = $this->generateMarkStructure($examClassificationArray);
         $exam_header_array_count = $this->generateMarkStructureCount($examClassificationArray);
         $this->_data['exam_header_array'] = $exam_header_array;
         $this->_data['exam_header_array_count'] = $exam_header_array_count;
-
+        $this->_data['exam_id'] = $request->exam_id;
+        $this->_data['class_id'] = $request->class_id;
+        $this->_data['enrollment_id'] = $request->enrollment_id;
         return view('admin.exam_report.individualMarksheet', $this->_data);
     }
 
     public function get_individual_result(Request $request)
+    {
+        $this->_data = $this->MarksheetData($request);
+
+        return view('admin.exam_report.individualMarksheetView', $this->_data);
+    }
+    function MarksheetData($request)
     {
         $user = auth()->user();
         $session_id = get_school_settings($user->school_id)->value('running_session');
@@ -413,6 +414,7 @@ class ExamController extends Controller
         $exam_id = $request->exam_id;
         $class_id = $request->class_id;
         $enrollment_id = $request->enrollment_id;
+
         $var_sql = (DB::select("Select fnc_result_header('$grading_type','$session_id','$school_id','$exam_id','$class_id','$enrollment_id')"))[0]->fnc_result_header;
         //dd($var_sql);
         $this->_data['data'] = DB::Select($var_sql);
@@ -428,22 +430,54 @@ class ExamController extends Controller
             ]);
         $this->_data['exam_details'] = Exam::where('id', $exam_id)->first(['name']);
 
+        $totalGPA = 0;
+        $count = count($this->_data['data']);
+        for ($i = 0; $i < $count; $i++) {
+            $totalGPA += $this->_data['data'][$i]->{"Grade Point"};
+        }
+        $this->_data['GPA'] = $totalGPA / $count;
+        $this->_data['exam_details'] = Exam::where('id', $exam_id)->first(['name']);
+
         $examClassificationArray = array_diff(
             array_keys((array) $this->_data['data'][0]),
             ["credit_hour", "enrollment_id", "subject", "Grade Point", "display", $this->_data['exam_details']->name]
         );
-        
+
         $this->_data['examClassificationArray'] = $examClassificationArray;
         $exam_header_array = $this->generateMarkStructure($examClassificationArray);
         $exam_header_array_count = $this->generateMarkStructureCount($examClassificationArray);
         $this->_data['exam_header_array'] = $exam_header_array;
         $this->_data['exam_header_array_count'] = $exam_header_array_count;
-        return view('admin.exam_report.individualMarksheetView', $this->_data);
+        return $this->_data;
+    }
+    public function downloadPDFMarksheet(Request $request)
+    {
+        $this->_data = $this->MarksheetData($request);
+        $pdf = new Dompdf();
+        $pdf->loadHtml(view('admin.exam_report.marksheet',  $this->_data)->render());
+        $pdf->setPaper('A4', 'portrait');
+        $pdf->render();
+        return $pdf->stream('invoice.pdf');
+    }
+    public function calculate_marks(Request $request)
+    {
+        $user = auth()->user();
+        $session_id = get_school_settings($user->school_id)->value('running_session');
+        if ($request->session_id) {
+            $session_id = $request->session_id;
+        }
+        $school_id = $user->school_id;
+        $exam_id = $request->exam_id;
+        $class_id = $request->class_id;
+        $section_id = $request->section_id;
+        DB::statement("call usp_bulk_generate_report_card('$section_id', '$school_id', '$exam_id' , $class_id , '$section_id' )");
+        return redirect()->back();
     }
     function generateMarkStructureCount(array $originalArray): array
     {
         $resultArray = [];
         $overall_count = 0;
+        $depth = 0;
         foreach ($originalArray as $value) {
             $depth = 0;
             $parts = explode("->", $value);
@@ -479,7 +513,7 @@ class ExamController extends Controller
     {
         $resultArray = [];
         $overall_count = 0;
-        //dd($originalArray);
+        $depth = 0;
         foreach ($originalArray as $value) {
             $depth = 0;
             $parts = explode("->", $value);

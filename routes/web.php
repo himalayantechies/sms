@@ -309,6 +309,7 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
 
     Route::get('admin/elective_enrollment', 'electiveEnrollment')->name('admin.electiveEnrollment');
     Route::get('admin/student_list', 'electiveEnrollmentFilter')->name('admin.electiveEnrollment.list');
+    Route::get('admin/elective_enrollment_bulk_update', 'electiveEnrollmentBulkUpdate')->name('admin.elective_enrollment_bulk_update');
 
     // Exam Hierarchy
 
@@ -336,6 +337,8 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
     Route::get('admin/exam/exam_remarks/studentList', [ExamController::class, 'loadStudentList_exam_remarks'])->name('admin.exam.remarks.studentList');
     Route::post('admin/exam_remarks/save', [ExamController::class, 'exam_remarks_store'])->name('admin.exam.exam_remarks_save');
     Route::post('admin/exam_remarks/get', [ExamController::class, 'exam_remarks_get'])->name('admin.exam.exam_remarks_get');
+    Route::get('admin/calculate/marks', [ExamController::class, 'calculate_marks'])->name('admin.calculate.marks');
+    Route::get('admin/download/marksheet', [ExamController::class, 'downloadPDFMarksheet'])->name('admin.marksheet.downloadPDFMarksheet');
 
     // Report card generation
     Route::get('admin/reportCard/generateBulk', [ExamController::class, 'bulk_generate_report_card'])->name('admin.bulk_generate_report_card');
@@ -778,6 +781,7 @@ Route::controller(CommonController::class)->middleware('auth')->group(function (
     Route::get('grade/get/{exam_mark}', 'getGrade')->name('get.grade');
     Route::get('mark/update', 'markUpdate')->name('update.mark');
     Route::get('elective_subject/update', 'elective_subjectUpdate')->name('update.elective_subject');
+    Route::post('elective_subject/update_bulk', 'elective_subjectUpdateBulk')->name('update.elective_subjectUpdateBulk');
 
     Route::get('user/{id}', 'idWiseUserName')->name('id_wise_user_name');
 });

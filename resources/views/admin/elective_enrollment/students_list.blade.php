@@ -49,6 +49,8 @@ use App\Models\ElectiveSubject;
 
 @if(count($enroll_students) > 0)
 <div class="mark_report_content" id="mark_report">
+<form method="POST"  action="{{ route('update.elective_subjectUpdateBulk') }}">
+@csrf
     <table class="table eTable table-bordered">
         <thead>
             <tr>
@@ -61,7 +63,7 @@ use App\Models\ElectiveSubject;
             </tr>   
         </thead>
         <tbody>
-            
+        
             <input type="hidden" name="class_id" value="{{$page_data['class_id']}}"></input> 
             <input type="hidden" name="section_id" value="{{$page_data['section_id']}}"></input> 
             <input type="hidden" name="session_id" value="{{$page_data['session_id']}}"></input> 
@@ -81,19 +83,19 @@ use App\Models\ElectiveSubject;
                                     ->where('elective_group','=',$key)->first();
                     ?>
                     <input type="hidden" class="key" value="{{$key}}"/>
-                    <select class="elective_subject" data="{{$key}}" id = "elective_subject[{{$enroll_student->user_id}}][{{$key}}]" >
+                    <select class="elective_subject" name= "elective[{{$enroll_student->user_id}}][{{$key}}]" data="{{$key}}" id = "elective_subject[{{$enroll_student->user_id}}][{{$key}}]" >
 
                         <option id="">Select </option>
                         @foreach($elective_subject as $k => $v)
                         
                         <?php if($electives !== null) {?>
                             @if($electives->subject_id == $k)
-                                <option id="{{$k}}" selected = "selected">{{$v}}</option>
+                                <option id="{{$k}}" value="{{$k}}" selected = "selected">{{$v}}</option>
                             @else
-                                <option id="{{$k}}" >{{$v}}</option>
+                                <option id="{{$k}}" value="{{$k}}" >{{$v}}</option>
                             @endif
                         <?php } else { ?>
-                            <option id="{{$k}}" >{{$v}}</option>
+                            <option id="{{$k}}" value="{{$k}}" >{{$v}}</option>
                         <?php } ?>
                         @endforeach
                     </select>
@@ -108,7 +110,11 @@ use App\Models\ElectiveSubject;
                 </tr>
             @endforeach
         </tbody>
+       
+       
     </table>
+    <button class="eBtn eBtn btn-secondary" type="submit" id = "bulk_update">{{ get_phrase('Save') }}</button>
+    </form>
 </div>
 @else
 <div class="empty_box center">

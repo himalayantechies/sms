@@ -1,3 +1,7 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/font-awesome.min.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" 
+integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <?php use App\Models\Classes; ?>
 
 @extends('admin.navigation')
@@ -50,18 +54,39 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>{{ get_phrase('Name') }}</th>
                             <th>{{ get_phrase('Class') }}</th>
+                            <th>{{ get_phrase('Name') }}</th>
+                            <th>{{ get_phrase('Conduct Exam') }}</th>
+                            <th>{{ get_phrase('Elective') }}</th>
+                            <th>{{ get_phrase('Elective Category') }}</th>
                             <th class="text-end">{{ get_phrase('Action') }}</th>
+                            
                         </tr>
                     </thead>
                     <tbody>
+                      
                         @foreach($subjects as $subject)
                             <?php $class = Classes::get()->where('id', $subject->class_id)->first(); ?>
                              <tr>
                                 <td>{{ $loop->index + 1 }}</td>
-                                <td>{{ $subject->subject->name }}</td>
                                 <td>{{ $class->name }}</td>
+                                <td>{{ $subject->subject->name }}</td>
+                                <td> 
+                                  <?php 
+                                  
+                                  if($subject->conduct_exam == 0){
+                                      echo '<i class=" fa-solid fa-close" style="color:red; font-size: 30px;"></i>';
+                                  }
+                                  ?>
+                                  </td>
+                                <td> 
+                                  <?php 
+                                  if($subject->elective_name_id == 1){
+                                      echo '<i class=" fa-solid fa-check" style="color:green; font-size: 30px;"></i>';
+                                  }
+                                  ?>
+                                  </td>
+                                <td> <?php echo isset($electives_list[$subject->elective_name_id]) ? $electives_list[$subject->elective_name_id] : ""; ?></td>
                                 <td class="text-start">
                                     <div class="adminTable-action">
                                         <button

@@ -10,6 +10,7 @@
         "barryvdh/laravel-dompdf": "^1.0",
         "clue/stream-filter": "1.6",
         "doctrine/dbal": "^3.5",
+        "dompdf/dompdf": "^1.2",
         "firebase/php-jwt": "^6.2",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
