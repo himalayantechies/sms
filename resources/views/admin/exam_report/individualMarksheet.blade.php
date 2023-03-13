@@ -48,16 +48,16 @@
                                         {{ $user_details->name }}: {{ $exam_details->name }} Report Card
                                     </div>
                                     <div>
-                                        <button onclick="Export()" class="btn btn-outline-dark"> Generate PDF
-                                            Report</button>
-                                        {{-- <a
-                                            href="{{ route('admin.marksheet.downloadPDFMarksheet', ['grading_type' => '2', 'exam_id' => $exam_id, 'class_id' => $class_id, 'enrollment_id' => $enrollment_id]) }}">Generate PDF</a> --}}
+                                        {{-- <button onclick="Export()" class="btn btn-outline-dark"> Generate PDF
+                                            Report</button> --}}
+                                        <a
+                                            href="{{ route('admin.marksheet.downloadPDFMarksheet', ['grading_type' => '2', 'exam_id' => $exam_id, 'class_id' => $class_id, 'enrollment_id' => $enrollment_id]) }}">Generate PDF</a>
                                     </div>
                                 </div>
                                 @if (count($data) !== 0)
-                                    {
+                                    
                                     @include('admin.exam_report.marksheet')
-                                    }
+                                    
                                 @else
                                     <h6 class="px-4 py-6">No data available.</h6>
                                 @endif

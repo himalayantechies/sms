@@ -32,38 +32,39 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     // Noticeboard Route
-    Route::get('/noticeboards', [NoticeBoardController::class,'index']);
+    Route::get('/noticeboards', [NoticeBoardController::class, 'index']);
 
     // Classroutine Route
 
-    Route::get('/classroutine/{class_id}/{section_id}',[RoutineController::class, 'index'] );
+    Route::get('/classroutine/{class_id}/{section_id}', [RoutineController::class, 'index']);
 
     // Exam Routine Route
-    Route::get('/examroutine/{class_id}/{exam_id}',[RoutineController::class, 'getExamRoutine'] );
+    Route::get('/examroutine/{class_id}/{exam_id}', [RoutineController::class, 'getExamRoutine']);
 
     // Class Section Route
-    Route::get('/classSection/{school_id}',[CommonController::class, 'getClassSectionList'] );
+    Route::get('/classSection/{school_id}', [CommonController::class, 'getClassSectionList']);
 
     // Class Exam Route
-    Route::get('/classExams/{school_id}',[CommonController::class, 'getClassExamList'] );
+    Route::get('/classExams/{school_id}', [CommonController::class, 'getClassExamList']);
 
     //Class Subjects
-    Route::get('/classSubjects/{school_id}',[CommonController::class, 'getClassSubjectsList'] );
+    Route::get('/classSubjects/{school_id}', [CommonController::class, 'getClassSubjectsList']);
 
     //Get Enrolled Students
-    Route::get('/enrolledStudents/{school_id}/{class_id}/{section_id}/{subject_id}/{exam_id}',[CommonController::class, 'getEnrolledStudents'] );
+    Route::get('/enrolledStudents/{school_id}/{class_id}/{section_id}/{subject_id}/{exam_id}', [CommonController::class, 'getEnrolledStudents']);
 
     //Get Exam Details
-    Route::get('/getExamDetails/{school_id}/{class_id}/{subject_id}/{exam_id}/{section_id}',[CommonController::class, 'getExamDetails'] );
+    Route::get('/getExamDetails/{school_id}/{class_id}/{subject_id}/{exam_id}/{section_id}', [CommonController::class, 'getExamDetails']);
 
     //Exam Marks Update
-    Route::post('/exam/marks/update',[ExamController::class, 'marks_update'] );
+    Route::post('/exam/marks/update', [ExamController::class, 'marks_update']);
 
     //Get Students Marks
-    Route::post('/getStudentsMarks',[ExamController::class, 'getstudentsMarks'] );
+    Route::post('/getStudentsMarks', [ExamController::class, 'getstudentsMarks']);
 
     Route::get('/exam/marks/{school_id}/{class_id}/{section_id}/{subject_id}/{exam_id}', [CommonController::class, 'getStudentMarksByClassSection']);
     // $school_id, $class_id, $section_id, $subject_id, $exam_id
-    Route::get('admin/lock/exam', [ExamController::class,'lockExams']);
-    Route::get('admin/unlock/exam', [ExamController::class,'unlockExams']);
+    Route::get('admin/lock/exam', [ExamController::class, 'lockExams']);
+    Route::get('admin/unlock/exam', [ExamController::class, 'unlockExams']);
+    Route::get('/get/individaual/marksheet', [ExamController::class, 'getIndividualMarksheet']);
 });
