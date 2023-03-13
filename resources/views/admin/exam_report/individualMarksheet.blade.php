@@ -55,9 +55,9 @@
                                     </div>
                                 </div>
                                 @if (count($data) !== 0)
-                                    
-                                    @include('admin.exam_report.marksheet')
-                                    
+                                    <div id="report-card">
+                                        @include('admin.exam_report.marksheet')
+                                    </div>
                                 @else
                                     <h6 class="px-4 py-6">No data available.</h6>
                                 @endif
@@ -83,6 +83,8 @@
             // change display of cloned element
             // $(clonedElement).css();
 
+            $(clonedElement).css("display", "block");
+
             // Choose the clonedElement and save the PDF for our user.
             var opt = {
                 margin: 1,
@@ -92,7 +94,7 @@
                     quality: 1
                 },
                 html2canvas: {
-                    scale: 4
+                    scale: 3
                 }
             };
 

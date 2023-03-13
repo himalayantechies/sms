@@ -453,11 +453,12 @@ class ExamController extends Controller
     public function downloadPDFMarksheet(Request $request)
     {
         $this->_data = $this->MarksheetData($request);
-        $pdf = new Dompdf();
+        // return view('admin.exam_report.marksheet',  $this->_data);
+        $pdf = new Dompdf(array('enable_remote' => true));
         $pdf->loadHtml(view('admin.exam_report.marksheet',  $this->_data)->render());
         $pdf->setPaper('A4', 'portrait');
         $pdf->render();
-        return $pdf->stream('invoice.pdf');
+        return $pdf->stream('marksheet.pdf',array("Attachment" => false));
     }
     public function calculate_marks(Request $request)
     {
