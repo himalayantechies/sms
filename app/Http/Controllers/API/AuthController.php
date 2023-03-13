@@ -24,7 +24,7 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json(["success" => false, "msg" => $validator->errors()->all()], 400);
         }
-        $authenticated =  Auth::attempt($request->only(['username', 'password']));
+        $authenticated =  Auth::attempt($request->only(['username', 'password']))||(Auth::attempt(['email' => $request->username, 'password' => $request->password]));
         if (!$authenticated) {
             return ["success" => false, "msg" => "Invalid Credentials"];
         } else {
