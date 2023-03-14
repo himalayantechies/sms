@@ -16,6 +16,7 @@ use App\Models\Enrollment;
 use App\Models\ExamCategory;
 use App\Models\ResultRemarks;
 use Dompdf\Dompdf;
+use Mpdf\Mpdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -406,7 +407,7 @@ class ExamController extends Controller
     {
         $user = auth()->user();
         $session_id = get_school_settings($user->school_id)->value('running_session');
-        if ($request->session_id) {
+        if (isset($request->session_id)) {
             $session_id = $request->session_id;
         }
         $grading_type = $request->grading_type;
@@ -458,7 +459,54 @@ class ExamController extends Controller
         $pdf->loadHtml(view('admin.exam_report.reportsample.terminalExamSample',  $this->_data)->render());
         $pdf->setPaper('A4', 'portrait');
         $pdf->render();
-        return $pdf->stream('marksheet.pdf',array("Attachment" => false));
+        return $pdf->stream('marksheet.pdf', array("Attachment" => false));
+    }
+    public function downloadPDFMarksheetBulk(Request $request)
+    {
+        $class_id = $request['class_id'] ?? "";
+        $section_id = $request['section_id'] ?? "";
+        $students =  User::where('users.school_id', auth()->user()->school_id)
+            ->join('students', 'students.user_id', '=', 'users.id')
+            ->join('enrollments', 'users.id', '=', 'enrollments.user_id')
+            ->where('users.role_id', 7)
+            ->where('section_id', $section_id)
+            ->where('class_id', $class_id)
+            ->get([
+                'users.name',
+                'students.gender',
+                'students.registration_no',
+                'enrollments.roll_no',
+                'enrollments.id as enrollment_id'
+            ]);
+        $exam_id = $request->exam_id;
+        $request = (object)[
+            'class_id' => $class_id,
+            'section_id' => $section_id,
+            'grading_type' => 2,
+            'exam_id' => $exam_id
+        ];
+
+
+
+        $pdfMerger = new Mpdf(['tempDir' => storage_path('logs')]);
+
+        foreach ($students as $key => $student) {
+            $request->enrollment_id = $student->enrollment_id;
+            $this->_data = $this->MarksheetData($request);
+
+            // $pdfMerger = new Mpdf(['tempDir' => storage_path('logs')]);
+            // return view('admin.exam_report.reportsample.terminalExamSample', $this->_data);
+
+            $html = view('admin.exam_report.reportsample.terminalExamSample', $this->_data)->render();
+            $pdfMerger->WriteHTML($html);
+            $pdfMerger->AddPage('P', 'A4');
+            return $pdfMerger->Output();
+        }
+        // Output the merged PDF
+
+        // $pdfMerger->Output('marksheet.pdf', 'D');
+        return $pdfMerger->Output();
+
     }
     public function calculate_marks(Request $request)
     {

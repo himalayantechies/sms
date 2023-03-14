@@ -21,9 +21,11 @@
         "laravel/ui": "^3.4",
         "league/omnipay": "^3.2",
         "maatwebsite/excel": "^3.1",
+        "mpdf/mpdf": "^8.1",
         "omnipay/omnipay": "^3.2",
         "omnipay/paypal": "^3.0",
         "orangehill/iseed": "^3.0",
+        "psr/log": "^1.1",
         "razorpay/razorpay": "^2.8",
         "stripe/stripe-php": "^8.11"
     },

@@ -7,9 +7,13 @@
         <div>
             {{-- <a href="{{ route('admin.calculate.marks', ['exam_id' => $exam_id, 'class_id' => $class_id, 'section_id' => $section_id]) }}"
                 class="btn btn-outline-dark">Calculate marks</a> --}}
-            <button onclick="calculatemarks({{ $exam_id }},{{ $class_id }},{{ $section_id }})" class="btn btn-outline-dark">
+            <button onclick="calculatemarks({{ $exam_id }},{{ $class_id }},{{ $section_id }})"
+                class="btn btn-outline-dark">
                 Calculate Marks
             </button>
+            <a href="{{ route('admin.marksheet.downloadPDFMarksheetBulk',['exam_id' => $exam_id, 'class_id' => $class_id,'section_id'=>$section_id]) }}" class="btn btn-outline-dark">
+                Download Bulk
+            </a>
             {{-- <a href="" class="btn btn-outline-dark">Clear Data</a> --}}
         </div>
     </div>
