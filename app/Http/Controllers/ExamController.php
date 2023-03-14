@@ -455,7 +455,7 @@ class ExamController extends Controller
         $this->_data = $this->MarksheetData($request);
         // return view('admin.exam_report.marksheet',  $this->_data);
         $pdf = new Dompdf(array('enable_remote' => true));
-        $pdf->loadHtml(view('admin.exam_report.marksheet',  $this->_data)->render());
+        $pdf->loadHtml(view('admin.exam_report.reportsample.terminalExamSample',  $this->_data)->render());
         $pdf->setPaper('A4', 'portrait');
         $pdf->render();
         return $pdf->stream('marksheet.pdf',array("Attachment" => false));

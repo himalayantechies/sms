@@ -1,197 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Marksheet</title>
-    <style>
-        .container {
-            max-width: 960px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table td,
-        table th {
-            /* padding: 0.3rem; */
-            vertical-align: middle;
-        }
-
-        .borderless,
-        .borderless td,
-        .borderless th {
-            border: 1px solid #ffffff;
-        }
-
-        .bordered,
-        .bordered td,
-        .bordered th {
-            border: 0.1px solid #8d8d8d;
-            padding: 0.3rem;
-            font-size: 15px;
-            padding: 5px !important;
-        }        
-
-        .left-col {
-            width: 40%;
-            float: left;
-        }
-
-        .right-col {
-            width: 56%;
-            margin-left: 4%;
-            float: right;
-        }
-
-        .caption-title {
-            font-weight: bold;
-            font-size: 16px;
-            padding: 2px;
-            margin-bottom: 10px;
-        }
-
-        .table td {
-            vertical-align: middle !important;
-        }
-
-        .alignCenter {
-            text-align: center;
-        }
-
-        .alignLeft {
-            text-align: left;
-        }
-
-        .alignRight {
-            text-align: right;
-        }
-
-        .mt-2per {
-            margin-top: 2%;
-        }
-
-        .header-left-img {
-            width: 40%;
-            float: left;
-        }
-
-        .header-right-desc {
-            width: 56%;
-            margin-left: 4%;
-            float: right;
-        }
-
-        .sub-text {
-            font: 10;
-        }
-
-        .header-text {
-            font-size: 1.5em;
-            font-weight: bold;
-        }
-
-        .p-0 {
-            padding: 0px !important;
-        }
-
-        .bg-blue {
-            background: rgb(0, 0, 85);
-            color: white;
-        }
-
-        .image-tab {
-            height: 100px;
-            width: 100px;
-            background-image: url("{{ asset('public/assets/uploads/logo/' . get_settings('dark_logo')) }}");
-            background-size: cover;
-        }
-
-        body {
-            border: 4px solid #8f8f8f;
-        }
-    </style>
-</head>
-
-<body>
+<div class="card-body" id="report-card">
     <div class="container">
-        <table class="bolderless">
-            <tbody>
-                <tr>
-                    <td class="alignCenter" rowspan="5">
-                        <div class="image-tab">
-
-                        </div>
-
-                    </td>
-                    <td class="alignCenter header-text p-0">
-                        Shramik Shanti Secondary School
-                    </td>
-                    <td rowspan="5" class="alignCenter" style="width: 100px;">
-                    </td>
-                </tr>
-                <tr>
-                    <td class="alignCenter sub-text p-0">
-                        Chyasal, Lalitpur
-                    </td>
-                </tr>
-                <tr>
-                    <td class="alignCenter sub-text p-0">
-                        Phone: 97798989898
-                    </td>
-                </tr>
-                <tr>
-                    <td class="alignCenter sub-text p-0">
-                        Estd. 1995-11-27
-                    </td>
-                </tr>
-                <tr>
-                    <td class="alignCenter sub-text bg-blue">
-                        Student's Progress Report Card</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="container">
-        <div style="margin-top: 2%">
-            <div>
+        <div class="row" style="margin-top: 15px;">
+            <div class="col-md-12">
                 <label>Student Name: </label>
                 <strong> {{ $user_details->name }}</strong>
             </div>
         </div>
-
-        <div class="mt-2per">
-            <div style="display: inline-block; width: 30%; text-align:left;">
+        <div class="row">
+            <div class="col-md-3">
                 <label>Class: </label>
                 <strong>{{ $user_details->class_name }}</strong>
             </div>
-            <div style="display: inline-block; width: 30%; text-align:center;">
+            <div class="col-md-3">
                 <label>Section: </label>
                 <strong>{{ $user_details->section_name }}</strong>
             </div>
-            <div style="display: inline-block; width: 30%; text-align:right;">
+            <div class="col-md-3">
                 <label>Roll No: </label>
                 <strong>{{ $user_details->roll_no }}</strong>
+            </div>
+            <div class="col-md-3">
+                <label>Admn no: </label>
+                <strong></strong>
             </div>
         </div>
 
         <!-- Start Mark Sheet -->
-        <div class="row table-responsive mt-2per" id="tabs-1">
-            <table class="table bordered ">
+        <div class="row table-responsive" id="tabs-1">
+            <table class="table table-bordered ">
                 <thead>
                     <tr class="result_header">
-                        <th rowspan="{{ $exam_header_array['max_depth'] - 1 }}" class="text-center"> S.N. </th>
-                        <th rowspan="{{ $exam_header_array['max_depth'] - 1 }}"> Subjects</th>
-                        <th rowspan="{{ $exam_header_array['max_depth'] - 1 }}" class="text-center"> Credit<br>
-                            Hours
-                        </th>
+                        <th rowspan="{{ $exam_header_array['max_depth'] }}" class="text-center"> S.N. </th>
+                        <th rowspan="{{ $exam_header_array['max_depth'] }}"> Subjects</th>
+                        <th rowspan="{{ $exam_header_array['max_depth'] }}" class="text-center"> Credit<br> Hours</th>
                         <th colspan={{ $exam_header_array_count[key($exam_header_array)]['__count'] + 2 }}
                             class="text-center" style="font-weight:bold;">
                             {{ key($exam_header_array) }} </th>
@@ -202,10 +43,10 @@
                                 {{ count($top_exam) > 0 ? 'colspan=' . $exam_header_array_count[key($exam_header_array)][$key]['__count'] : 'rowspan=' . $exam_header_array_count[key($exam_header_array)][$key]['__count'] + 1 }}>
                                 {{ $key }}</th>
                         @endforeach
-                        <th rowspan='{{ $exam_header_array['exam_colspan_count'] - 3 }}'>
+                        <th rowspan='{{ $exam_header_array['exam_colspan_count'] - 1 }}'>
                             Grade
                         </th>
-                        <th rowspan='{{ $exam_header_array['exam_colspan_count'] - 3 }}'>
+                        <th rowspan='{{ $exam_header_array['exam_colspan_count'] - 1 }}'>
                             Grade
                             Point </th>
                     </tr>
@@ -215,12 +56,13 @@
                             @if (count($top_exam) > 0)
                                 @foreach ($top_exam as $key2 => $item)
                                     <td
-                                        {{ count($item) > 0 ? 'colspan=' . $exam_header_array_count[key($exam_header_array)][$key][$key2]['__count'] : '' }}>
+                                        {{ count($item) > 0 ? 'colspan=' . $exam_header_array_count[key($exam_header_array)][$key][$key2]['__count'] : 'rowspan=' . $exam_header_array_count[key($exam_header_array)][$key][$key2]['__count'] + 1 }}>
                                         {{ $key2 }}
                                     </td>
                                 @endforeach
                             @endif
                         @endforeach
+
                     </tr>
                 </thead>
                 <tbody>
@@ -249,10 +91,10 @@
                         </tr>
                     @endforeach
                     <tr>
-                        <td colspan="7" class="alignRight">
-                            Grade Point Average (GPA) </td>
+                        <td colspan="7" style="text-align: end;">
+                            GPA </td>
 
-                        <td class="alignCenter">
+                        <td class="alignRight">
                             {{ $GPA }} </td>
                     </tr>
                 </tbody>
@@ -261,12 +103,11 @@
 
         <!--Start  CCE Result Section-->
 
-
-        <div class="row mt-2per">
-            <div class="left-col">
+        <div class="row">
+            <div class="col-md-5">
                 <div class="row">
                     <div class="caption-title">Result</div>
-                    <table class="table bordered">
+                    <table class="table table-bordered">
                         <tbody>
                             <tr>
                                 <td>Term</td>
@@ -287,16 +128,16 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="row mt-2per">
+                <div class="row">
                     <div class="caption-title">Comments</div>
-                    <div class="card bordered" style="min-height:7.5em;">
+                    <div class="card">
                         Comments
                     </div>
                 </div>
             </div>
-            <div class="right-col">
+            <div class="col-md-7">
                 <div class="caption-title">Grading &amp; Marking System</div>
-                <table class="table bordered table-hover">
+                <table class="table table-bordered table-hover">
                     <tbody>
                         <tr>
                             <td class="alignCenter">S.N</td>
@@ -315,6 +156,7 @@
                             <td class="alignLeft">
                                 Outstanding </td>
                         </tr>
+
                         <tr>
                             <td class="alignCenter">
                                 2 </td>
@@ -416,6 +258,4 @@
         </div>
         <!--End    CCE Result Section-->
     </div>
-</body>
-
-</html>
+</div>
