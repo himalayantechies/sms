@@ -53,6 +53,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use App\Exports\TeacherDataExport;
 use App\Models\ExamLock;
+use App\Models\PublishResult;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -4369,5 +4370,65 @@ class AdminController extends Controller
             $elective_subjects_list[$elective_subject->elective_name_id][$elective_subject->subject_id] = $subject->name;
         }
         return $elective_subjects_list;
+    }
+
+    public function publish_results($value = '')
+    {
+        $school_id = auth()->user()->school_id;
+        $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
+        $exam_categories = ExamCategory::where('school_id', auth()->user()->school_id)->get();
+        // $exam = Exam::where(['school_id'=>$school_id , 'session_id'=> $session]);
+        $classes = (new Classes)->getClassBySchool($school_id);
+        // $classes = Classes::where('school_id', auth()->user()->school_id)->get();
+        return view('admin.publish_results.index', ['exam_categories' => $exam_categories, 'classes' => $classes]);
+    }
+
+    public function exam_list(Request $request){
+        $school_id = auth()->user()->school_id;
+        $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
+        $class_id = $request->class_id;
+        $exams = (new ExamController)->classWiseExams($class_id);
+        $class = Classes::find($class_id); 
+
+        foreach($exams as $exam){
+            $publish_result = PublishResult::where('school_id','=', $school_id)
+                                ->where('session_id','=',$session_id)
+                                ->where('exam_id','=', $exam->id)
+                                ->first();
+            $exam->publish_result = $publish_result;
+        }
+        //dd($exams);
+        return view('admin.publish_results.exam_list', ['exams' => $exams, 'class' => $class]);
+
+    }
+
+    public function publish_results_update(Request $request){
+        $school_id = auth()->user()->school_id;
+        $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
+        $class_id = $request->class_id;
+
+        $exams = $request->exam;
+       
+        foreach($exams as $exam){
+            
+            $publish_result = PublishResult::where('school_id','=', $school_id)
+                                ->where('session_id','=',$session_id)
+                                ->where('exam_id','=', $exam['id'])
+                                ->first();
+            if($publish_result == null){
+                $publish_result = new PublishResult();
+                $publish_result->school_id = $school_id;
+                $publish_result->session_id = $session_id;
+
+            }
+            $publish_result->grade_id = $class_id;
+            $publish_result->exam_id = $exam['id'];
+            $publish_result->publish_date = $exam['publish_date'];
+            $publish_result->date_format_on_marksheet = $exam['publish_date_type'];
+            $publish_result->modified_by = auth()->user()->id;
+
+            $publish_result->save();
+        }
+        return redirect()->back();
     }
 }

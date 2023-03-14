@@ -233,6 +233,10 @@
                         <a class="{{ request()->is('admin/exam/exam_remarks') ? 'active' : '' }}"
                             href="{{ route('admin.exam.exam_remarks') }}"><span>{{ get_phrase('Individual Remarks Entry') }}</span></a>
                     </li>
+                    <li>
+                        <a class="{{ request()->is('admin.exam.publish_results') ? 'active' : '' }}"
+                            href="{{ route('admin.exam.publish_results') }}"><span>{{ get_phrase('Publish Results') }}</span></a>
+                    </li>
                 </ul>
             </li>
 
