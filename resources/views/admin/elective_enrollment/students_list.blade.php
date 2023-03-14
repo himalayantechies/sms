@@ -104,7 +104,7 @@ use App\Models\ElectiveSubject;
                     
                     
                     <td class="text-center">
-                        <button class="btn btn-success" onclick="elective_update('{{ $enroll_student->user_id }}')"><i class="bi bi-check2-circle"></i></button>
+                        <span class="btn btn-success btn-indv" onclick="elective_update('{{ $enroll_student->user_id }}')"><i class="bi bi-check2-circle"></i></span>
                     </td>
                 
                 </tr>
@@ -129,6 +129,7 @@ use App\Models\ElectiveSubject;
   "use strict";
 
     function elective_update(student_id){
+        
         var class_id = '{{ $page_data['class_id'] }}';
         var section_id = '{{ $page_data['section_id'] }}';
         var session_id = '{{ $page_data['session_id'] }}';
