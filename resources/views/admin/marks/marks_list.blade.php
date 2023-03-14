@@ -145,7 +145,7 @@ $lock = isset($exam_lock->id) ? 1 : 0;
                         @endif
 
                         <td>
-                            <span id="grade-for-mark-{{ $enroll_student->user_id }}">{{ get_grade($th_marks) }}</span>
+                            <span id="grade-for-mark-{{ $enroll_student->user_id }}">{{ get_grade($total) }}</span>
                         </td>
                         <td>
                             <input class="form-control eForm-control" type="text"
@@ -214,12 +214,19 @@ $lock = isset($exam_lock->id) ? 1 : 0;
     }
 
     function get_grade(exam_mark, id) {
+
+        var th_marks = '{{ $page_data['th_fm']}}';
+        var pr_marks = '{{ $page_data['pr_fm']}}';
+
+        var total = Number(th_marks) + Number(pr_marks);
+
+        exam_mark = 100 * exam_mark/total;
+
         let url = "{{ route('get.grade', ['exam_mark' => ':exam_mark']) }}";
         url = url.replace(":exam_mark", exam_mark);
         $.ajax({
             url: url,
             success: function(response) {
-                // $('#grade-for-'+id).text(response);
                 $('#grade-for-mark-' + id).text(response);
 
             }
