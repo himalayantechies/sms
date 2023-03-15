@@ -14,6 +14,7 @@ use App\Models\Gradebook;
 use App\Models\Section;
 use App\Models\Enrollment;
 use App\Models\ExamCategory;
+use App\Models\Grade;
 use App\Models\ResultRemarks;
 use Dompdf\Dompdf;
 use Mpdf\Mpdf;
@@ -423,11 +424,25 @@ class ExamController extends Controller
         $this->_data['user_details'] = Enrollment::join('classes', 'enrollments.class_id', 'classes.id')
             ->join('sections', 'enrollments.section_id', 'sections.id')
             ->join('users', 'enrollments.user_id', 'users.id')
-            ->where('enrollments.id', $enrollment_id)->first([
+            ->leftJoin('student_report_card_outlines', 'enrollments.id', 'student_report_card_outlines.enrollment_id')
+            ->where('enrollments.id', $enrollment_id)
+            ->where('student_report_card_outlines.exam_id', $exam_id)
+            ->where('student_report_card_outlines.session_id', $session_id)
+            ->first([
                 'classes.name as class_name',
                 'sections.name as section_name',
                 'enrollments.roll_no',
-                'users.name'
+                'users.name',
+                'student_report_card_outlines.rank',
+                'student_report_card_outlines.rank_gpa',
+                'student_report_card_outlines.percentage',
+                'student_report_card_outlines.grade_scored',
+                'student_report_card_outlines.division',
+                'student_report_card_outlines.result',
+                'student_report_card_outlines.present_day',
+                'student_report_card_outlines.working_day',
+                'student_report_card_outlines.total_marks',
+                'student_report_card_outlines.remarks'
             ]);
         $this->_data['exam_details'] = Exam::where('id', $exam_id)->first(['name']);
 
@@ -461,11 +476,13 @@ class ExamController extends Controller
         $pdf->render();
         return $pdf->stream('marksheet.pdf', array("Attachment" => false));
     }
+
     public function downloadPDFMarksheetBulk(Request $request)
     {
         $class_id = $request['class_id'] ?? "";
         $section_id = $request['section_id'] ?? "";
-        $students =  User::where('users.school_id', auth()->user()->school_id)
+        $school_id = auth()->user()->school_id;
+        $students =  User::where('users.school_id', $school_id)
             ->join('students', 'students.user_id', '=', 'users.id')
             ->join('enrollments', 'users.id', '=', 'enrollments.user_id')
             ->where('users.role_id', 7)
@@ -478,6 +495,8 @@ class ExamController extends Controller
                 'enrollments.roll_no',
                 'enrollments.id as enrollment_id'
             ]);
+        $this->_data['school_information'] = get_school_settings($school_id)[0];
+        // dd( $this->_data['school_information']);
         $exam_id = $request->exam_id;
         $request = (object)[
             'class_id' => $class_id,
@@ -488,12 +507,15 @@ class ExamController extends Controller
 
         $pdfMerger = new Mpdf(['tempDir' => storage_path('logs')]);
 
+        $grade_type = $request->grade_type ?? "Letter Grading";
+        $grade_details = $this->getAllGradeDetails($grade_type);
         foreach ($students as $key => $student) {
             $request->enrollment_id = $student->enrollment_id;
-            $this->_data = $this->MarksheetData($request);
-            // return view('admin.exam_report.reportsample.terminalExamSample', $this->_data);
+            $data = $this->MarksheetData($request);
+            $data['grade_details'] = $grade_details;
+            // return view('admin.exam_report.reportsample.terminalExamSample', $data);
 
-            $html = view('admin.exam_report.reportsample.terminalExamSample', $this->_data)->render();
+            $html = view('admin.exam_report.reportsample.terminalExamSample', $data)->render();
 
             $pdfMerger->WriteHTML($html);
             $pdfMerger->AddPage('P', 'A4');
@@ -503,6 +525,10 @@ class ExamController extends Controller
 
         // $pdfMerger->Output('marksheet.pdf', 'D');
         return $pdfMerger->Output();
+    }
+    function getAllGradeDetails($grade_type)
+    {
+        return Grade::where('grade_type', $grade_type)->get(['name', 'grade_point', 'mark_from', 'mark_upto']);
     }
     public function calculate_marks(Request $request)
     {

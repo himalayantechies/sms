@@ -29,6 +29,11 @@
             border: none !important;
         } */
 
+        .small_text_table td,
+        .small_text_table th {
+            font-size: 13px;
+        }
+
         .bordered,
         .bordered td,
         .bordered th,
@@ -152,28 +157,29 @@
             <tbody>
                 <tr>
                     <td class="alignCenter" rowspan="8">
-                        <img src="{{asset('public/assets/uploads/logo/' . get_settings('dark_logo'))}}" alt="" height="100" width="100">
+                        <img src="{{ asset($school_information->logo) }}" alt=""
+                            width="100">
 
                     </td>
                     <td class="alignCenter header-text p-0">
-                        Shramik Shanti Secondary School
+                        {{ $school_information->title }}
                     </td>
                     <td rowspan="5" class="alignCenter" style="width: 100px;">
                     </td>
                 </tr>
                 <tr>
                     <td class="alignCenter fs-15 p-0">
-                        Chyasal, Lalitpur
+                        {{ $school_information->address }}
                     </td>
                 </tr>
                 <tr>
                     <td class="alignCenter fs-15 p-0">
-                        Phone: 97798989898
+                        Phone: {{ $school_information->phone }}
                     </td>
                 </tr>
                 <tr>
                     <td class="alignCenter fs-15 p-0">
-                        Estd. 1995
+                        Estd. {{ $school_information->year_established }}
                     </td>
                 </tr>
                 <tr>
@@ -198,14 +204,13 @@
 
     <div class="container mt-2per">
         <table class="table-borderless">
-
             <tbody>
                 <tr>
-                    <td colspan="2">
+                    <td colspan="2" style="width:66.66%">
                         <label>Student's Name: </label>
                         <strong>{{ $user_details->name }}</strong>
                     </td>
-                    <td>
+                    <td style="width:33.33%">
                         <label>Exam: </label>
                         <strong>{{ key($exam_header_array) }}</strong>
                     </td>
@@ -242,9 +247,11 @@
             <table class="table bordered ">
                 <thead>
                     <tr class="result_header">
-                        <th rowspan="{{ $exam_header_array['max_depth'] - 1 }}" class="text-center"> S.N. </th>
-                        <th rowspan="{{ $exam_header_array['max_depth'] - 1 }}"> Subjects</th>
-                        <th rowspan="{{ $exam_header_array['max_depth'] - 1 }}" class="text-center"> Credit<br>
+                        <th rowspan="{{ $exam_header_array['max_depth'] - 1 }}" class="text-center" style="width:7%">
+                            S.N. </th>
+                        <th rowspan="{{ $exam_header_array['max_depth'] - 1 }}" style="width:40%"> Subjects</th>
+                        <th rowspan="{{ $exam_header_array['max_depth'] - 1 }}" class="text-center" style="width: 9%">
+                            Credit<br>
                             Hours
                         </th>
                         <th colspan={{ $exam_header_array_count[key($exam_header_array)]['__count'] + 2 }}
@@ -257,10 +264,10 @@
                                 {{ count($top_exam) > 0 ? 'colspan=' . $exam_header_array_count[key($exam_header_array)][$key]['__count'] : 'rowspan=' . $exam_header_array_count[key($exam_header_array)][$key]['__count'] + 1 }}>
                                 {{ $key }}</th>
                         @endforeach
-                        <th rowspan='{{ $exam_header_array['exam_colspan_count'] - 3 }}'>
+                        <th rowspan='{{ $exam_header_array['exam_colspan_count'] - 3 }}' style="width:10%">
                             Grade
                         </th>
-                        <th rowspan='{{ $exam_header_array['exam_colspan_count'] - 3 }}'>
+                        <th rowspan='{{ $exam_header_array['exam_colspan_count'] - 3 }}' style="width:10%">
                             Grade
                             Point </th>
                     </tr>
@@ -303,12 +310,13 @@
                                 {{ $my_data['Grade Point'] }} </td>
                         </tr>
                     @endforeach
+
                     <tr>
                         <td colspan="7" class="alignRight">
                             Grade Point Average (GPA) </td>
 
                         <td class="alignCenter">
-                            {{ $GPA }} </td>
+                            {{ $user_details->grade_scored }} </td>
                     </tr>
                 </tbody>
             </table>
@@ -318,12 +326,13 @@
         <!--End    CCE Result Section-->
     </div>
     <div class="container mt-2per">
-        <table class="table borderedless">
+        <table class="table borderless">
             <thead>
                 <tr>
                     <td>
                         <div class="caption-title">Result</div>
                     </td>
+                    <td></td>
                     <td class="alignCenter">
                         <div class="caption-title">Grading &amp; Marking System</div>
                     </td>
@@ -331,149 +340,73 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>
-                        <table class="table bordered">
+                    <td style="vertical-align: top;width: 40%;">
+                        <table class="table">
                             <tbody>
-                                <tr>
+                                <tr class="bordered">
                                     <td>Term</td>
                                     <td>{{ $exam_details->name }}</td>
                                 </tr>
-                                <tr>
+                                <tr class="bordered">
                                     <td>GPA</td>
-                                    <td>{{ $GPA }}</td>
+                                    <td>{{ $user_details->grade_scored }}</td>
                                 </tr>
-                                <tr>
+                                <tr class="bordered">
                                     <td>Rank</td>
+                                    <td>{{ $user_details->rank_gpa }}</td>
+                                </tr>
+                                <tr class="bordered">
+                                    <td>Attendance</td>
+                                    <td>{{ $user_details->present_day ?? 0 }}/{{ $user_details->working_day ?? 0 }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td>Attendance</td>
                                     <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="caption-title"> Comments</td>
+                                    <td></td>
+                                </tr>
+                                <tr class="bordered">
+                                    <td colspan="2"
+                                        style="border: 1px solid black; height: 7.5em; vertical-align: top;">
+                                        <p>{{ $user_details->remarks ?? 'NA' }}</p>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
-                        <div class="row mt-2per">
-                            <div class="caption-title">Comments</div>
-                            <div class="card bordered" style="min-height:7.5em;">
-                                Comments
-                            </div>
-                        </div>
                     </td>
-                    <td>
-                        <table class="table bordered table-hover">
+                    <td></td>
+                    <td style="width: 45%;">
+                        <table class="table bordered small_text_table">
                             <tbody>
                                 <tr>
-                                    <td class="alignCenter">S.N</td>
-                                    <td class="alignLeft">Grade</td>
-                                    <td class="alignCenter">Interval</td>
-                                    <td class="alignLeft">Description</td>
+                                    <td class="alignCenter" style="width:10%">S.N</td>
+                                    <td class="alignLeft" style="width:15%">Grade</td>
+                                    <td class="alignLeft" style="width:15%">Grade Point</td>
+                                    <td class="alignCenter" style="width:20%">Interval</td>
                                 </tr>
-                                <tr>
-                                    <td class="alignCenter">
-                                        1 </td>
-                                    <td class="alignLeft">
-                                        A+ </td>
-                                    <td class="alignCenter">
-                                        90 to
-                                        100.00 </td>
-                                    <td class="alignLeft">
-                                        Outstanding </td>
-                                </tr>
-                                <tr>
-                                    <td class="alignCenter">
-                                        2 </td>
-                                    <td class="alignLeft">
-                                        A </td>
-                                    <td class="alignCenter">
-                                        80 to
-                                        89.99 </td>
-                                    <td class="alignLeft">
-                                        Excellent </td>
-                                </tr>
-
-                                <tr>
-                                    <td class="alignCenter">
-                                        3 </td>
-                                    <td class="alignLeft">
-                                        B+ </td>
-                                    <td class="alignCenter">
-                                        70 to
-                                        79.99 </td>
-                                    <td class="alignLeft">
-                                        Very Good </td>
-                                </tr>
-
-                                <tr>
-                                    <td class="alignCenter">
-                                        4 </td>
-                                    <td class="alignLeft">
-                                        B </td>
-                                    <td class="alignCenter">
-                                        60 to
-                                        69.99 </td>
-                                    <td class="alignLeft">
-                                        Good </td>
-                                </tr>
-
-                                <tr>
-                                    <td class="alignCenter">
-                                        5 </td>
-                                    <td class="alignLeft">
-                                        C+ </td>
-                                    <td class="alignCenter">
-                                        50 to
-                                        59.99 </td>
-                                    <td class="alignLeft">
-                                        Satisfactory </td>
-                                </tr>
-
-                                <tr>
-                                    <td class="alignCenter">
-                                        6 </td>
-                                    <td class="alignLeft">
-                                        C </td>
-                                    <td class="alignCenter">
-                                        40 to
-                                        49.99 </td>
-                                    <td class="alignLeft">
-                                        Acceptable </td>
-                                </tr>
-
-                                <tr>
-                                    <td class="alignCenter">
-                                        7 </td>
-                                    <td class="alignLeft">
-                                        D </td>
-                                    <td class="alignCenter">
-                                        35 to
-                                        39.99 </td>
-                                    <td class="alignLeft">
-                                        Partially Acceptable </td>
-                                </tr>
-
-                                <tr>
-                                    <td class="alignCenter">
-                                        8 </td>
-                                    <td class="alignLeft">
-                                        NG </td>
-                                    <td class="alignCenter">
-                                        20 to
-                                        34.99 </td>
-                                    <td class="alignLeft">
-                                        Insufficient </td>
-                                </tr>
-
-                                <tr>
-                                    <td class="alignCenter">
-                                        9 </td>
-                                    <td class="alignLeft">
-                                        NG </td>
-                                    <td class="alignCenter">
-                                        0 to
-                                        19.99 </td>
-                                    <td class="alignLeft">
-                                        Very Insufficient </td>
-                                </tr>
+                                @foreach ($grade_details as $details)
+                                    <tr>
+                                        <td>
+                                            {{ $loop->iteration }}
+                                        </td>
+                                        <td>
+                                            {{ $details->name }}
+                                        </td>
+                                        <td>
+                                            {{ $details->grade_point }}
+                                        </td>
+                                        <td>
+                                            {{ $details->mark_from }}-{{ $details->mark_upto }}
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </td>
@@ -487,14 +420,17 @@
             <tbody>
                 <tr>
                     <td class="alignCenter">
-                        <h4 style="border-top: #8d8d8d 0.1px solid; padding:5px 30px; color:white;">Date of Issue aaa</h4>
+                        <h4 style="border-top: #8d8d8d 0.1px solid; padding:5px 30px; color:white;">Date of Issue
+                            aaa
+                        </h4>
                     </td>
                     <td class="alignCenter">
                         <h4 style="border-top: #8d8d8d 0.1px solid; padding:5px 30px; color:white;">Class Teacher
                             /Prepared By aaa</h4>
                     </td>
                     <td class="alignCenter">
-                        <h4 style="border-top: #8d8d8d 0.1px solid; padding:5px 30px; color:white;">Principal aaa</h4>
+                        <h4 style="border-top: #8d8d8d 0.1px solid; padding:5px 30px; color:white;">Principal aaa
+                        </h4>
                     </td>
                 </tr>
                 <tr>
