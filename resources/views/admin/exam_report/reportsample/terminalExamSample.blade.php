@@ -20,20 +20,20 @@
 
         table td,
         table th {
-            /* padding: 0.3rem; */
             vertical-align: middle;
         }
 
-        .borderless,
+        /* .borderless,
         .borderless td,
         .borderless th {
             border: none !important;
-        }
+        } */
 
         .bordered,
         .bordered td,
-        .bordered th {
-            border: 0.1px solid #8d8d8d;
+        .bordered th,
+            {
+            border: #8d8d8d 0.1px solid;
             padding: 0.3rem;
             font-size: 15px;
             padding: 5px !important;
@@ -128,9 +128,10 @@
         }
 
         .top-border {
-            border-top: black 1px solid !important;
+            /* border: black 1px solid; */
+            border-top: none;
             padding: 5px 30px;
-            display: inline-block;
+            display: block;
             font-weight: lighter;
             font-size: 1em;
         }
@@ -151,9 +152,7 @@
             <tbody>
                 <tr>
                     <td class="alignCenter" rowspan="8">
-                        <div class="image-tab">
-
-                        </div>
+                        <img src="{{asset('public/assets/uploads/logo/' . get_settings('dark_logo'))}}" alt="" height="100" width="100">
 
                     </td>
                     <td class="alignCenter header-text p-0">
@@ -488,15 +487,29 @@
             <tbody>
                 <tr>
                     <td class="alignCenter">
+                        <h4 style="border-top: #8d8d8d 0.1px solid; padding:5px 30px; color:white;">Date of Issue aaa</h4>
+                    </td>
+                    <td class="alignCenter">
+                        <h4 style="border-top: #8d8d8d 0.1px solid; padding:5px 30px; color:white;">Class Teacher
+                            /Prepared By aaa</h4>
+                    </td>
+                    <td class="alignCenter">
+                        <h4 style="border-top: #8d8d8d 0.1px solid; padding:5px 30px; color:white;">Principal aaa</h4>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="alignCenter">
                         <h4 class="top-border">
                             Date of Issue
                         </h4>
                     </td>
                     <td class="alignCenter">
-                        <h4 class="top-border"> Class Teacher /Prepared By</h4>
+                        <h4 class="top-border"> Class
+                            Teacher /Prepared By</h4>
                     </td>
                     <td class="alignCenter">
-                        <h4 class="top-border"> Principal</h4>
+                        <h4 class="top-border"> Principal
+                        </h4>
                     </td>
                 </tr>
             </tbody>

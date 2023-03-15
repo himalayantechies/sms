@@ -486,27 +486,23 @@ class ExamController extends Controller
             'exam_id' => $exam_id
         ];
 
-
-
         $pdfMerger = new Mpdf(['tempDir' => storage_path('logs')]);
 
         foreach ($students as $key => $student) {
             $request->enrollment_id = $student->enrollment_id;
             $this->_data = $this->MarksheetData($request);
-
-            // $pdfMerger = new Mpdf(['tempDir' => storage_path('logs')]);
             // return view('admin.exam_report.reportsample.terminalExamSample', $this->_data);
 
             $html = view('admin.exam_report.reportsample.terminalExamSample', $this->_data)->render();
+
             $pdfMerger->WriteHTML($html);
             $pdfMerger->AddPage('P', 'A4');
-            return $pdfMerger->Output();
+            // return $pdfMerger->Output();
         }
         // Output the merged PDF
 
         // $pdfMerger->Output('marksheet.pdf', 'D');
         return $pdfMerger->Output();
-
     }
     public function calculate_marks(Request $request)
     {
