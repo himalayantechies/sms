@@ -54,12 +54,12 @@ use App\Models\ElectiveSubject;
     <table class="table eTable table-bordered">
         <thead>
             <tr>
-                <th scope="col">Roll No.</th>
+                <th scope="col" class="text-center">Roll No.</th>
                 <th scope="col">{{ get_phrase('Student name') }}</th>
                 @foreach($page_data['elective_subjects'] as $key => $elective_subject)
                 <th> Elective {{$key}}</th>
                 @endforeach
-                <th scope="col">{{ get_phrase('Action') }}</th>
+                <th scope="col" class="text-center">{{ get_phrase('Action') }}</th>
             </tr>   
         </thead>
         <tbody>
@@ -68,23 +68,16 @@ use App\Models\ElectiveSubject;
             <input type="hidden" name="section_id" value="{{$page_data['section_id']}}"></input> 
             <input type="hidden" name="session_id" value="{{$page_data['session_id']}}"></input> 
             @foreach($enroll_students as $enroll_student)
-                <?php
-                    $student_details = User::find($enroll_student->user_id);
-                    
-                ?>
+                <?php $student_details = User::find($enroll_student->user_id);?>
                 <tr id="student_{{$enroll_student->user_id}}">
-                
-                    <td>{{ $enroll_student->roll_no }}</td>
+                    <td class="text-center">{{ $enroll_student->roll_no }}</td>
                     <td>{{ $student_details->name }}</td>
                     @foreach($page_data['elective_subjects'] as $key => $elective_subject)
                     <td>
-                    <?php
-                        $electives = ElectiveSubject::where('user_id','=',$enroll_student->user_id)
-                                    ->where('elective_group','=',$key)->first();
-                    ?>
+                    <?php $electives = ElectiveSubject::where('user_id','=',$enroll_student->user_id)->where('elective_group','=',$key)->first();?>
                     <input type="hidden" class="key" value="{{$key}}"/>
-                    <select class="elective_subject" name= "elective[{{$enroll_student->user_id}}][{{$key}}]" data="{{$key}}" id = "elective_subject[{{$enroll_student->user_id}}][{{$key}}]" >
-
+                    <select class="elective_subject form-select eForm-select " style="font-size: 12px" 
+                            name= "elective[{{$enroll_student->user_id}}][{{$key}}]" data="{{$key}}" id = "elective_subject[{{$enroll_student->user_id}}][{{$key}}]" >
                         <option id="">Select </option>
                         @foreach($elective_subject as $k => $v)
                         

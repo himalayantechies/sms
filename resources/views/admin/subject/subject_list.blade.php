@@ -29,7 +29,7 @@ integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiG
     </div>
 </div>
 <div class="row">
-    <div class="col-8 offset-md-2">
+    <div class="col-12 ">
         <div class="eSection-wrap">
             <form method="GET" class="d-block ajaxForm" action="{{ route('admin.subject_list') }}">
                 <div class="row mt-3">
@@ -55,11 +55,11 @@ integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiG
                         <tr>
                             <th>#</th>
                             <th>{{ get_phrase('Class') }}</th>
-                            <th>{{ get_phrase('Name') }}</th>
-                            <th>{{ get_phrase('Conduct Exam') }}</th>
-                            <th>{{ get_phrase('Elective') }}</th>
-                            <th>{{ get_phrase('Elective Category') }}</th>
-                            <th class="text-end">{{ get_phrase('Action') }}</th>
+                            <th class="col-md-3">{{ get_phrase('Name') }}</th>
+                            <th class="th-sm text-center">{{ get_phrase('Conduct Exam') }}</th>
+                            <th class="th-sm text-center">{{ get_phrase('Elective') }}</th>
+                            <th class="text-center">{{ get_phrase('Elective Category') }}</th>
+                            <th class="text-center">{{ get_phrase('Action') }}</th>
                             
                         </tr>
                     </thead>
@@ -71,22 +71,13 @@ integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiG
                                 <td>{{ $loop->index + 1 }}</td>
                                 <td>{{ $class->name }}</td>
                                 <td>{{ $subject->subject->name }}</td>
-                                <td> 
-                                  <?php 
-                                  
-                                  if($subject->conduct_exam == 0){
-                                      echo '<i class=" fa-solid fa-close" style="color:red; font-size: 30px;"></i>';
-                                  }
-                                  ?>
+                                <td class="text-center"> 
+                                  <?php if($subject->conduct_exam == 0){echo '<i class=" fa-solid fa-close" style="color:red; font-size: 15px;"></i>';} ?>
                                   </td>
-                                <td> 
-                                  <?php 
-                                  if($subject->elective_name_id == 1){
-                                      echo '<i class=" fa-solid fa-check" style="color:green; font-size: 30px;"></i>';
-                                  }
-                                  ?>
+                                <td class="text-center"> 
+                                  <?php if($subject->elective_name_id == 1){ echo '<i class=" fa-solid fa-check" style="color:green; font-size: 15px;"></i>'; }?>
                                   </td>
-                                <td> <?php echo isset($electives_list[$subject->elective_name_id]) ? $electives_list[$subject->elective_name_id] : ""; ?></td>
+                                <td class="text-center"> <?php echo isset($electives_list[$subject->elective_name_id]) ? $electives_list[$subject->elective_name_id] : ""; ?></td>
                                 <td class="text-start">
                                     <div class="adminTable-action">
                                         <button

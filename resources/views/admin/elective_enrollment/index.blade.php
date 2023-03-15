@@ -33,7 +33,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <select name="section_id" id="section_id" class="form-select eForm-select eChoice-multiple-with-remove" required >
                             <option value="">{{ get_phrase('First select a class') }}</option>
                         </select>

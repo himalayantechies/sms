@@ -29,7 +29,7 @@
         <div class="eSection-wrap">
             <div class="search-filter-area d-flex justify-content-md-between justify-content-center align-items-center flex-wrap gr-15">
               <form action="{{ route('admin.class_list') }}">
-                <div
+                {{-- <div
                   class="search-input d-flex justify-content-start align-items-center"
                 >
                   <span>
@@ -55,7 +55,7 @@
                     placeholder="Search user"
                     class="form-control"
                   />
-                </div>
+                </div> --}}
               </form>
               <!-- Export Button -->
               @if(count($class_lists) > 0)

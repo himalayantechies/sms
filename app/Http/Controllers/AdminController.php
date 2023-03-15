@@ -277,18 +277,23 @@ class AdminController extends Controller
      */
     public function teacherList(Request $request)
     {
-        $search = $request['search'] ?? "";
-        $class_id = $request['class_id'] ?? "";
-        $school_id = auth()->user()->school_id;
-        $query = User::join('teachers', 'teachers.user_id', 'users.id')->where('users.role_id', 3)->where('users.school_id', $school_id);
+        $search     = $request['search'] ?? "";
+        $class_id   = $request['class_id'] ?? "";
+        $school_id  = auth()->user()->school_id;
+        $query      = User::join('teachers', 'teachers.user_id', 'users.id')
+                        ->where('users.role_id', 3)
+                        ->where('users.school_id', $school_id)
+                        ->distinct()->orderBy('name');
+
         if ($search !== "") {
             $query->orWhere('users.name', 'LIKE', "%{$search}%")
-                ->orWhere('users.email', 'LIKE', "%{$search}%");
+                    ->orWhere('users.email', 'LIKE', "%{$search}%");
         }
         if ($class_id !== "") {
             $query->join('routines', 'users.id', 'routines.teacher_id')
-                ->where('routines.class_id', $class_id);
+                    ->where('routines.class_id', $class_id);
         }
+        
         $teachers = $query->get(['users.*']);
         $classes = (new Classes)->getClassBySchool($school_id);
 
@@ -850,8 +855,8 @@ class AdminController extends Controller
     public function studentList(Request $request)
     {
         $search = $request['search'] ?? "";
-        $class_id = $request['class_id'] ?? "";
-        $section_id = $request['section_id'] ?? "";
+        $class_id = $request['class_id'] ?? "1";
+        $section_id = $request['section_id'] ?? "1";
 
         $users = User::where(function ($query) use ($search) {
             $query->where('users.name', 'LIKE', "%{$search}%")
@@ -869,9 +874,10 @@ class AdminController extends Controller
             $users->where('class_id', $class_id);
         }
 
-        $students = $users->join('enrollments', 'users.id', '=', 'enrollments.user_id')->select('enrollments.*')->paginate(10);
+        $students = $users->join('enrollments', 'users.id', '=', 'enrollments.user_id')->select('enrollments.*')->orderBy('roll_no')->paginate(50);
 
         $classes = Classes::get();
+
 
         return view('admin.student.student_list', compact('students', 'search', 'classes', 'class_id', 'section_id'));
     }
@@ -2490,16 +2496,14 @@ class AdminController extends Controller
         $classes = Classes::get();
 
         if (count($request->all()) > 0 && $request->class_id != '') {
-
             $data = $request->all();
             $class_id = $data['class_id'] ?? '';
-            //$subjects = GradeSubject::where('class_id', $class_id)->paginate(10);
-            $subjects = GradeSubject::with('subject')->where('class_id', $class_id)->orderBy('sequence')->paginate(10);
+            $subjects = GradeSubject::with('subject')->where('class_id', $class_id)->orderBy('sequence')->paginate(50);
         } else {
-            $subjects = GradeSubject::with('subject')->where('school_id', auth()->user()->school_id)->paginate(10);
-            $class_id = '';
+            $subjects = GradeSubject::with('subject')->where('school_id', auth()->user()->school_id)->where('class_id', 1)->orderBy('sequence')->paginate(50);
+            $class_id = '1';
         }
-        // dd($subjects->subject);
+        
         return view('admin.subject.subject_list', compact('subjects', 'classes', 'class_id','electives_list'));
     }
 
@@ -4320,7 +4324,12 @@ class AdminController extends Controller
         $school_id = auth()->user()->school_id;
         $session_id = get_school_settings(auth()->user()->school_id)->value('running_session');
 
-        $classes = (new Classes)->getClassBySchool($school_id);
+        $classes = (new Classes)->getClassWithElectiveSubjects($session_id, $school_id);
+
+        // $classes = (new Classes)->getClassBySchool($school_id);
+        // echo "<pre>";
+        // print_r($classes->toArray());
+        // die;
 
         return view('admin.elective_enrollment.index', ['classes' => $classes]);
     }
@@ -4339,17 +4348,17 @@ class AdminController extends Controller
         $page_data['section_name'] = Section::find($data['section_id'])->name;
 
         $enroll_students = Enrollment::where('class_id', $page_data['class_id'])
-            ->where('section_id', $page_data['section_id'])
-            ->where('session_id', $session_id)
-            ->where('school_id', $school_id)
-            ->orderBy('roll_no')
-            ->get();
+                            ->where('section_id', $page_data['section_id'])
+                            ->where('session_id', $session_id)
+                            ->where('school_id', $school_id)
+                            ->orderBy('roll_no')
+                            ->get();
 
 
         $page_data['classes'] = (new Classes)->getClassBySchool($school_id);
         $elective_subjects = $this->get_elective_subjects($page_data['class_id'], $session_id, $school_id);
         $page_data['elective_subjects'] = $elective_subjects;
-        //dd($elective_subjects);
+        
         return view('admin.elective_enrollment.students_list', ['enroll_students' => $enroll_students, 'page_data' => $page_data]);
     }
 

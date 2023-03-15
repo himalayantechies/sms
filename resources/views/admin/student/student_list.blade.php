@@ -155,7 +155,7 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">{{ get_phrase('Name') }}</th>
-                                    <th scope="col">{{ get_phrase('Email') }}</th>
+                                    <th scope="col"></th>
                                     <th scope="col">{{ get_phrase('User Info') }}</th>
                                     <th scope="col">{{ get_phrase('Options') }}</th>
                             </thead>
@@ -171,6 +171,8 @@
                                     $info = json_decode($student->user_information);
 
                                     $student_details = (new CommonController())->get_student_academic_info($student->id);
+                                    // echo "<pre>";
+                                    // print_r($info);
                                     ?>
                                     <tr>
                                         <th scope="row">
@@ -185,15 +187,21 @@
                                                 <div class="dAdmin_profile_name dAdmin_info_name">
                                                     <h4>{{ $student->name }}</h4>
                                                     <p>
-                                                        <span>{{ get_phrase('Class') }}:</span>
-                                                        {{ $student_details->class_name }}
+                                                       
+                                                            Gender: {{$info->gender}}
+                                                       
                                                     </p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="dAdmin_info_name min-w-250px">
-                                                <p>{{ $student->email }}</p>
+                                                <p>
+                                                    {{ get_phrase('Class') }}:
+                                                    <span>{{ $student_details->class_name }}
+                                                    {{ $student_details->section_name }}</span>
+                                                </p>
+                                                <p> Roll No:  {{ $student_details->roll_no }}</p>
                                             </div>
                                         </td>
                                         <td>

@@ -396,15 +396,14 @@ class SuperAdminController extends Controller
         if(count($request->all()) > 0 && $request->class_id != ''){
 
             $data = $request->all();
-            //$class_id = $data['class_id'] ?? '';
-            $subjects = Subject::paginate(10);
+            $subjects = Subject::orderBy('name')->paginate(50);
 
         } else {
-            $subjects = Subject::paginate(10);
+            $subjects = Subject::orderBy('name')->paginate(50);
 
             $class_id = '';
         }
-        //dd($subjects);
+        
         return view('superadmin.subject.subject_list', compact('subjects', 'classes', 'class_id'));
     }
 

@@ -99,12 +99,12 @@ $lock = isset($exam_lock->id) ? 1 : 0;
                     }
                     $student_details = User::find($enroll_student->user_id);
                     $filterd_data = Gradebook::where('exam_id', $page_data['exam_id'])
-                        ->where('class_id', $page_data['class_id'])
-                        ->where('section_id', $page_data['section_id'])
-                        ->where('subject_id', $page_data['subject_id'])
-                        ->where('session_id', $page_data['session_id'])
-                        ->where('user_id', $enroll_student->user_id)
-                        ->get();
+                                                ->where('class_id', $page_data['class_id'])
+                                                ->where('section_id', $page_data['section_id'])
+                                                ->where('subject_id', $page_data['subject_id'])
+                                                ->where('session_id', $page_data['session_id'])
+                                                ->where('user_id', $enroll_student->user_id)
+                                                ->get();
 
                     if ($filterd_data->value('th_marks')) {
                         $th_marks = !empty($filterd_data->value('th_marks')) ? $filterd_data->value('th_marks') : 0;
@@ -118,7 +118,7 @@ $lock = isset($exam_lock->id) ? 1 : 0;
 
                     $comment = !empty($filterd_data->value('comment')) ? $filterd_data->value('comment') : ''; ?>
                     <tr>
-                        <td>{{ $enroll_student->roll_no }}</td>
+                        <td class="text-center">{{ $enroll_student->roll_no }}</td>
                         <td>{{ $student_details->name }}</td>
 
                         @if ($pr_fm <= 0)
@@ -143,9 +143,14 @@ $lock = isset($exam_lock->id) ? 1 : 0;
                                 <span id="total-marks-{{ $enroll_student->user_id }}">{{ $total }}</span>
                             </td>
                         @endif
-
+                            {{-- @php
+                                echo "<pre>";
+                                print_r($enroll_student->user_id);
+                                die;
+                            @endphp --}}
                         <td>
                             <span id="grade-for-mark-{{ $enroll_student->user_id }}">{{ get_grade($total) }}</span>
+                            
                         </td>
                         <td>
                             <input class="form-control eForm-control" type="text"
@@ -219,8 +224,9 @@ $lock = isset($exam_lock->id) ? 1 : 0;
         var pr_marks = '{{ $page_data['pr_fm']}}';
 
         var total = Number(th_marks) + Number(pr_marks);
-
+        
         exam_mark = 100 * exam_mark/total;
+        alert(exam_mark);
 
         let url = "{{ route('get.grade', ['exam_mark' => ':exam_mark']) }}";
         url = url.replace(":exam_mark", exam_mark);
