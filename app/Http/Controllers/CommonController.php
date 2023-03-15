@@ -21,6 +21,7 @@ use App\Models\GradeSubject;
 use App\Models\ElectiveSubject;
 use DB;
 use PDF;
+use Log;
 
 
 
@@ -234,18 +235,20 @@ class CommonController extends Controller
 
         foreach ($data['elective'] as $key => $value) {
             $user_id = $key;
-            $elective = ElectiveSubject::where('user_id', '=', $user_id)
-                ->where('class_id', '=', $class_id)
-                ->where('section_id', '=', $section_id)
-                ->where('elective_group', '=', $key)->first();
-            if ($elective == null) {
-                $elective = new ElectiveSubject();
-            }
-            $elective->session_id = get_school_settings(auth()->user()->school_id)->value('running_session');;
-            $elective->user_id = $user_id;
-            $elective->class_id = $class_id;
-            $elective->section_id = $section_id;
+            
+            
             foreach($value as $k => $v){
+                $elective = ElectiveSubject::where('user_id', '=', $user_id)
+                    ->where('class_id', '=', $class_id)
+                    ->where('section_id', '=', $section_id)
+                    ->where('elective_group', '=', $k)->first();
+                if ($elective == null) {
+                    $elective = new ElectiveSubject();
+                }
+                $elective->session_id = get_school_settings(auth()->user()->school_id)->value('running_session');;
+                $elective->user_id = $user_id;
+                $elective->class_id = $class_id;
+                $elective->section_id = $section_id;
                 $elective->subject_id = isset($v) ? $v : 0;
                 $elective->elective_group = isset($k) ? $k : 0;
             }
@@ -254,7 +257,7 @@ class CommonController extends Controller
             if($elective->subject_id !== 'Select'){
                 $elective->save();
             }
-            
+            //Log::info($elective);
            
         }
         return redirect()->back();

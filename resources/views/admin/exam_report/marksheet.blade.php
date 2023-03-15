@@ -24,12 +24,6 @@
                 <strong></strong>
             </div>
         </div>
-        {{-- <div class="row result-elements" style="margin-top: 15px; margin-bottom: 10px;">
-            <div class="col-md-12">
-                <strong>{{ $exam_details->name }} Mark Sheet</strong>
-            </div>
-        </div> --}}
-
 
         <!-- Start Mark Sheet -->
         <div class="row table-responsive" id="tabs-1">

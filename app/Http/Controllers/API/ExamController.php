@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\ExamController as ControllersExamController;
 use App\Models\ExamRoutine;
 use App\Models\Gradebook;
 use App\Models\ExamMarkSetup;
@@ -132,4 +133,9 @@ class ExamController extends Controller
         return response()->json(["success" => true, "msg" => "Exam unlocked"]);
     }
 
+    public function getIndividualMarksheet(Request $request)
+    {
+        $data = (new ControllersExamController)->MarksheetData($request);
+        return response()->json(["success" => true, "msg" => "Marksheet fetched", "data" => $data]);
+    }
 }

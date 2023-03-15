@@ -398,7 +398,10 @@ Route::controller(AdminController::class)->middleware('admin', 'auth')->group(fu
     Route::get('admin/exam_routine/list', 'examRoutineFilter')->name('admin.exam_routine.list');
     Route::post('admin/exam_routine_update', 'examRoutineUpdate')->name('admin.exam_routine.update');
 
-
+    //Publish Results
+    Route::get('admin/exam_publish_results', 'publish_results')->name('admin.exam.publish_results');
+    Route::get('admin/exam_list', 'exam_list')->name('admin.exam.exam_list');
+    Route::post('admin/publish_results_update', 'publish_results_update')->name('admin.update.publish_results');
 
     //Grade routes
     Route::get('admin/grade', 'gradeList')->name('admin.grade_list');

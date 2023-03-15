@@ -48,16 +48,16 @@
                                         {{ $user_details->name }}: {{ $exam_details->name }} Report Card
                                     </div>
                                     <div>
-                                        <button onclick="Export()" class="btn btn-outline-dark"> Generate PDF
-                                            Report</button>
-                                        {{-- <a
-                                            href="{{ route('admin.marksheet.downloadPDFMarksheet', ['grading_type' => '2', 'exam_id' => $exam_id, 'class_id' => $class_id, 'enrollment_id' => $enrollment_id]) }}">Generate PDF</a> --}}
+                                        {{-- <button onclick="Export()" class="btn btn-outline-dark"> Generate PDF
+                                            Report</button> --}}
+                                        <a
+                                            href="{{ route('admin.marksheet.downloadPDFMarksheet', ['grading_type' => '2', 'exam_id' => $exam_id, 'class_id' => $class_id, 'enrollment_id' => $enrollment_id]) }}">Generate PDF</a>
                                     </div>
                                 </div>
                                 @if (count($data) !== 0)
-                                    {
-                                    @include('admin.exam_report.marksheet')
-                                    }
+                                    <div id="report-card">
+                                        @include('admin.exam_report.marksheet')
+                                    </div>
                                 @else
                                     <h6 class="px-4 py-6">No data available.</h6>
                                 @endif
@@ -83,6 +83,8 @@
             // change display of cloned element
             // $(clonedElement).css();
 
+            $(clonedElement).css("display", "block");
+
             // Choose the clonedElement and save the PDF for our user.
             var opt = {
                 margin: 1,
@@ -92,7 +94,7 @@
                     quality: 1
                 },
                 html2canvas: {
-                    scale: 4
+                    scale: 3
                 }
             };
 
